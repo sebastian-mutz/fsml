@@ -1,0 +1,46 @@
+name = "fsml"
+version = "0.1.0"
+license = "MIT license"
+author = "Sebastian G. Mutz"
+maintainer = "sebastian@mutz.science"
+copyright = "Copyright 2025, Sebastian G. Mutz"
+description = "Fortran Statistics and Machine Learning Library"
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+module-naming = false
+
+[install]
+library = false
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
+
+[library]
+source-dir = "src"
+
+[executable]
+name = "test"
+source-dir = "app"
+main = "main.f90"
+
+[extra.ford]
+project = "FSML"
+author = "Sebastian G. Mutz"
+author_description = "Climate/Earth scientist (assoc. professor) with passion for statistics, modelling, AI, games, music, open culture & coding (Fortran & Python). 🇪🇺 🦊🌱"
+author_pic = "https://avatars.githubusercontent.com/u/46564062?v=4"
+email = "sebastian@mutz.science"
+github = "https://github.com/sebastian-mutz"
+linkedin = "https://www.linkedin.com/in/sebastian-gerhard-m-5b9952210/"
+website = "http://mutz.science/"
+license = "MIT license"
+doc_license = "by"
+project_download = "https://github.com/sebastian-mutz/fsml"
+preprocess = true
+display = ["public", "protected", "private"]
+media_dir = "./assets/"
+max_frontpage_items = 4
