@@ -12,7 +12,7 @@ module fsml
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Module for argument construction.
+!! FSML module.
 
 ! load modules
   use :: fsml_typ
@@ -23,7 +23,7 @@ module fsml
   private
 
 ! declare public procedures
-  public :: f_sts_mean, f_sts_var, f_sts_cov, f_sts_reg, f_sts_corr, say_hello
+  public :: f_sts_mean, f_sts_var, f_sts_std, f_sts_cov, f_sts_trend, f_sts_corr, say_hello
 
 contains
 

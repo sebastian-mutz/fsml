@@ -22,18 +22,19 @@ module fsml_sts
   private
 
 ! declare public procedures
-  public :: f_sts_mean, f_sts_var, f_sts_cov, f_sts_reg, f_sts_corr
+  public :: f_sts_mean, f_sts_var, f_sts_std, f_sts_cov, f_sts_trend, f_sts_corr
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-function f_sts_mean(x,n) result(mean)
-  integer(i4), intent(in) :: n
-  real(wp)   , intent(in) :: x(n)
+pure function f_sts_mean(x,n) result(mean)
+  !! Computes arithmetic mean.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
   real(wp)                :: mean
   real(wp)                :: sum
-  integer(kind=4)             :: i
+  integer(kind=4)         :: i
   sum = 0.0_wp
   do i = 1, n
      sum = sum + x(i)
@@ -44,16 +45,16 @@ end function f_sts_mean
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-function f_sts_var(x,n) result(var)
-  integer(i4), intent(in) :: n
-  real(wp)   , intent(in) :: x(n)
+pure function f_sts_var(x,n) result(var)
+  !! Computes variance.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
   real(wp)                :: var
-  real(wp)                :: sum, mn
+  real(wp)                :: sum
   integer(i4)             :: i
-  mn = f_sts_mean(x,n)
   sum = 0.0_wp
   do i = 1, n
-     sum = sum + (x(i) - mn) * (x(i) - mn)
+     sum = sum + ( x(i) - f_sts_mean(x,n) ) * (x(i) - f_sts_mean(x,n) )
   enddo
   var = sum / n
 end function f_sts_var
@@ -61,17 +62,28 @@ end function f_sts_var
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-function f_sts_cov(x,y,n) result(cov)
-  integer(i4), intent(in) :: n
-  real(wp)   , intent(in) :: x(n), y(n)
+pure function f_sts_std(x,n) result(std)
+  !! Computes standard deviation.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
+  real(wp)                :: std
+  std = sqrt( f_sts_var(x,n) )
+end function f_sts_std
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_sts_cov(x,y,n) result(cov)
+  !! Computes covariance.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
+  real(wp)   , intent(in) :: y(n)   !! y vector
   real(wp)                :: cov
-  real(wp)                :: sum, mnx, mny
+  real(wp)                :: sum
   integer(i4)             :: i
-  mnx = f_sts_mean(x,n)
-  mny = f_sts_mean(y,n)
   sum = 0.0_wp
   do i = 1, n
-     sum = sum + (x(i) - mnx) * (y(i) - mny)
+     sum = sum + ( x(i) - f_sts_mean(x,n) ) * (y(i) - f_sts_mean(y,n) )
   enddo
   cov = sum / n
 end function f_sts_cov
@@ -79,19 +91,23 @@ end function f_sts_cov
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-function f_sts_reg(x,y,n) result(reg)
-  integer(i4), intent(in) :: n
-  real(wp)   , intent(in) :: x(n), y(n)
-  real(wp)                :: reg
-  reg = f_sts_cov(x,y,n) / f_sts_var(x,n)
-end function f_sts_reg
+pure function f_sts_trend(x,y,n) result(trend)
+  !! Computes regression coefficient/trend.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
+  real(wp)   , intent(in) :: y(n)   !! y vector
+  real(wp)                :: trend
+  trend = f_sts_cov(x,y,n) / f_sts_var(x,n)
+end function f_sts_trend
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-function f_sts_corr(x,y,n) result(corr)
-  integer(i4), intent(in) :: n
-  real(wp)   , intent(in) :: x(n), y(n)
+pure function f_sts_corr(x,y,n) result(corr)
+  !! Computes Pearson correlation coefficient.
+  integer(i4), intent(in) :: n      !! vector length
+  real(wp)   , intent(in) :: x(n)   !! x vector
+  real(wp)   , intent(in) :: y(n)   !! y vector
   real(wp)                :: corr
   corr = f_sts_cov(x,y,n) / sqrt( f_sts_var(x,n) * f_sts_var(y,n) )
 end function f_sts_corr

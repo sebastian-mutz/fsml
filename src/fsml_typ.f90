@@ -12,7 +12,7 @@ module fsml_typ
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! FPLT kinds and derived types.
+!! FSML kinds and derived types.
 
 ! load modules
   use :: iso_fortran_env, only: int32, int64, real32, real64&
@@ -50,8 +50,8 @@ module fsml_typ
      integer(i4)                    :: index        !! index for data frame
      character(len=64), allocatable :: name         !! dataframe name
      real(wp)         , allocatable :: data(:,:)    !! data
-     integer(i4)      , allocatable :: row_key      !! key/index for rows
-     integer(i4)      , allocatable :: col_key      !! key/index for columns
+     integer(i4)      , allocatable :: row_key(:)   !! key/index for rows
+     integer(i4)      , allocatable :: col_key(:)   !! key/index for columns
      character(len=64), allocatable :: row_label(:) !! labels for rows
      character(len=64), allocatable :: col_label(:) !! labels for rows
   end type fsml_typ_df
