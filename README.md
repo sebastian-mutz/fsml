@@ -15,7 +15,7 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 ## <span style="color:#734f96">Description</span>
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (mean, variance, correlation, variance, standard deviation), common univariate and multivariate statistical tests (t-test, ANOVA, Kruskal Wallis, KS), classic statistical analysis (principal component analysis, discriminant analysis, multiple regression), and classic parametric and non-parametric machine learning procedures (K-Means Clusterint, Hierarchical Clustering, Random Forests, LASSO- and Ridge regression in bootstrap and cross-validation settings), as well as Bayesian classifiers.
+FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (mean, variance, correlation, variance, standard deviation), common univariate and multivariate statistical tests (t-test, ANOVA, Kruskal Wallis, KS), classic statistical analysis (principal component analysis, discriminant analysis, multiple regression), and classic parametric and non-parametric machine learning procedures (k-means clustering, hierarchical clustering, random forests, LASSO- and ridge regression in bootstrap and cross-validation settings), as well as Bayesian classifiers.
 
 ## <span style="color:#734f96">Development</span>
 
@@ -40,6 +40,15 @@ This stage is reached once:
 
 ### <span style="color:#734f96">Progress</span>
 
+| Statistics  | Covered |
+| ----------- | ------- |
+| Mean        | ✓       |
+| Variance    | ✓       |
+| Std Dev.    | -       |
+| Covariance  | ✓       |
+| Regression  | ✓       |
+| Correlation | ✓       |
+
 | Tests   | Covered |
 | ------- | ------- |
 | T-Test  | -       |
@@ -47,21 +56,13 @@ This stage is reached once:
 | KW-Test | -       |
 | ANOVA   | -       |
 
-| Statistics  | Covered |
-| ----------- | ------- |
-| Mean        | -       |
-| Trend       | -       |
-| Correlation | -       |
-| Variance    | -       |
-| Std Dev.    | -       |
-
 | S. Analyses | Covered |
 | ----------- | ------- |
 | PCA         | -       |
 | 2C-LDA      | -       |
 | 2C-MDA      | -       |
-| Bayesian Cl.| -       |
-| Multireg    | -       |
+| Bayes Class.| -       |
+| Multireg.   | -       |
 | LASSO       | -       |
 | Ridge       | -       |
 
