@@ -25,7 +25,7 @@ module fsml_typ
 ! declare public
   public :: dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
-  public :: fsml_typ_df
+  public :: typ_df
 
 ! ==== Declarations
 
@@ -45,15 +45,15 @@ module fsml_typ
 ! ==== Definitions
 
 ! simple dataframe
-  type :: fsml_typ_df
+  type :: typ_df
      !! Derived type for dataframe.
-     integer(i4)                    :: index        !! index for data frame
-     character(len=64), allocatable :: name         !! dataframe name
-     real(wp)         , allocatable :: data(:,:)    !! data
-     integer(i4)      , allocatable :: row_key(:)   !! key/index for rows
-     integer(i4)      , allocatable :: col_key(:)   !! key/index for columns
-     character(len=64), allocatable :: row_label(:) !! labels for rows
-     character(len=64), allocatable :: col_label(:) !! labels for rows
-  end type fsml_typ_df
+     integer(i4)                    :: id         !! ID/index for data frame
+     character(len=64), allocatable :: nm         !! dataframe name
+     real(wp)         , allocatable :: data(:,:)  !! data
+     integer(i4)      , allocatable :: row_id(:)  !! ID/key/index for rows
+     integer(i4)      , allocatable :: col_id(:)  !! ID/key/index for columns
+     character(len=64), allocatable :: row_nm(:)  !! names/labels for rows
+     character(len=64), allocatable :: col_nm(:)  !! names/labels for rows
+  end type typ_df
 
 end module fsml_typ

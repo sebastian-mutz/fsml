@@ -23,56 +23,69 @@ FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran co
 
 The published research below uses some of the to-be-reworked code and demonstrates some applications of the above-mentioned methods:
 
-- [Mutz and Ehlers (2019) Detection and Explanation of Spatiotemporal Patterns in Late Cenozoic Palaeoclimate Change Relevant to Earth Surface Processes](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis)
-- [Mutz et al. (2015)  Modelling of future mass balance changes of Norwegian glaciers by application of a dynamical-statistical model](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier)
+- [Mutz and Ehlers (2019)](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis)
+- [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier)
 
 ### <span style="color:#734f96">Alpha</span>
 
-I will consider the library to be in "alpha" once FSML covers the functionality needed to reproduce ~80% of all the analyses I've conducted (and published as first author) in the past ~15 years.
+I will consider the library to be in "alpha" once FSML covers the functionality needed to reproduce ~80% of all the Fortran-based data analysis I've conducted (and published) in the past ~15 years.
 
 ### <span style="color:#734f96">Beta</span>
 
 This stage is reached once:
 
-- FSML is able to reproduce all of the above mentioned analyses without issues.
+- FSML is able to reproduce all of the above mentioned type of analyses without issues.
 - FSML fully works with GFortran, LFortran, and Flang compilers.
 - FSML has proper documentation.
 
 ### <span style="color:#734f96">Progress</span>
 
-| Statistics  | Covered |
-| ----------- | ------- |
-| Mean        | ✓       |
-| Variance    | ✓       |
-| Std Dev.    | -       |
-| Covariance  | ✓       |
-| Regression  | ✓       |
-| Correlation | ✓       |
+#### Basic Statistics
 
-| Tests   | Covered |
-| ------- | ------- |
-| T-Test  | -       |
-| KS-Test | -       |
-| KW-Test | -       |
-| ANOVA   | -       |
+Basic Statistics (Descriptive measures for understanding data):
 
-| S. Analyses | Covered |
-| ----------- | ------- |
-| PCA         | -       |
-| 2C-LDA      | -       |
-| 2C-MDA      | -       |
-| Bayes Class.| -       |
-| Multireg.   | -       |
-| LASSO       | -       |
-| Ridge       | -       |
+| Basic Statistics (STS) | Covered |
+| ---------------------- | ------- |
+| Mean                   | ✓       |
+| Variance               | ✓       |
+| Standard Deviation     | ✓       |
+| Covariance             | ✓       |
+| Regression             | ✓       |
+| Correlation            | ✓       |
 
-| Machine Learning  | Covered |
-| ----------------- | ------- |
-| RF                | -       |
-| K-Means Cl.       | -       |
-| Hierarchical Cl.  | -       |
-| CV setting        | -       |
-| Bootstrap setting | -       |
+#### Hypothesis Testing
+
+Hypothesis Testing (Statistical tests for inference and comparing groups):
+
+| Hypothesis Testing (TST) | Covered |
+| ------------------------ | ------- |
+| Student T-Test           | -       |
+| Kolmogorov Smirnov Test  | -       |
+| Kruskall Wallis Test     | -       |
+| Analysis of Variance     | -       |
+
+#### Linear Parametric Models (LPM)
+
+ Coefficient-Based Prediction & Machine Learning (models using linear coefficients for prediction or classification):
+
+| Linear Parametric Models (LPM)| Covered |
+| ----------------------------- | ------- |
+| OLS Regression                | -       |
+| LASSO Regression              | -       |
+| Ridge Regression              | -       |
+| Pincipal Component Analysis   | -       |
+| Discriminant Analysis (LDA)   | -       |
+
+#### Non-Parametric Models (NPM)
+
+Classification-Based Prediction & Machine Learning (models focused on predicting categorical outcomes, typically without explicit coefficients):
+
+| Non-Parametric Models (NPM) | Covered |
+| --------------------------- | ------- |
+| Random Forests Regression   | -       |
+| Hierarchical Clustering     | -       |
+| K-Means Clustering          | -       |
+| Bayesian Classification     | -       |
 
 ## <span style="color:#734f96">Installation</span>
 
