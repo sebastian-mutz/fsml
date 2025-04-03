@@ -15,7 +15,9 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 ## <span style="color:#734f96">Description</span>
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (mean, variance, correlation, variance, standard deviation), common statistical tests (t-test, ANOVA, Kruskal-Wallis, Kolmogorov-Smirnov), linear parametric methods and models (principal component analysis, discriminant analysis, multiple ordinary least squares regression, LASSO and ridge regression, and Bayesian classifier), and non-linear statistical and machine learning procedures (k-means clustering, hierarchical clustering, random forests), as well as Bayesian classifiers.
+![logo](assets/logo/FSML_small.png)
+
+FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (mean, variance, correlation, variance, standard deviation), common statistical tests (t-test, ANOVA, Kruskal-Wallis, Kolmogorov-Smirnov), linear parametric methods and models (principal component analysis, discriminant analysis, multiple ordinary least squares regression, LASSO and ridge regression, and Bayesian classifier), and non-linear statistical and machine learning procedures (k-means clustering, hierarchical clustering, random forests), as well as Bayesian classifiers. The implementation is a compromise between speed and readability, and it only uses an external library for linear algebra and netCDF support (optional).
 
 ## <span style="color:#734f96">Development</span>
 
@@ -88,6 +90,15 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 | K-Means Clustering          | -       |
 | (Simple Neural Networks)    | -       |
 
+#### Additional Functionality
+
+| Additional Functionality    | Covered |
+| --------------------------- | ------- |
+| Read from CSV file          | -       |
+| Read from netCDF file       | -       |
+| Simple Fortran Dataframe    | ✓       |
+| Cross-Validation            | -       |
+| Bootstrapping               | -       |
 
 ## <span style="color:#734f96">Installation</span>
 

@@ -28,88 +28,82 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_mean(x,n) result(mean)
+pure function f_sts_mean(x) result(mean)
   !! Computes arithmetic mean.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)                :: mean
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)                :: mean   !! arithmetic mean
   real(wp)                :: sum
   integer(kind=4)         :: i
   sum = 0.0_wp
-  do i = 1, n
+  do i = 1, size(x)
      sum = sum + x(i)
   enddo
-  mean = sum / n
+  mean = sum / size(x)
 end function f_sts_mean
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_var(x,n) result(var)
+pure function f_sts_var(x) result(var)
   !! Computes variance.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)                :: var
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)                :: var    !! variance
   real(wp)                :: sum
   integer(i4)             :: i
   sum = 0.0_wp
-  do i = 1, n
-     sum = sum + ( x(i) - f_sts_mean(x,n) ) * (x(i) - f_sts_mean(x,n) )
+  do i = 1, size(x)
+     sum = sum + ( x(i) - f_sts_mean(x) ) * (x(i) - f_sts_mean(x) )
   enddo
-  var = sum / n
+  var = sum / size(x)
 end function f_sts_var
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_std(x,n) result(std)
+pure function f_sts_std(x) result(std)
   !! Computes standard deviation.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)                :: std
-  std = sqrt( f_sts_var(x,n) )
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)                :: std    !! standard deviation
+  std = sqrt( f_sts_var(x) )
 end function f_sts_std
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_cov(x,y,n) result(cov)
-  !! Computes covariance.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)   , intent(in) :: y(n)   !! y vector
-  real(wp)                :: cov
+pure function f_sts_cov(x,y) result(cov)
+  !! Computes covariance. x and y must be the same size.
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)   , intent(in) :: y(:)   !! y vector (assumed size array)
+  real(wp)                :: cov    !! covariance
   real(wp)                :: sum
   integer(i4)             :: i
   sum = 0.0_wp
-  do i = 1, n
-     sum = sum + ( x(i) - f_sts_mean(x,n) ) * (y(i) - f_sts_mean(y,n) )
+  do i = 1, size(x)
+     sum = sum + ( x(i) - f_sts_mean(x) ) * (y(i) - f_sts_mean(y) )
   enddo
-  cov = sum / n
+  cov = sum / size(x)
 end function f_sts_cov
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_trend(x,y,n) result(trend)
-  !! Computes regression coefficient/trend.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)   , intent(in) :: y(n)   !! y vector
-  real(wp)                :: trend
-  trend = f_sts_cov(x,y,n) / f_sts_var(x,n)
+pure function f_sts_trend(x,y) result(trend)
+  !! Computes regression coefficient/trend. x and y must be the same size.
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)   , intent(in) :: y(:)   !! y vector (assumed size array)
+  real(wp)                :: trend  !! trend/regression slope
+  trend = f_sts_cov(x,y) / f_sts_var(x)
 end function f_sts_trend
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_corr(x,y,n) result(corr)
-  !! Computes Pearson correlation coefficient.
-  integer(i4), intent(in) :: n      !! vector length
-  real(wp)   , intent(in) :: x(n)   !! x vector
-  real(wp)   , intent(in) :: y(n)   !! y vector
-  real(wp)                :: corr
-  corr = f_sts_cov(x,y,n) / sqrt( f_sts_var(x,n) * f_sts_var(y,n) )
+pure function f_sts_corr(x,y) result(corr)
+  !! Computes Pearson correlation coefficient. x and y must be the same size.
+  real(wp)   , intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)   , intent(in) :: y(:)   !! y vector (assumed size array)
+  real(wp)                :: corr   !! Pearson correlation coefficient
+  corr = f_sts_cov(x,y) / sqrt( f_sts_var(x) * f_sts_var(y) )
 end function f_sts_corr
 
 

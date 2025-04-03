@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="FSML.svg"
+   inkscape:export-filename="model.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="1.5308036"
+     inkscape:cx="334.46486"
+     inkscape:cy="87.862351"
+     inkscape:window-width="1720"
+     inkscape:window-height="1356"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
+  <defs
+     id="defs2">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-8.7343077 : 158.97357 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="201.26569 : 158.97357 : 1"
+       inkscape:persp3d-origin="96.265693 : 109.47357 : 1"
+       id="perspective1483" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#808080;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect607"
+       width="42.674236"
+       height="42.674236"
+       x="48.60363"
+       y="7.350091"
+       ry="7.9365754"
+       inkscape:export-filename="FSML_light.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.096509;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1271"
+       width="0.64880592"
+       height="10.766708"
+       x="44.099007"
+       y="-59.790405"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       transform="rotate(90)" />
+    <g
+       id="use933"
+       transform="translate(59.230031,-0.39487641)">
+      <title
+         id="title1965">1</title>
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M 10.86279,38.928416 26.945985,29.642768 V 11.071488 L 10.86279,20.357121 Z"
+         id="path1967"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M -5.2204075,29.642768 V 11.071488 L 10.86279,20.357121 v 18.571295 z"
+         id="path1969" />
+      <title
+         id="title1973">1</title>
+    </g>
+    <g
+       id="g1993"
+       transform="translate(-7.4951459,13.173208)">
+      <title
+         id="title1983">1</title>
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.529167;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="m 22.913589,39.687514 11.456794,-6.61459 v -13.22917 l -11.456794,6.61458 z"
+         id="path1985"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:0.529167;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="m 11.456794,33.072924 v -13.22917 l 11.456795,6.61458 v 13.22918 z"
+         id="path1987" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:0.529167;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="m 11.456793,19.843764 11.456795,-6.61459 11.456795,6.61458 -11.456795,6.61459 z"
+         id="path1989"
+         sodipodi:nodetypes="ccccc" />
+      <title
+         id="title1991">1</title>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:Cousine;-inkscape-font-specification:Cousine;fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+       x="5.9683132"
+       y="23.393528"
+       id="text2001"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan1999"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;font-family:'IBM Plex Serif';-inkscape-font-specification:'IBM Plex Serif';fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+         x="5.9683132"
+         y="23.393528">(:)</tspan></text>
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
+       id="circle2052"
+       cx="70.092293"
+       cy="24.820299"
+       r="1.236887" />
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
+       id="circle2054"
+       cx="70.092293"
+       cy="33.365868"
+       r="1.236887" />
+    <g
+       id="g2286"
+       transform="translate(59.230031,-0.39487641)">
+      <title
+         id="title2276">1</title>
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#a98dc3;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M 10.86279,38.928416 26.945985,29.642768 V 11.071488 L 10.86279,20.357121 Z"
+         id="path2278"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#734f96;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M -5.2204075,29.642768 V 11.071488 L 10.86279,20.357121 v 18.571295 z"
+         id="path2280" />
+      <title
+         id="title2284">1</title>
+    </g>
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.368149;stroke-opacity:1"
+       id="circle2304"
+       cx="83.482819"
+       cy="42.475876"
+       r="0.92036915" />
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.368149;stroke-opacity:1"
+       id="circle2306"
+       cx="83.482819"
+       cy="46.438156"
+       r="0.92036915" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;line-height:1.25;font-family:Cousine;-inkscape-font-specification:Cousine;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.265;stroke-dasharray:none"
+       x="58.85173"
+       y="47.544502"
+       id="text2310"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan2308"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;font-family:'IBM Plex Sans';-inkscape-font-specification:'IBM Plex Sans';fill:#808080;fill-opacity:1;stroke-width:0.265;stroke-dasharray:none"
+         x="58.85173"
+         y="47.544502">FSML</tspan></text>
+    <rect
+       style="fill:#333333;fill-opacity:1;stroke:#999999;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2414"
+       width="42.674236"
+       height="42.674236"
+       x="95.872749"
+       y="7.350091"
+       ry="7.9365754"
+       inkscape:export-filename="FPLT.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#999999;fill-opacity:1;fill-rule:evenodd;stroke-width:0.096509;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect2416"
+       width="0.64880592"
+       height="10.766708"
+       x="44.099007"
+       y="-107.05952"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       transform="rotate(90)" />
+    <g
+       id="g2428"
+       transform="translate(106.49915,-0.39487641)">
+      <title
+         id="title2418">1</title>
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M 10.86279,38.928416 26.945985,29.642768 V 11.071488 L 10.86279,20.357121 Z"
+         id="path2420"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M -5.2204075,29.642768 V 11.071488 L 10.86279,20.357121 v 18.571295 z"
+         id="path2422" />
+      <title
+         id="title2426">1</title>
+    </g>
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
+       id="circle2430"
+       cx="117.36141"
+       cy="24.820299"
+       r="1.236887" />
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
+       id="circle2432"
+       cx="117.36141"
+       cy="33.365868"
+       r="1.236887" />
+    <g
+       id="g2444"
+       transform="translate(106.49915,-0.39487641)">
+      <title
+         id="title2434">1</title>
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#a98dc3;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M 10.86279,38.928416 26.945985,29.642768 V 11.071488 L 10.86279,20.357121 Z"
+         id="path2436"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="font-variation-settings:normal;vector-effect:none;fill:#734f96;fill-opacity:1;stroke:none;stroke-width:0.742852;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+         d="M -5.2204075,29.642768 V 11.071488 L 10.86279,20.357121 v 18.571295 z"
+         id="path2438" />
+      <title
+         id="title2442">1</title>
+    </g>
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#999999;stroke-width:0.368149;stroke-opacity:1"
+       id="circle2446"
+       cx="130.75192"
+       cy="42.475876"
+       r="0.92036915" />
+    <circle
+       style="fill:#734f96;fill-opacity:1;stroke:#999999;stroke-width:0.368149;stroke-opacity:1"
+       id="circle2448"
+       cx="130.75192"
+       cy="46.438156"
+       r="0.92036915" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;line-height:1.25;font-family:Cousine;-inkscape-font-specification:Cousine;fill:#999999;fill-opacity:1;stroke:none;stroke-width:0.265;stroke-dasharray:none"
+       x="106.12085"
+       y="47.544502"
+       id="text2452"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan2450"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;font-family:'IBM Plex Sans';-inkscape-font-specification:'IBM Plex Sans';fill:#999999;fill-opacity:1;stroke-width:0.265;stroke-dasharray:none"
+         x="106.12085"
+         y="47.544502">FSML</tspan></text>
+    <rect
+       style="fill:#e5e5e5;fill-opacity:1;fill-rule:evenodd;stroke-width:0.238892;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect2599"
+       width="2.1980643"
+       height="19.472315"
+       x="68.992455"
+       y="19.161219"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke-width:0.238461;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect2601"
+       width="2.1980643"
+       height="19.402124"
+       x="116.26265"
+       y="19.161219"
+       inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>
