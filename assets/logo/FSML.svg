@@ -27,8 +27,8 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.5308036"
-     inkscape:cx="421.34732"
-     inkscape:cy="88.515601"
+     inkscape:cx="204.46777"
+     inkscape:cy="-30.376202"
      inkscape:window-width="1720"
      inkscape:window-height="1356"
      inkscape:window-x="0"
@@ -75,7 +75,7 @@
        transform="rotate(90)" />
     <g
        id="use933"
-       transform="translate(59.230031,-0.39487641)">
+       transform="translate(58.700864,-0.39487641)">
       <title
          id="title1965">1</title>
       <path
@@ -129,18 +129,18 @@
     <circle
        style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
        id="circle2052"
-       cx="70.092293"
+       cx="69.563126"
        cy="24.820299"
        r="1.236887" />
     <circle
        style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
        id="circle2054"
-       cx="70.092293"
+       cx="69.563126"
        cy="33.365868"
        r="1.236887" />
     <g
        id="g2286"
-       transform="translate(59.230031,-0.39487641)">
+       transform="translate(58.700864,-0.39487641)">
       <title
          id="title2276">1</title>
       <path
@@ -189,9 +189,9 @@
        x="95.872749"
        y="7.350091"
        ry="7.9365754"
-       inkscape:export-filename="FSML.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-filename="FSML_small.png"
+       inkscape:export-xdpi="55.831539"
+       inkscape:export-ydpi="55.831539" />
     <rect
        style="fill:#999999;fill-opacity:1;fill-rule:evenodd;stroke-width:0.096509;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect2416"
@@ -205,7 +205,7 @@
        transform="rotate(90)" />
     <g
        id="g2428"
-       transform="translate(106.49915,-0.39487641)">
+       transform="translate(105.96998,-0.39487641)">
       <title
          id="title2418">1</title>
       <path
@@ -223,18 +223,18 @@
     <circle
        style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
        id="circle2430"
-       cx="117.36141"
+       cx="116.83224"
        cy="24.820299"
        r="1.236887" />
     <circle
        style="fill:#734f96;fill-opacity:1;stroke:#808080;stroke-width:0.494757;stroke-opacity:1"
        id="circle2432"
-       cx="117.36141"
+       cx="116.83224"
        cy="33.365868"
        r="1.236887" />
     <g
        id="g2444"
-       transform="translate(106.49915,-0.39487641)">
+       transform="translate(105.96998,-0.39487641)">
       <title
          id="title2434">1</title>
       <path
@@ -280,7 +280,7 @@
        id="rect2599"
        width="2.1980643"
        height="19.472315"
-       x="68.992455"
+       x="68.463287"
        y="19.161219"
        inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
        inkscape:export-xdpi="96"
@@ -290,7 +290,7 @@
        id="rect2601"
        width="2.1980643"
        height="19.402124"
-       x="116.26265"
+       x="115.73348"
        y="19.161219"
        inkscape:export-filename="/home/sebastian/Academia/Community/groups/CSD/img/logo/CSD_darkGrey.png"
        inkscape:export-xdpi="96"
