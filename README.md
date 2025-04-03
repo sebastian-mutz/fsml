@@ -15,7 +15,7 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 ## <span style="color:#734f96">Description</span>
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (mean, variance, correlation, variance, standard deviation), common univariate and multivariate statistical tests (t-test, ANOVA, Kruskal Wallis, KS), classic statistical analysis (principal component analysis, discriminant analysis, multiple regression), and classic parametric and non-parametric machine learning procedures (k-means clustering, hierarchical clustering, random forests, LASSO- and ridge regression in bootstrap and cross-validation settings), as well as Bayesian classifiers.
+FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (mean, variance, correlation, variance, standard deviation), common statistical tests (t-test, ANOVA, Kruskal-Wallis, Kolmogorov-Smirnov), linear parametric methods and models (principal component analysis, discriminant analysis, multiple ordinary least squares regression, LASSO and ridge regression, and Bayesian classifier), and non-linear statistical and machine learning procedures (k-means clustering, hierarchical clustering, random forests), as well as Bayesian classifiers.
 
 ## <span style="color:#734f96">Development</span>
 
@@ -42,7 +42,7 @@ This stage is reached once:
 
 #### Basic Statistics
 
-Basic Statistics (Descriptive measures for understanding data).
+Basic Statistics (descriptive measures for understanding data).
 
 | Basic Statistics (STS) | Covered |
 | ---------------------- | ------- |
@@ -55,7 +55,7 @@ Basic Statistics (Descriptive measures for understanding data).
 
 #### Hypothesis Testing
 
-Hypothesis Testing (Statistical tests for inference and comparing groups).
+Hypothesis Testing (statistical tests for inference and comparing groups).
 
 | Hypothesis Testing (TST) | Covered |
 | ------------------------ | ------- |
@@ -77,7 +77,7 @@ Hypothesis Testing (Statistical tests for inference and comparing groups).
 | Discriminant Analysis (LDA)   | -       |
 | Bayesian Classification       | -       |
 
-#### Non-Linear Models (NPM)
+#### Non-Linear Models (NLM)
 
 Models for clustering and/or capture non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
 
