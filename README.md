@@ -42,7 +42,7 @@ This stage is reached once:
 
 #### Basic Statistics
 
-Basic Statistics (Descriptive measures for understanding data):
+Basic Statistics (Descriptive measures for understanding data).
 
 | Basic Statistics (STS) | Covered |
 | ---------------------- | ------- |
@@ -55,7 +55,7 @@ Basic Statistics (Descriptive measures for understanding data):
 
 #### Hypothesis Testing
 
-Hypothesis Testing (Statistical tests for inference and comparing groups):
+Hypothesis Testing (Statistical tests for inference and comparing groups).
 
 | Hypothesis Testing (TST) | Covered |
 | ------------------------ | ------- |
@@ -66,26 +66,28 @@ Hypothesis Testing (Statistical tests for inference and comparing groups):
 
 #### Linear Parametric Models (LPM)
 
- Coefficient-Based Prediction & Machine Learning (models using linear coefficients for prediction or classification):
+ Models that assume a linear relationship between the features and target, and estimate parameters (coefficients). Methods in brackets are optional, new implementations (rather than reworked old code).
 
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
 | OLS Regression                | -       |
-| LASSO Regression              | -       |
-| Ridge Regression              | -       |
+| (LASSO Regression)            | -       |
+| (Ridge Regression)            | -       |
 | Pincipal Component Analysis   | -       |
 | Discriminant Analysis (LDA)   | -       |
+| Bayesian Classification       | -       |
 
-#### Non-Parametric Models (NPM)
+#### Non-Linear Models (NPM)
 
-Classification-Based Prediction & Machine Learning (models focused on predicting categorical outcomes, typically without explicit coefficients):
+Models for clustering and/or capture non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
 
-| Non-Parametric Models (NPM) | Covered |
+| Non-Linear Models (NLM)     | Covered |
 | --------------------------- | ------- |
-| Random Forests Regression   | -       |
+| (Random Forests Regression) | -       |
 | Hierarchical Clustering     | -       |
 | K-Means Clustering          | -       |
-| Bayesian Classification     | -       |
+| (Simple Neural Networks)    | -       |
+
 
 ## <span style="color:#734f96">Installation</span>
 
