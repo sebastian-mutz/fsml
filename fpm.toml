@@ -28,6 +28,9 @@ name = "test"
 source-dir = "app"
 main = "main.f90"
 
+[dependencies]
+stdlib = "*"
+
 [extra.ford]
 project = "FSML"
 author = "Sebastian G. Mutz"

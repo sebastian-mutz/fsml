@@ -11,8 +11,13 @@ program main
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
-  use fsml, only: say_hello
+  use fsml
   implicit none
 
-  call say_hello()
+  type(fsml_typ_df) :: df
+  character(len=128) :: infile
+
+  infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
+
+  call fsml_readcsv(infile, labelcol=.true., labelrow=.true.)
 end program main
