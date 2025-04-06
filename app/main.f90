@@ -19,5 +19,6 @@ program main
 
   infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
 
-  call fsml_readcsv(infile, labelcol=.true., labelrow=.true.)
+  call fsml_readcsv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
+
 end program main

@@ -30,9 +30,9 @@ module fsml_typ
 ! ==== Declarations
 
 ! define kinds (used consistently and explicitly in derived types and entire project)
-  integer, parameter :: sp = real32  !! single precision
-  integer, parameter :: dp = real64  !! double precision
-  integer, parameter :: wp = sp      !! working precision
+  integer, parameter :: sp = real32 !! single precision
+  integer, parameter :: dp = real64 !! double precision
+  integer, parameter :: wp = sp     !! working precision
   integer, parameter :: i4 = int32
   integer, parameter :: i8 = int64
 
@@ -47,13 +47,13 @@ module fsml_typ
 ! simple dataframe
   type :: fsml_typ_df
      !! Derived type for dataframe.
-     integer(i4)                    :: id         !! ID/index for data frame
-     character(len=64), allocatable :: nm         !! dataframe name
-     real(wp)         , allocatable :: data(:,:)  !! data
-     integer(i4)      , allocatable :: row_id(:)  !! ID/key/index for rows
-     integer(i4)      , allocatable :: col_id(:)  !! ID/key/index for columns
-     character(len=64), allocatable :: row_nm(:)  !! names/labels for rows
-     character(len=64), allocatable :: col_nm(:)  !! names/labels for rows
+     integer(i4)                    :: id        !! ID/index for data frame
+     character(len=64), allocatable :: nm        !! dataframe name
+     real(wp)         , allocatable :: data(:,:) !! data
+     integer(i4)      , allocatable :: row_id(:) !! ID/key/index for rows
+     integer(i4)      , allocatable :: col_id(:) !! ID/key/index for columns
+     character(len=64), allocatable :: row_nm(:) !! names/labels for rows
+     character(len=64), allocatable :: col_nm(:) !! names/labels for rows
   end type fsml_typ_df
 
 end module fsml_typ
