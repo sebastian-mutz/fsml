@@ -43,6 +43,7 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
   logical                                 :: w_labelrow  !! final value of labeleow
   character(len=1)                        :: w_delimiter !! final value of delimiter
   character(len=1000)                     :: line        !! row will be read into line string
+  character(len=64), allocatable          :: cells(:)    !! cells in row
   integer(i4)                             :: nrow        !! number of rows
   integer(i4)                             :: ncol        !! number of columns
   integer(i4)                             :: ios         !! io status
@@ -100,14 +101,13 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
 
 ! get number of columns
   rewind(std_rw)
-  read(std_rw, '(a)', iostat=ios) line
+  read(std_rw, '(a)') line
   ncol = 1
   do i = 1, len_trim(line)
      if (line(i:i) .eq. w_delimiter) ncol = ncol + 1
   enddo
 
 ! summary
-  write(std_o, *)
   write(std_o, '(a18,i5)') "number of rows:   ", nrow
   write(std_o, '(a18,i5)') "number of columns:", ncol
   write(std_o, *)
@@ -119,6 +119,7 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
   allocate(df%row_nm(nrow))
   allocate(df%col_id(ncol))
   allocate(df%col_nm(ncol))
+  allocate(cells(ncol))
 
 ! update row number for data only
   if (w_labelrow) then
@@ -151,34 +152,89 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
   rewind(std_rw)
   ! loop through rows
   do i = 1, 1!nrow
-    ! read entire line
-    read(std_rw, '(a)', iostat=ios) line
-    ! reset initial cell position (p) and column number (j)
-    p = 1
-    j = 1
-    ! go through line, left to right
-    do k = p, len_trim(line)
-       if (line(k:k) .eq. w_delimiter) then
-          ! pass data
-          df%col_nm(j) = line(p:k-1)
-          ! update initial cell position and column number
-          p = k + 1
-          j = j + 1
-          ! if last column, pass remaining data
-          if (j .eq. ncol) df%col_nm(j) = line(p:len_trim(line))
-       endif
-    enddo
-    print*, df%col_nm(:)
+     ! read entire line
+     read(std_rw, '(a)') line
+     ! split line up into cells
+     call split_line(trim(line), w_delimiter, ncol, cells)
+     print*, cells(:)
+     ! pass cell contents to dataframe
+
   enddo
 
-! TODO: implement contained procedures to get only label column, label row or data;
-! create option arguments to get only subset of data?
+!   if (labelrow) then
+!
+!   if (labelcol) then
+!      do j = 1, ncol
+!         df%col_nm(j) = cell(j)
+!      enddo
+!      do i = 1, nrow
+!         df%row_nm(i) = cell(1)
+!         do j = 2, ncol
+!            df%data(i,j) = cell(j)
+!         enddo
+!      enddo
+!   else
+!      do j = 1, ncol
+!         df%col_nm(j) = cell(j)
+!      enddo
+!      do i = 2, nrow
+!         do j = 1, ncol
+!            df%data(i,j) = cell(j)
+!         enddo
+!      enddo
+!   endif
+!
+!
+!   else
+!
+!   if (labelcol) then
+!      do i = 1, nrow
+!         df%row_nm(i) = cell(1)
+!         do j = 2, ncol
+!            df%data(i,j) = cell(j)
+!         enddo
+!      enddo
+!   else
+!      do i = 1, nrow
+!         do j = 1, ncol
+!            df%data(i,j) = cell(j)
+!         enddo
+!      enddo
+!   endif
+!
+!   endif
 
   close(std_rw)
 
+
+  deallocate(cells)
+
+  contains
+     subroutine split_line(line, delimiter, ncol, cells)
+     !! Splits passed line up into cells by delimiter.
+     character(len=*) , intent(in)    :: line        !! row read into line string
+     character(len=1) , intent(in)    :: delimiter   !! single char delimiter
+     integer(i4)      , intent(in)    :: ncol        !! number of columns
+     character(len=64), intent(inout) :: cells(ncol) !! cells between delimiter (in line)
+     integer(i4)                      :: i, j, k, p
+     ! reset initial cell position (p) and column number (j)
+     p = 1
+     j = 1
+     ! go through line, left to right
+     do k = p, len_trim(line)
+        if (line(k:k) .eq. delimiter) then
+           ! pass data
+           cells(j) = line(p:k-1)
+           ! update initial cell position and column number
+           p = k + 1
+           j = j + 1
+           ! if last column, pass remaining data
+           if (j .eq. ncol) cells(j) = line(p:len_trim(line))
+        endif
+     enddo
+     end subroutine split_line
+
 end subroutine s_utl_readcsv
-
-
 
 
 
