@@ -104,7 +104,7 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
 
 ! --- allocate
 
-  ! number of actual cells in file
+  ! number of actual cells per row in file
   allocate(cells(ncol))
 
   ! update row number for data if labelrow
