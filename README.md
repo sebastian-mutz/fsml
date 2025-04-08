@@ -19,6 +19,37 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (mean, variance, correlation, variance, standard deviation), common statistical tests (t-test, ANOVA, Kruskal-Wallis, Kolmogorov-Smirnov), linear parametric methods and models (principal component analysis, discriminant analysis, multiple ordinary least squares regression, LASSO and ridge regression, and Bayesian classifier), and non-linear statistical and machine learning procedures (k-means clustering, hierarchical clustering, random forests), as well as Bayesian classifiers. The implementation is a compromise between speed and readability, and it only uses an external library for linear algebra and netCDF support (optional).
 
+
+## <span style="color:#734f96">Example</span>
+
+The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_readcsv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_corr* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
+
+```fortran
+program fortran_statistics
+  use fsml
+  implicit none
+
+  type(fsml_typ_df)  :: df
+  character(len=128) :: infile
+
+  infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
+
+  ! read data directly into dataframe
+  call fsml_readcsv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
+
+  ! mean of first variable (msl - mean sea level pressure)
+  print*, "mean: ", fsml_mean(df%data(:,1))
+
+  ! variance of second variable (t2m - 2m air temperature)
+  print*, "variance: ", fsml_var(df%data(:,2))
+
+  ! correlation of msl and t2m
+  print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
+
+end program fortran_statistics
+```
+
+
 ## <span style="color:#734f96">Development</span>
 
 FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written for my research in the past 15 years, and to bundle and publish it as a well organised and well documented library.
