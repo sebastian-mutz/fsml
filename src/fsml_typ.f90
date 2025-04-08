@@ -53,7 +53,7 @@ module fsml_typ
      integer(i4)      , allocatable :: row_id(:) !! ID/key/index for rows
      integer(i4)      , allocatable :: col_id(:) !! ID/key/index for columns
      character(len=64), allocatable :: row_nm(:) !! names/labels for rows
-     character(len=64), allocatable :: col_nm(:) !! names/labels for rows
+     character(len=64), allocatable :: col_nm(:) !! names/labels for columns
   end type fsml_typ_df
 
 end module fsml_typ
