@@ -30,14 +30,13 @@ program main
   enddo
   print*
 
-  ! mean
-  print*, trim(df%col_nm(1)), " mean: ", fsml_mean(df%data(:,1))
+  ! mean of first variable (msl - mean sea level pressure)
+  print*, "mean: ", fsml_mean(df%data(:,1))
 
-  ! trend
-  print*, trim(df%col_nm(2)), " variance: ", fsml_var(df%data(:,2))
+  ! variance of second variable (t2m - 2m air temperature)
+  print*, "variance: ", fsml_var(df%data(:,2))
 
-  ! correlation
-  print*, trim(df%col_nm(1))," - ",trim(df%col_nm(2)), " correlation: "&
-       &, fsml_corr(df%data(:,1), df%data(:,2))
+  ! correlation of msl and t2m
+  print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
 end program main
