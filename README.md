@@ -72,7 +72,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
-| OLS Regression                | -       |
+| Multiple OLS Regression       | -       |
 | (LASSO Regression)            | -       |
 | (Ridge Regression)            | -       |
 | Pincipal Component Analysis   | -       |
@@ -94,7 +94,7 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 
 | Additional Functionality    | Covered |
 | --------------------------- | ------- |
-| Read from CSV file          | -       |
+| Read from CSV file          | ✓       |
 | Read from netCDF file       | -       |
 | Simple Fortran Dataframe    | ✓       |
 | Cross-Validation            | -       |
