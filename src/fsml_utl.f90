@@ -5,7 +5,7 @@ module fsml_utl
 ! |                                                                    |
 ! | about                                                              |
 ! | -----                                                              |
-! | Test application for fsml lib.                                     |
+! | Utilities module; includes io procedures.                          |
 ! |                                                                    |
 ! | license : MIT                                                      |
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
