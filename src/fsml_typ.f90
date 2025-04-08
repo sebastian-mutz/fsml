@@ -14,22 +14,22 @@ module fsml_typ
 ! FORD
 !! FSML kinds and derived types.
 
-! load modules
+  ! load modules
   use :: iso_fortran_env, only: int32, int64, real32, real64&
                             &, input_unit, output_unit, error_unit
 
-! basic options
+  ! basic options
   implicit none
   private
 
-! declare public
+  ! declare public
   public :: dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
   public :: fsml_typ_df
 
 ! ==== Declarations
 
-! define kinds (used consistently and explicitly in derived types and entire project)
+  ! define kinds (used consistently and explicitly in derived types and entire project)
   integer, parameter :: sp = real32 !! single precision
   integer, parameter :: dp = real64 !! double precision
   integer, parameter :: wp = sp     !! working precision
@@ -44,7 +44,7 @@ module fsml_typ
 
 ! ==== Definitions
 
-! simple dataframe
+  ! simple dataframe
   type :: fsml_typ_df
      !! Derived type for dataframe.
      integer(i4)                    :: id        !! ID/index for data frame

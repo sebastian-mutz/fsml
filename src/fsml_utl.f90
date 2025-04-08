@@ -36,9 +36,9 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
 ! ==== Declarations
   character(len=*) , intent(in)           :: infile      !! read csv file
   type(fsml_typ_df), intent(inout)        :: df          !! dataframe
-  logical          , intent(in), optional :: labelcol    !! true if first column contains row labels
-  logical          , intent(in), optional :: labelrow    !! true if first row contains column lavels
-  character(len=1) , intent(in), optional :: delimiter   !! single char delimiter
+  logical          , optional, intent(in) :: labelcol    !! true if first column contains row labels
+  logical          , optional, intent(in) :: labelrow    !! true if first row contains column lavels
+  character(len=1) , optional, intent(in) :: delimiter   !! single char delimiter
   logical                                 :: w_labelcol  !! final value of labelcol
   logical                                 :: w_labelrow  !! final value of labeleow
   character(len=1)                        :: w_delimiter !! final value of delimiter
@@ -51,47 +51,42 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
 
 ! ==== Instructions
 
+  write(std_o, *)
   write(std_o, '(a, a)') "Reading file: ", trim(infile)
 
 ! ---- handle optional arguments
 
-! is first column a list of labels
+  ! pass labelcol if present, otherwise set to true
   if (present(labelcol)) then
-     ! use passed value
      w_labelcol = labelcol
   else
-     ! use defaul value
-     w_labelcol = .true.
+     w_labelcol = .false.
   endif
 
-! is first row a list of labels
+  ! pass labelrow if present, otherwise set to true
   if (present(labelrow)) then
-     ! use passed value
      w_labelrow = labelrow
   else
-     ! use defaul value
-     w_labelrow = .true.
+     w_labelrow = .false.
   endif
 
-! is first row a list of labels
+  ! pass delimiter if present, otherwise set to comma
   if (present(delimiter)) then
-     ! use passed value
      w_delimiter = delimiter
   else
-     ! use defaul value
      w_delimiter = ","
   endif
 
 ! --- get dims
 
-! open existing file (check if there, stop in case of error)
+  ! open existing file (check if there, stop in case of error)
   open(unit=std_rw, file=infile, status="old", action="read", iostat=ios)
   if (ios .ne. 0) then
     write(std_o,*) "Error opening file:", infile
     stop
   endif
 
-! get number of rows
+  ! get number of rows
   nrow = 0
   do
     read(std_rw, '(a)', iostat=ios) line
@@ -99,7 +94,7 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
     if (len_trim(line) .gt. 0) nrow = nrow + 1
   enddo
 
-! get number of columns
+  ! get number of columns
   rewind(std_rw)
   read(std_rw, '(a)') line
   ncol = 1
@@ -107,110 +102,106 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
      if (line(i:i) .eq. w_delimiter) ncol = ncol + 1
   enddo
 
-! summary
-  write(std_o, '(a18,i5)') "number of rows:   ", nrow
-  write(std_o, '(a18,i5)') "number of columns:", ncol
-  write(std_o, *)
-
 ! --- allocate
 
-! column and row ids and names
-  allocate(df%row_id(nrow))
-  allocate(df%row_nm(nrow))
-  allocate(df%col_id(ncol))
-  allocate(df%col_nm(ncol))
+  ! number of actual cells in file
   allocate(cells(ncol))
 
-! update row number for data only
-  if (w_labelrow) then
-     i = nrow - 1
-  else
-     i = nrow
-  endif
+  ! update row number for data if labelrow
+  i = merge(nrow - 1, nrow, w_labelrow)
 
-! update column number for data only
-  if (w_labelcol) then
-     j = ncol - 1
-  else
-     j = ncol
-  endif
+  ! update column number for data if labelcol
+  j = merge(ncol - 1, ncol, w_labelcol)
 
-! data matrix dimensions
+  ! column and row ids and names
+  allocate(df%row_id(i))
+  allocate(df%row_nm(i))
+  allocate(df%col_id(j))
+  allocate(df%col_nm(j))
+
+  ! data matrix dimensions
   allocate(df%data(i,j))
 
-! default values
-  df%id        = 0
-  df%nm        = "no_name"
-  df%row_id(:) = 0
+  ! default values
+  df%id = 0
+  df%nm = "no_name"
   df%row_nm(:) = "no_name"
-  df%col_id(:) = 0
   df%col_nm(:) = "no_name"
   df%data(:,:) = 0.0_wp
+  do k = 1, i
+     df%row_id(k) = k
+  enddo
+  do k = 1, j
+     df%col_id(k) = k
+  enddo
 
 ! ---- read data into dataframe
 
   rewind(std_rw)
-  ! loop through rows
-  do i = 1, 1!nrow
+
+  ! read column names if there is a row of labels
+  if (w_labelrow) then
      ! read entire line
      read(std_rw, '(a)') line
      ! split line up into cells
      call split_line(trim(line), w_delimiter, ncol, cells)
-     print*, cells(:)
-     ! pass cell contents to dataframe
+     ! pass cell values to dataframe
+     if (w_labelcol) then
+        df%col_nm(:) = cells(2:ncol)
+     else
+        df%col_nm(:) = cells(:)
+     endif
+  endif
 
-  enddo
+  ! determine starting row for data
+  k = merge(2, 1, w_labelrow)
 
-!   if (labelrow) then
-!
-!   if (labelcol) then
-!      do j = 1, ncol
-!         df%col_nm(j) = cell(j)
-!      enddo
-!      do i = 1, nrow
-!         df%row_nm(i) = cell(1)
-!         do j = 2, ncol
-!            df%data(i,j) = cell(j)
-!         enddo
-!      enddo
-!   else
-!      do j = 1, ncol
-!         df%col_nm(j) = cell(j)
-!      enddo
-!      do i = 2, nrow
-!         do j = 1, ncol
-!            df%data(i,j) = cell(j)
-!         enddo
-!      enddo
-!   endif
-!
-!
-!   else
-!
-!   if (labelcol) then
-!      do i = 1, nrow
-!         df%row_nm(i) = cell(1)
-!         do j = 2, ncol
-!            df%data(i,j) = cell(j)
-!         enddo
-!      enddo
-!   else
-!      do i = 1, nrow
-!         do j = 1, ncol
-!            df%data(i,j) = cell(j)
-!         enddo
-!      enddo
-!   endif
-!
-!   endif
+  ! determine index correction for data
+  p = merge(1, 0, w_labelrow)
 
+  if (w_labelcol) then
+     do i = k, nrow
+        ! read entire line
+        read(std_rw, '(a)') line
+        ! split line up into cells
+        call split_line(trim(line), w_delimiter, ncol, cells)
+        ! pass cell values label column
+        df%row_nm(i-p) = cells(1)
+        ! pass cell values to data matrix
+        do j = 2, ncol
+           df%data(i-p,j-1) = s2r(cells(j))
+        enddo
+     enddo
+  else
+     do i = k, nrow
+        ! read entire line
+        read(std_rw, '(a)') line
+        ! split line up into cells
+        call split_line(trim(line), w_delimiter, ncol, cells)
+        ! pass cell values to data matrix
+        do j = 1, ncol
+           df%data(i-p,j) = s2r(cells(j))
+        enddo
+     enddo
+  endif
+
+! ---- finish
+
+  ! close file
   close(std_rw)
 
-
+  ! deallocate
   deallocate(cells)
 
+  ! summary
+  write(std_o, '(a18,i5)') "number of rows:   ", nrow
+  write(std_o, '(a18,i5)') "number of columns:", ncol
+  write(std_o, *)
+
+! ---- conatined procedures
   contains
-     subroutine split_line(line, delimiter, ncol, cells)
+
+  subroutine split_line(line, delimiter, ncol, cells)
      !! Splits passed line up into cells by delimiter.
      character(len=*) , intent(in)    :: line        !! row read into line string
      character(len=1) , intent(in)    :: delimiter   !! single char delimiter
@@ -232,7 +223,14 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
            if (j .eq. ncol) cells(j) = line(p:len_trim(line))
         endif
      enddo
-     end subroutine split_line
+  end subroutine split_line
+
+  pure function s2r(s) result(r)
+     !! Converts string to real.
+     character(len=*), intent(in) :: s
+     real(wp)                     :: r
+     read(s, *) r
+  end function
 
 end subroutine s_utl_readcsv
 

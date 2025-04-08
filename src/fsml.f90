@@ -14,17 +14,17 @@ module fsml
 ! FORD
 !! FSML module.
 
-! load modules
+  ! load modules
   use :: fsml_typ
   use :: fsml_sts
   use :: fsml_utl
 
-! basic options
+  ! basic options
   implicit none
   private
 
-! declare public procedures
-  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_trend, fsml_corr
+  ! declare public procedures
+  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
   public :: fsml_readcsv
   public :: fsml_typ_df
 
@@ -54,8 +54,8 @@ interface fsml_cov
 end interface
 
 ! linear trend (regression coefficient)
-interface fsml_trend
-  module procedure f_sts_trend
+interface fsml_reg
+  module procedure f_sts_reg
 end interface
 
 ! Pearson correlation coefficient
