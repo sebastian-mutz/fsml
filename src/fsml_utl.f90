@@ -12,7 +12,7 @@ module fsml_utl
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Module for basic statistics.
+!! Utilities module; includes io procedures.
 
 ! load modules
   use :: fsml_typ
