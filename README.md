@@ -34,6 +34,7 @@ The example below loads data from a CSV file directly into a simple Fortran data
 ```fortran
 program fortran_statistics
   use fsml
+  use iso_fortran_env, dp => real64
   implicit none
 
   type(fsml_typ_df)  :: df
