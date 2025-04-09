@@ -23,7 +23,7 @@ FSML is a scientific toolkit consisting of common statistical and machine learni
 
  - Commons statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
- - Compromise between performance and readability (=> more suitable for demonstration, teaching, and tinkering).
+ - Compromise between performance and readability (also suitable for demonstration, teaching, and tinkering).
  - Minimal requirements/dependencies (Fortran 2008 or later, [Fortran-lang stdlib](https://github.com/fortran-lang/stdlib)).
 
 
