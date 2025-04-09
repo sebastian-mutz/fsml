@@ -17,7 +17,14 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 ![logo](assets/logo/FSML_small.png)
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (mean, variance, correlation, variance, standard deviation), common statistical tests (t-test, ANOVA, Kruskal-Wallis, Kolmogorov-Smirnov), linear parametric methods and models (principal component analysis, discriminant analysis, multiple ordinary least squares regression, LASSO and ridge regression, and Bayesian classifier), and non-linear statistical and machine learning procedures (k-means clustering, hierarchical clustering, random forests), as well as Bayesian classifiers. The implementation is a compromise between speed and readability, and it only uses an external library for linear algebra and netCDF support (optional).
+FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Kolmogorov-Smirnov), linear parametric methods and models (e.g., principal component analysis, discriminant analysis, Bayesian classifier), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+
+**Key features:**
+
+ - Commons statistics and machine learning techniques (as used in modern research).
+ - Familiar/intuitive interface (similarities to popular Python or R libs).
+ - Compromise between performance and readability (=> more suitable for demonstration, teaching, and tinkering).
+ - Minimal requirements/dependencies (Fortran 2008 or later, [Fortran-lang stdlib](https://github.com/fortran-lang/stdlib)).
 
 
 ## <span style="color:#734f96">Example</span>
@@ -46,6 +53,12 @@ program fortran_statistics
   ! correlation of msl and t2m
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
+  ! normal pdf (x=0.8)
+  print*, fsml_pdf_norm(0.8_dp)
+
+  ! 2-tailed p-value for normal distribution at x=1 standard dev
+  print*, fsml_cdf_norm(1.0_dp)
+
 end program fortran_statistics
 ```
 
@@ -73,6 +86,10 @@ This stage is reached once:
 
 ### <span style="color:#734f96">Progress</span>
 
+> [!IMPORTANT]
+> Uses real64 double precision by default; currently limited to it, as stdlib Gauss-Legendre quadrature currently only supports this type.
+>
+
 #### Basic Statistics
 
 Basic Statistics (descriptive measures for understanding data).
@@ -85,6 +102,15 @@ Basic Statistics (descriptive measures for understanding data).
 | Covariance             | ✓       |
 | Regression             | ✓       |
 | Correlation            | ✓       |
+
+| Distribution Functions | Covered |
+| ---------------------- | ------- |
+| Normal PDF             | ✓       |
+| Normal CDF             | 2-tailed|
+| Normal PPF             | -       |
+| Student T PDF          | ✓       |
+| Student T CDF          | -       |
+| Student T PPF          | -       |
 
 #### Hypothesis Testing
 

@@ -11,13 +11,14 @@ program main
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
-  use fsml
+  use :: fsml
+  use :: iso_fortran_env, dp => real64
+
   implicit none
 
   type(fsml_typ_df)  :: df
   character(len=128) :: infile
   integer            :: i
-  real               :: r
 
   infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
 
@@ -38,5 +39,11 @@ program main
 
   ! correlation of msl and t2m
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
+
+  ! normal pdf (x=0.8)
+  print*, fsml_pdf_norm(0.8_dp)
+
+  ! 2-tailed p-value for normal distribution at x=1 standard dev
+  print*, fsml_cdf_norm(1.0_dp)
 
 end program main

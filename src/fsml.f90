@@ -17,6 +17,7 @@ module fsml
   ! load modules
   use :: fsml_typ
   use :: fsml_sts
+  use :: fsml_dst
   use :: fsml_utl
 
   ! basic options
@@ -25,6 +26,7 @@ module fsml
 
   ! declare public procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
+  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_pdf_t
   public :: fsml_readcsv
   public :: fsml_typ_df
 
@@ -61,6 +63,23 @@ end interface
 ! Pearson correlation coefficient
 interface fsml_corr
   module procedure f_sts_corr
+end interface
+
+! ---- Statistical Distributions
+
+! normal distribution pdf
+interface fsml_pdf_norm
+  module procedure f_dst_pdf_norm
+end interface
+
+! normal distribution cdf
+interface fsml_cdf_norm
+  module procedure f_dst_cdf_norm
+end interface
+
+! student t distribution pdf
+interface fsml_pdf_t
+  module procedure f_dst_pdf_t
 end interface
 
 ! ---- Utilities

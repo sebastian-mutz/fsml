@@ -32,7 +32,7 @@ module fsml_typ
   ! define kinds (used consistently and explicitly in derived types and entire project)
   integer, parameter :: sp = real32 !! single precision
   integer, parameter :: dp = real64 !! double precision
-  integer, parameter :: wp = sp     !! working precision
+  integer, parameter :: wp = dp     !! working precision
   integer, parameter :: i4 = int32
   integer, parameter :: i8 = int64
 
