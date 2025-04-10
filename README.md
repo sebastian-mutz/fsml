@@ -21,10 +21,10 @@ FSML is a scientific toolkit consisting of common statistical and machine learni
 
 **Key features:**
 
- - Commons statistics and machine learning techniques (as used in modern research).
+ - Common statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
  - Compromise between performance and readability (also suitable for demonstration, teaching, and tinkering).
- - Minimal requirements/dependencies (Fortran 2008 or later, [Fortran-lang stdlib](https://github.com/fortran-lang/stdlib)).
+ - Minimal requirements/dependencies (uses instrinsic functions; Fortran 2008 or later).
 
 
 ## <span style="color:#734f96">Example</span>
@@ -88,7 +88,7 @@ This stage is reached once:
 ### <span style="color:#734f96">Progress</span>
 
 > [!IMPORTANT]
-> Uses real64 double precision by default; currently limited to it, as stdlib Gauss-Legendre quadrature currently only supports this type.
+> Uses double precision (real64) by default, but can be switched project-wide by changing working precision (wp) in the fsml_typ module.
 >
 
 #### Basic Statistics
@@ -107,7 +107,7 @@ Basic Statistics (descriptive measures for understanding data).
 | Distribution Functions | Covered |
 | ---------------------- | ------- |
 | Normal PDF             | ✓       |
-| Normal CDF             | 2-tailed|
+| Normal CDF             | ✓       |
 | Normal PPF             | -       |
 | Student T PDF          | ✓       |
 | Student T CDF          | -       |
