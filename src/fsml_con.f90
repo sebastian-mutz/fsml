@@ -26,6 +26,5 @@ module fsml_con
 
 ! constants
   real(wp)   , parameter :: c_pi = 3.141592653589793_wp  !! pi
-  integer(i4), parameter :: c_qn = 50                    !! number of nodes for quadrature
 
 end module fsml_con

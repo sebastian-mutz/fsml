@@ -1,7 +1,7 @@
 # <span style="color:#734f96">FSML - Fortran Statistics and Machine Learning Library</span>
 
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-![0%](https://progress-bar.xyz/0?title=Alpha)
+![5%](https://progress-bar.xyz/5?title=Alpha)
 
 > [!IMPORTANT]
 > FSML is in a pre-alpha state, and only suitable for developers at this point.
@@ -24,7 +24,7 @@ FSML is a scientific toolkit consisting of common statistical and machine learni
  - Common statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
  - Compromise between performance and readability (also suitable for demonstration, teaching, and tinkering).
- - Minimal requirements/dependencies (uses instrinsic functions; Fortran 2008 or later).
+ - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
 
 ## <span style="color:#734f96">Example</span>
