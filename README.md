@@ -57,8 +57,8 @@ program fortran_statistics
   ! normal pdf (x=0.8)
   print*, fsml_pdf_norm(0.8_dp)
 
-  ! 2-tailed p-value for normal distribution at x=1 standard dev
-  print*, fsml_cdf_norm(1.0_dp)
+  ! left-tailed p-value for normal distribution with specified mean and standard deviation
+  print*, fsml_cdf_norm(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
 end program fortran_statistics
 ```
