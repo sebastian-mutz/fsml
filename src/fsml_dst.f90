@@ -170,7 +170,7 @@ pure function f_dst_cdf_norm(x, mu, sigma, tail) result(p)
         elseif (x .le. w_mu) then
            p = 2.0_wp * p
         endif
-     ! confidence level
+     ! confidence interval
      case("confidence")
         if (x .gt. w_mu) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
