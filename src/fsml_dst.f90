@@ -275,8 +275,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
    end select
 
   contains
-
-  !! NOTE: beta_inc and beta_cf algorithms are thrown together based on public domain Fortran and C code and numerical recipes, and modified to use 2008+ intrinsics. May be improved.
+  ! NOTE: beta_inc and beta_cf algorithms are based on several public domain Fortran and C code, Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
 
      ! --------------------------------------------------------------- !
      pure function beta_inc(x, a, b) result(betai)
@@ -308,9 +307,11 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
 
      ! compute log(beta(a, b)) for numerical stability
      lnbeta = log_gamma(a) + log_gamma(b) - log_gamma(a + b)
+
+     ! avoid problems from large a/b
      bt = exp(a * log(x) + b * log(1.0_wp - x) - lnbeta)
 
-     ! use symmetry transformation if x > (a+1)/(a+b+2)
+     ! switch x with 1-x for num. stability if x > (a+1)/(a+b+2)
      if (x .lt. (a + 1.0_wp) / (a + b + 2.0_wp)) then
        cf = beta_cf(x, a, b)
        betai = bt * cf / a
