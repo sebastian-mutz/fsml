@@ -60,6 +60,9 @@ program fortran_statistics
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
   print*, fsml_cdf_norm(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
+  ! left-tailed p-value for t distribution with t=1.5 and 15 degrees of freedom
+  print*, fsml_cdf_t(1.5_dp, df=15, tail="left")
+
 end program fortran_statistics
 ```
 

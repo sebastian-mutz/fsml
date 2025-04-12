@@ -26,7 +26,7 @@ module fsml
 
   ! declare public procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
-  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_pdf_t
+  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_pdf_t, fsml_cdf_t
   public :: fsml_readcsv
   public :: fsml_typ_df
 
@@ -80,6 +80,11 @@ end interface
 ! student t distribution pdf
 interface fsml_pdf_t
   module procedure f_dst_pdf_t
+end interface
+
+! student t distribution cdf
+interface fsml_cdf_t
+  module procedure f_dst_cdf_t
 end interface
 
 ! ---- Utilities

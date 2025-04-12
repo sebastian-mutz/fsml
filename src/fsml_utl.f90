@@ -201,13 +201,20 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
 ! ---- conatined procedures
   contains
 
-  subroutine split_line(line, delimiter, ncol, cells)
+     ! --------------------------------------------------------------- !
+     subroutine split_line(line, delimiter, ncol, cells)
+
+     ! ==== Description
      !! Splits passed line up into cells by delimiter.
+
+     ! ==== Declarations
      character(len=*) , intent(in)    :: line        !! row read into line string
      character(len=1) , intent(in)    :: delimiter   !! single char delimiter
      integer(i4)      , intent(in)    :: ncol        !! number of columns
      character(len=64), intent(inout) :: cells(ncol) !! cells between delimiter (in line)
      integer(i4)                      :: i, j, k, p
+
+     ! ==== Instructions
      ! reset initial cell position (p) and column number (j)
      p = 1
      j = 1
@@ -223,14 +230,23 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
            if (j .eq. ncol) cells(j) = line(p:len_trim(line))
         endif
      enddo
-  end subroutine split_line
 
-  pure function s2r(s) result(r)
+     end subroutine split_line
+
+     ! --------------------------------------------------------------- !
+     pure function s2r(s) result(r)
+
+     ! ==== Description
      !! Converts string to real.
+
+     ! ==== Declarations
      character(len=*), intent(in) :: s
      real(wp)                     :: r
+
+     ! ==== Instructions
      read(s, *) r
-  end function
+
+     end function
 
 end subroutine s_utl_readcsv
 
