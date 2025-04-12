@@ -112,9 +112,9 @@ Basic Statistics (descriptive measures for understanding data).
 | Normal PDF             | ✓       |
 | Normal CDF             | ✓       |
 | Normal PPF             | -       |
-| Student T PDF          | ✓       |
-| Student T CDF          | ✓       |
-| Student T PPF          | -       |
+| T PDF                  | ✓       |
+| T CDF                  | ✓       |
+| T PPF                  | -       |
 
 #### Hypothesis Testing
 

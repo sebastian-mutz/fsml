@@ -335,7 +335,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
      real(wp)               :: cf                 !! continued fraction
      real(wp)               :: c, d
      real(wp)               :: aa, del, qab, qam, qap
-     real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold ( how close to 1 the fractional delta must be to stop iterating)
+     real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
      integer(i4), parameter :: max_i = 200        !! max. iteration numbers
      integer(i4)            :: m
@@ -374,6 +374,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
         del = d * c
         cf = cf * del
 
+        ! check if fractional delta against convergence threshold
         if (abs(del - 1.0_wp) .lt. eps) exit
      enddo
 
