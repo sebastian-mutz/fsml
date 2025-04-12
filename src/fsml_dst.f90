@@ -338,7 +338,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
      real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
      integer(i4), parameter :: max_i = 200        !! max. iteration numbers
-     integer(i4)            :: m
+     integer(i4)            :: i
 
      ! ==== Instructions
 
@@ -354,9 +354,9 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
      cf = d
 
      ! iterative approx.
-     do m = 1, max_i
+     do i = 1, max_i
         ! even term
-        aa = m * (b - m) * x / ((qam + 2.0_wp * m) * (a + 2.0_wp * m))
+        aa = i * (b - i) * x / ((qam + 2.0_wp * i) * (a + 2.0_wp * i))
         d = 1.0_wp + aa * d
         if (abs(d) .lt. fpmin) d = fpmin
         c = 1.0_wp + aa / c
@@ -365,7 +365,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
         cf = cf * d * c
 
         ! odd term
-        aa = -(a + m) * (qab + m) * x / ((a + 2.0_wp * m) * (qap + 2.0_wp * m))
+        aa = -(a + i) * (qab + i) * x / ((a + 2.0_wp * i) * (qap + 2.0_wp * i))
         d = 1.0_wp + aa * d
         if (abs(d) .lt. fpmin) d = fpmin
         c = 1.0_wp + aa / c
