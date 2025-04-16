@@ -42,8 +42,7 @@ program fortran_statistics
 
   infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
 
-  ! read data directly into dataframe
-  call fsml_readcsv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
+  call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
 
   ! mean of first variable (msl - mean sea level pressure)
   print*, "mean: ", fsml_mean(df%data(:,1))
@@ -55,13 +54,13 @@ program fortran_statistics
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
   ! normal pdf (x=0.8)
-  print*, fsml_pdf_norm(0.8_dp)
+  print*, fsml_norm_pdf(0.8_dp)
 
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
-  print*, fsml_cdf_norm(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
+  print*, fsml_norm_cdf(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
-  ! left-tailed p-value for t distribution with t=1.5 and 15 degrees of freedom
-  print*, fsml_cdf_t(1.5_dp, df=15, tail="left")
+  ! left-tailed p-value for t distribution with specified degrees of freedom
+  print*, fsml_t_ppf(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
 
 end program fortran_statistics
 ```
@@ -107,14 +106,19 @@ Basic Statistics (descriptive measures for understanding data).
 | Regression             | ✓       |
 | Correlation            | ✓       |
 
-| Distribution Functions | Covered |
+#### Distributions and Functions
+
+Each distribution comes with procedures for the following functions: Probability Density Function (PDF), Cumulative Distribution Function (CDF), and Percent Point Function (PPF).
+
+| Distributions          | Covered |
 | ---------------------- | ------- |
-| Normal PDF             | ✓       |
-| Normal CDF             | ✓       |
-| Normal PPF             | ✓       |
-| T PDF                  | ✓       |
-| T CDF                  | ✓       |
-| T PPF                  | ✓       |
+| Normal                 | ✓       |
+| T                      | ✓       |
+| (Gamma)                | -       |
+| Exponential            | -       |
+| (Generalised Pareto)   | -       |
+| Chi-Squared            | -       |
+
 
 #### Hypothesis Testing
 

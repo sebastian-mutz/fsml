@@ -26,8 +26,8 @@ module fsml
 
   ! declare public procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
-  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_ppf_norm
-  public :: fsml_pdf_t, fsml_cdf_t, fsml_ppf_t
+  public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
+  public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
   public :: fsml_read_csv
   public :: fsml_typ_df
 
@@ -69,33 +69,33 @@ end interface
 ! ---- Statistical Distributions
 
 ! normal distribution pdf
-interface fsml_pdf_norm
-  module procedure f_dst_pdf_norm
+interface fsml_norm_pdf
+  module procedure f_dst_norm_pdf
 end interface
 
 ! normal distribution cdf
-interface fsml_cdf_norm
-  module procedure f_dst_cdf_norm
+interface fsml_norm_cdf
+  module procedure f_dst_norm_cdf
 end interface
 
 ! normal distribution ppf
-interface fsml_ppf_norm
-  module procedure f_dst_ppf_norm
+interface fsml_norm_ppf
+  module procedure f_dst_norm_ppf
 end interface
 
 ! student t distribution pdf
-interface fsml_pdf_t
-  module procedure f_dst_pdf_t
+interface fsml_t_pdf
+  module procedure f_dst_t_pdf
 end interface
 
 ! student t distribution cdf
-interface fsml_cdf_t
-  module procedure f_dst_cdf_t
+interface fsml_t_cdf
+  module procedure f_dst_t_cdf
 end interface
 
 ! student t distribution ppf
-interface fsml_ppf_t
-  module procedure f_dst_ppf_t
+interface fsml_t_ppf
+  module procedure f_dst_t_ppf
 end interface
 
 ! ---- Utilities

@@ -42,12 +42,12 @@ program main
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
   ! normal pdf (x=0.8)
-  print*, fsml_pdf_norm(0.8_dp)
+  print*, fsml_norm_pdf(0.8_dp)
 
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
-  print*, fsml_cdf_norm(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
+  print*, fsml_norm_cdf(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
   ! left-tailed p-value for t distribution with specified degrees of freedom
-  print*, fsml_ppf_t(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
+  print*, fsml_t_ppf(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
 
 end program main

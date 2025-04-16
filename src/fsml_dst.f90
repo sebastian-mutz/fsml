@@ -23,17 +23,17 @@ module fsml_dst
   private
 
 ! declare public procedures
-  public :: f_dst_pdf_norm, f_dst_cdf_norm, f_dst_ppf_norm
-  public :: f_dst_pdf_t, f_dst_cdf_t, f_dst_ppf_t
+  public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
+  public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_pdf_norm(x, mu, sigma) result(fx)
+pure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
-!! Probability density function for for normal distribution.
+!! Probability density function for normal distribution.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -63,54 +63,12 @@ pure function f_dst_pdf_norm(x, mu, sigma) result(fx)
   fx = (1.0_wp / (w_sigma * sqrt(2.0_wp * c_pi))) * &
      & exp(-0.5_wp * ((x - w_mu) / w_sigma)**2.0_wp)
 
-end function f_dst_pdf_norm
+end function f_dst_norm_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_pdf_t(x, df, mu, sigma) result(fx)
-
-! ==== Description
-!! Probability density function for for student t distribution.
-!! Uses intrinsic gamma function (Fortran 2008 and later)
-
-! ==== Declarations
-  real(wp), intent(in)           :: x       !! sample position
-  real(wp), intent(in)           :: df      !! degrees of freedom
-  real(wp), intent(in), optional :: mu      !! distribution location (~mean)
-  real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
-  real(wp)                       :: w_mu    !! final value of mu
-  real(wp)                       :: w_sigma !! final value of sigma
-  real(wp)                       :: fx
-
-! ==== Instructions
-
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     w_mu = mu
-  else
-     w_mu = 0.0_wp
-  endif
-
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     w_sigma = sigma
-  else
-     w_sigma = 1.0_wp
-  endif
-
-  ! calculate probability/fx
-  fx = gamma((df + 1.0_wp) / 2.0_wp) / &
-     & (w_sigma * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
-     & (1.0_wp + ( ( (x - w_mu) / w_sigma )**2 ) / df)** &
-     & (-(df + 1.0_wp) / 2.0_wp)
-
-end function f_dst_pdf_t
-
-
-! ==================================================================== !
-! -------------------------------------------------------------------- !
-pure function f_dst_cdf_norm(x, mu, sigma, tail) result(p)
+pure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for normal distribution.
@@ -184,12 +142,124 @@ pure function f_dst_cdf_norm(x, mu, sigma, tail) result(p)
         endif
    end select
 
-end function f_dst_cdf_norm
+end function f_dst_norm_cdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
+pure function f_dst_norm_ppf(p, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function(PPF) (quantile function or inverse CDF) for normal distribution.
+!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+
+! ==== Declarations
+  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
+  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
+  real(wp)                          :: w_mu             !! final value of mu
+  real(wp)                          :: w_sigma          !! final value of sigma
+  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
+  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                          :: a, b             !! section bounds for bisection algorithm
+  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)                       :: i                !! for iteration
+  real(wp)                          :: x                !! sample position
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute inverse CDF
+
+  ! set initial section
+  a = -20.0_wp
+  b = 20.0_wp
+
+  ! iteratively refine with bisection method
+  do i = 1, i_max
+     x_mid = 0.5_wp * (a + b)
+     ! difference between passed p and new mid point p
+     p_mid = f_dst_norm_cdf(x_mid, tail="left") - p
+     ! check if difference is acceptable, update section if not
+     if (abs(p_mid) .lt. tol) then
+        ! pass final x value and adjust for mu and sigma
+        x = w_mu + w_sigma * x_mid
+        return
+     elseif (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     endif
+  enddo
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
+
+end function f_dst_norm_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
+
+! ==== Description
+!! Probability density function for student t distribution.
+!! Uses intrinsic gamma function (Fortran 2008 and later)
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: df      !! degrees of freedom
+  real(wp), intent(in), optional :: mu      !! distribution location (~mean)
+  real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
+  real(wp)                       :: w_mu    !! final value of mu
+  real(wp)                       :: w_sigma !! final value of sigma
+  real(wp)                       :: fx
+
+! ==== Instructions
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+  ! calculate probability/fx
+  fx = gamma((df + 1.0_wp) / 2.0_wp) / &
+     & (w_sigma * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
+     & (1.0_wp + ( ( (x - w_mu) / w_sigma )**2 ) / df)** &
+     & (-(df + 1.0_wp) / 2.0_wp)
+
+end function f_dst_t_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for student t distribution.
@@ -338,7 +408,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
      real(wp)               :: aa, del, qab, qam, qap
      real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
-     integer(i4), parameter :: max_i = 200        !! max. iteration numbers
+     integer(i4), parameter :: i_max = 200        !! max. iteration numbers
      integer(i4)            :: i
 
      ! ==== Instructions
@@ -355,7 +425,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
      cf = d
 
      ! iterative approx.
-     do i = 1, max_i
+     do i = 1, i_max
         ! even term
         aa = i * (b - i) * x / ((qam + 2.0_wp * i) * (a + 2.0_wp * i))
         d = 1.0_wp + aa * d
@@ -381,84 +451,12 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
 
    end function beta_cf
 
-end function f_dst_cdf_t
+end function f_dst_t_cdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_ppf_norm(p, mu, sigma) result(x)
-
-! ==== Description
-!! Percent point function(PPF) (quantile function or inverse CDF) for normal distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
-!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
-!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
-
-! ==== Declarations
-  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
-  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
-  real(wp)                          :: w_mu             !! final value of mu
-  real(wp)                          :: w_sigma          !! final value of sigma
-  integer(i4), parameter            :: max_i = 200      !! max. iteration numbers
-  real(wp)   , parameter            :: x_min = -20.0_wp !! min x
-  real(wp)   , parameter            :: x_max = 20.0_wp  !! max x
-  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                          :: a, b             !! section bounds for bisection algorithm
-  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)                       :: i                !! for iteration
-  real(wp)                          :: x                !! sample position
-
-! ==== Instructions
-
-! ---- handle input
-
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     w_mu = mu
-  else
-     w_mu = 0.0_wp
-  endif
-
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     w_sigma = sigma
-  else
-     w_sigma = 1.0_wp
-  endif
-
-! ---- compute inverse CDF
-
-  ! set initial section
-  a = x_min
-  b = x_max
-
-  ! iteratively refine with bisection method
-  do i = 1, max_i
-     x_mid = 0.5_wp * (a + b)
-     ! difference between passed p and new mid point p
-     p_mid = f_dst_cdf_norm(x_mid, tail="left") - p
-     ! check if difference is acceptable, update section if not
-     if (abs(p_mid) .lt. tol) then
-        ! pass final x value and adjust for mu and sigma
-        x = w_mu + w_sigma * x_mid
-        return
-     elseif (p_mid .lt. 0.0_wp) then
-        a = x_mid
-     else
-        b = x_mid
-     endif
-  enddo
-
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. max_i) x = 0.0_wp
-
-end function f_dst_ppf_norm
-
-
-! ==================================================================== !
-! -------------------------------------------------------------------- !
-pure function f_dst_ppf_t(p, df, mu, sigma) result(x)
+pure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Description
 !! Percent point function(PPF) (quantile function or inverse CDF) for t distribution.
@@ -473,9 +471,7 @@ pure function f_dst_ppf_t(p, df, mu, sigma) result(x)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: w_mu             !! final value of mu
   real(wp)                          :: w_sigma          !! final value of sigma
-  integer(i4), parameter            :: max_i = 200      !! max. iteration numbers
-  real(wp)   , parameter            :: x_min = -20.0_wp !! min x
-  real(wp)   , parameter            :: x_max = 20.0_wp  !! max x
+  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
   real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
@@ -502,15 +498,15 @@ pure function f_dst_ppf_t(p, df, mu, sigma) result(x)
 
 ! ---- compute inverse CDF
 
-  ! set initial section
-  a = x_min
-  b = x_max
+  ! set initial section bounds
+  a = -20.0_wp
+  b = 20.0_wp
 
   ! iteratively refine with bisection method
-  do i = 1, max_i
+  do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_cdf_t(x_mid, df, tail="left") - p
+     p_mid = f_dst_t_cdf(x_mid, df, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value and adjust for mu and sigma
@@ -524,8 +520,138 @@ pure function f_dst_ppf_t(p, df, mu, sigma) result(x)
   enddo
 
   ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. max_i) x = 0.0_wp
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
 
-end function f_dst_ppf_t
+end function f_dst_t_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_exp_pdf(x, lambda) result(fx)
+
+! ==== Description
+!! Probability density function for exponential distribution.
+!! Uses intrinsic exp function.
+! TODO: TEST
+! TODO: include location/mu as option, set default to 0
+! TODO: make lambda optional, set detault to 1
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: lambda  !! lambda parameter, beta(scale) = 1/lambda = mean
+  real(wp)             :: fx
+
+! ==== Instructions
+  if (x .lt. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     fx = lambda * exp(-lambda * x)
+  endif
+
+end function f_dst_exp_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_exp_cdf(x, lambda, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for exponential distribution.
+! TODO: TEST
+! TODO: include location/mu as option, set default to 0
+! TODO: make lambda optional, set detault to 1
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: x      !! sample position
+  real(wp)        , intent(in)           :: lambda !! parameter
+  character(len=*), intent(in), optional :: tail   !! tail options
+  character(len=16)                      :: w_tail !! final tail option
+  real(wp)                               :: p      !! returned probability integral
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume left-tailed if not specified
+  if (present(tail)) then
+     w_tail = tail
+  else
+     w_tail = "left"
+  endif
+
+! ---- compute CDF
+
+  ! compute integral (left tailed)
+  if (x .lt. 0.0_wp) then
+     p = 0.0_wp
+  else
+     p = 1.0_wp - exp(-lambda * x)
+  endif
+
+  ! tail options
+  select case(w_tail)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+   end select
+
+
+end function f_dst_exp_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_exp_ppf(p, lambda) result(x)
+
+! ==== Description
+!! Percent point function(PPF) (quantile function or inverse CDF) for exponential distribution.
+!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+! TODO: TEST
+! TODO: include location/mu as option, set default to 0
+! TODO: make lambda optional, set detault to 1
+
+! ==== Declarations
+  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: lambda           !! lambda parameter
+  integer(i4), parameter  :: i_max = 200      !! max. iteration numbers
+  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                :: a, b             !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                !! for iteration
+  real(wp)                :: x                !! sample position
+
+! ==== Instructions
+
+! ---- compute inverse CDF
+
+  ! set initial section (min possible approaches 0)
+  a = 0.0_wp
+  b = -log(1.0_wp - p) / lambda * 10.0_wp
+
+  ! iteratively refine with bisection method
+  do i = 1, i_max
+     x_mid = 0.5_wp * (a + b)
+     ! difference between passed p and new mid point p
+     p_mid = f_dst_exp_cdf(x_mid, lambda, tail="left") - p
+     ! check if difference is acceptable, update section if not
+     if (abs(p_mid) .lt. tol) then
+        ! pass final x value
+        x = x_mid  ! TODO: adjust for mu
+        return
+     elseif (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     endif
+  enddo
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
+
+end function f_dst_exp_ppf
+
 
 end module fsml_dst
