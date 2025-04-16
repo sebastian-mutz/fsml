@@ -19,10 +19,11 @@ program main
   type(fsml_typ_df)  :: df
   character(len=128) :: infile
   integer            :: i
+  real(dp)           :: r
 
   infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
 
-  call fsml_readcsv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
+  call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
 
   ! print column id and names
   print*, "dataframe columns"
@@ -47,6 +48,6 @@ program main
   print*, fsml_cdf_norm(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
   ! left-tailed p-value for t distribution with specified degrees of freedom
-  print*, fsml_cdf_t(1.5_dp, df=15, mu=0.0_dp, sigma=1.0_dp, tail="left")
+  print*, fsml_ppf_t(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
 
 end program main

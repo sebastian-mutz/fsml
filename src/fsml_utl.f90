@@ -22,13 +22,13 @@ module fsml_utl
   private
 
 ! declare public procedures
-  public :: s_utl_readcsv
+  public :: s_utl_read_csv
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
+subroutine s_utl_read_csv(infile, df, labelcol, labelrow, delimiter)
 
 ! ==== Description
 !! Read CSV file directly into dataframe.
@@ -246,9 +246,9 @@ subroutine s_utl_readcsv(infile, df, labelcol, labelrow, delimiter)
      ! ==== Instructions
      read(s, *) r
 
-     end function
+     end function s2r
 
-end subroutine s_utl_readcsv
+end subroutine s_utl_read_csv
 
 
 

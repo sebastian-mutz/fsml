@@ -26,8 +26,9 @@ module fsml
 
   ! declare public procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
-  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_pdf_t, fsml_cdf_t
-  public :: fsml_readcsv
+  public :: fsml_pdf_norm, fsml_cdf_norm, fsml_ppf_norm
+  public :: fsml_pdf_t, fsml_cdf_t, fsml_ppf_t
+  public :: fsml_read_csv
   public :: fsml_typ_df
 
 ! ==== Interfaces (API)
@@ -77,6 +78,11 @@ interface fsml_cdf_norm
   module procedure f_dst_cdf_norm
 end interface
 
+! normal distribution ppf
+interface fsml_ppf_norm
+  module procedure f_dst_ppf_norm
+end interface
+
 ! student t distribution pdf
 interface fsml_pdf_t
   module procedure f_dst_pdf_t
@@ -87,11 +93,16 @@ interface fsml_cdf_t
   module procedure f_dst_cdf_t
 end interface
 
+! student t distribution ppf
+interface fsml_ppf_t
+  module procedure f_dst_ppf_t
+end interface
+
 ! ---- Utilities
 
 ! read csv file into dataframe
-interface fsml_readcsv
-  module procedure s_utl_readcsv
+interface fsml_read_csv
+  module procedure s_utl_read_csv
 end interface
 
 end module fsml

@@ -23,7 +23,8 @@ module fsml_dst
   private
 
 ! declare public procedures
-  public :: f_dst_pdf_norm, f_dst_cdf_norm, f_dst_pdf_t, f_dst_cdf_t
+  public :: f_dst_pdf_norm, f_dst_cdf_norm, f_dst_ppf_norm
+  public :: f_dst_pdf_t, f_dst_cdf_t, f_dst_ppf_t
 
 contains
 
@@ -62,7 +63,7 @@ pure function f_dst_pdf_norm(x, mu, sigma) result(fx)
   fx = (1.0_wp / (w_sigma * sqrt(2.0_wp * c_pi))) * &
      & exp(-0.5_wp * ((x - w_mu) / w_sigma)**2.0_wp)
 
-end function
+end function f_dst_pdf_norm
 
 
 ! ==================================================================== !
@@ -104,7 +105,7 @@ pure function f_dst_pdf_t(x, df, mu, sigma) result(fx)
      & (1.0_wp + ( ( (x - w_mu) / w_sigma )**2 ) / df)** &
      & (-(df + 1.0_wp) / 2.0_wp)
 
-end function
+end function f_dst_pdf_t
 
 
 ! ==================================================================== !
@@ -183,7 +184,7 @@ pure function f_dst_cdf_norm(x, mu, sigma, tail) result(p)
         endif
    end select
 
-end function
+end function f_dst_cdf_norm
 
 
 ! ==================================================================== !
@@ -320,7 +321,7 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
        betai = 1.0_wp - bt * cf / b
      endif
 
-     end function
+     end function beta_inc
 
      ! --------------------------------------------------------------- !
      pure function beta_cf(x, a, b) result(cf)
@@ -378,8 +379,153 @@ pure function f_dst_cdf_t(t, df, mu, sigma, tail) result(p)
         if (abs(del - 1.0_wp) .lt. eps) exit
      enddo
 
-   end function
+   end function beta_cf
 
-end function
+end function f_dst_cdf_t
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_ppf_norm(p, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function(PPF) (quantile function or inverse CDF) for normal distribution.
+!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+
+! ==== Declarations
+  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
+  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
+  real(wp)                          :: w_mu             !! final value of mu
+  real(wp)                          :: w_sigma          !! final value of sigma
+  integer(i4), parameter            :: max_i = 200      !! max. iteration numbers
+  real(wp)   , parameter            :: x_min = -20.0_wp !! min x
+  real(wp)   , parameter            :: x_max = 20.0_wp  !! max x
+  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                          :: a, b             !! section bounds for bisection algorithm
+  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)                       :: i                !! for iteration
+  real(wp)                          :: x                !! sample position
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute inverse CDF
+
+  ! set initial section
+  a = x_min
+  b = x_max
+
+  ! iteratively refine with bisection method
+  do i = 1, max_i
+     x_mid = 0.5_wp * (a + b)
+     ! difference between passed p and new mid point p
+     p_mid = f_dst_cdf_norm(x_mid, tail="left") - p
+     ! check if difference is acceptable, update section if not
+     if (abs(p_mid) .lt. tol) then
+        ! pass final x value and adjust for mu and sigma
+        x = w_mu + w_sigma * x_mid
+        return
+     elseif (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     endif
+  enddo
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. max_i) x = 0.0_wp
+
+end function f_dst_ppf_norm
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_ppf_t(p, df, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function(PPF) (quantile function or inverse CDF) for t distribution.
+!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+
+! ==== Declarations
+  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
+  integer(i4), intent(in)           :: df               !! degrees of freedom
+  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
+  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
+  real(wp)                          :: w_mu             !! final value of mu
+  real(wp)                          :: w_sigma          !! final value of sigma
+  integer(i4), parameter            :: max_i = 200      !! max. iteration numbers
+  real(wp)   , parameter            :: x_min = -20.0_wp !! min x
+  real(wp)   , parameter            :: x_max = 20.0_wp  !! max x
+  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                          :: a, b             !! section bounds for bisection algorithm
+  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)                       :: i                !! for iteration
+  real(wp)                          :: x                !! sample position
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute inverse CDF
+
+  ! set initial section
+  a = x_min
+  b = x_max
+
+  ! iteratively refine with bisection method
+  do i = 1, max_i
+     x_mid = 0.5_wp * (a + b)
+     ! difference between passed p and new mid point p
+     p_mid = f_dst_cdf_t(x_mid, df, tail="left") - p
+     ! check if difference is acceptable, update section if not
+     if (abs(p_mid) .lt. tol) then
+        ! pass final x value and adjust for mu and sigma
+        x = w_mu + w_sigma * x_mid
+        return
+     elseif (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     endif
+  enddo
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. max_i) x = 0.0_wp
+
+end function f_dst_ppf_t
 
 end module fsml_dst
