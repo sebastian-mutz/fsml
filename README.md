@@ -110,7 +110,7 @@ Basic Statistics (descriptive measures for understanding data).
 
 Each distribution comes with procedures for the following functions: Probability Density Function (PDF), Cumulative Distribution Function (CDF), and Percent Point Function (PPF).
 
-| Distributions          | Covered |
+| Distributions (DST)    | Covered |
 | ---------------------- | ------- |
 | Normal                 | ✓       |
 | T                      | ✓       |
