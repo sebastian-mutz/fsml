@@ -50,4 +50,8 @@ program main
   ! left-tailed p-value for t distribution with specified degrees of freedom
   print*, fsml_t_ppf(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
 
+  ! left-tailed p-value for t distribution with specified degrees of freedom
+  print*, fsml_exp_ppf(0.9_dp, mu=0.5_dp, lambda=0.8_dp)
+
+
 end program main

@@ -28,6 +28,7 @@ module fsml
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
+  public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
   public :: fsml_read_csv
   public :: fsml_typ_df
 
@@ -96,6 +97,21 @@ end interface
 ! student t distribution ppf
 interface fsml_t_ppf
   module procedure f_dst_t_ppf
+end interface
+
+! student exponential distribution pdf
+interface fsml_exp_pdf
+  module procedure f_dst_exp_pdf
+end interface
+
+! student exponential distribution cdf
+interface fsml_exp_cdf
+  module procedure f_dst_exp_cdf
+end interface
+
+! student exponential distribution ppf
+interface fsml_exp_ppf
+  module procedure f_dst_exp_ppf
 end interface
 
 ! ---- Utilities

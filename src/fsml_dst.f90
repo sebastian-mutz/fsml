@@ -25,6 +25,7 @@ module fsml_dst
 ! declare public procedures
   public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
+  public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
 
 contains
 
@@ -45,6 +46,8 @@ pure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Instructions
 
+! ---- handle input
+
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
      w_mu = mu
@@ -58,6 +61,8 @@ pure function f_dst_norm_pdf(x, mu, sigma) result(fx)
   else
      w_sigma = 1.0_wp
   endif
+
+! ---- compute PDF
 
   ! calculate probability/fx
   fx = (1.0_wp / (w_sigma * sqrt(2.0_wp * c_pi))) * &
@@ -234,6 +239,8 @@ pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Instructions
 
+! ---- handle input
+
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
      w_mu = mu
@@ -247,6 +254,8 @@ pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   else
      w_sigma = 1.0_wp
   endif
+
+! ---- compute PDF
 
   ! calculate probability/fx
   fx = gamma((df + 1.0_wp) / 2.0_wp) / &
@@ -527,25 +536,47 @@ end function f_dst_t_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_pdf(x, lambda) result(fx)
+pure function f_dst_exp_pdf(x, mu, lambda) result(fx)
 
 ! ==== Description
 !! Probability density function for exponential distribution.
 !! Uses intrinsic exp function.
-! TODO: TEST
-! TODO: include location/mu as option, set default to 0
-! TODO: make lambda optional, set detault to 1
 
 ! ==== Declarations
-  real(wp), intent(in) :: x       !! sample position
-  real(wp), intent(in) :: lambda  !! lambda parameter, beta(scale) = 1/lambda = mean
-  real(wp)             :: fx
+  real(wp), intent(in)           :: x        !! sample position
+  real(wp), intent(in), optional :: mu       !! location/mus parameter
+  real(wp), intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mean
+  real(wp)                       :: w_mu     !! final value for mu
+  real(wp)                       :: w_lambda !! final value for lambda
+  real(wp)                       :: fx
 
 ! ==== Instructions
-  if (x .lt. 0.0_wp) then
+
+! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume lambda = 1 if not specified
+  if (present(lambda)) then
+     w_lambda = lambda
+  else
+     w_lambda = 1.0_wp
+  endif
+
+! ---- compute PDF
+
+  ! calculate probability/fx
+  if (x .lt. w_mu) then
+     fx = 0.0_wp
+  elseif (w_lambda .lt. 0.0_wp) then
      fx = 0.0_wp
   else
-     fx = lambda * exp(-lambda * x)
+     fx = w_lambda * exp( -w_lambda * (x - w_mu) )
   endif
 
 end function f_dst_exp_pdf
@@ -553,24 +584,38 @@ end function f_dst_exp_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_cdf(x, lambda, tail) result(p)
+pure function f_dst_exp_cdf(x, mu, lambda, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for exponential distribution.
-! TODO: TEST
-! TODO: include location/mu as option, set default to 0
-! TODO: make lambda optional, set detault to 1
 
 ! ==== Declarations
-  real(wp)        , intent(in)           :: x      !! sample position
-  real(wp)        , intent(in)           :: lambda !! parameter
-  character(len=*), intent(in), optional :: tail   !! tail options
-  character(len=16)                      :: w_tail !! final tail option
-  real(wp)                               :: p      !! returned probability integral
+  real(wp)        , intent(in)           :: x        !! sample position
+  real(wp)        , intent(in), optional :: mu       !! location/mus parameter
+  real(wp)        , intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mean
+  character(len=*), intent(in), optional :: tail     !! tail options
+  real(wp)                               :: w_mu     !! final value for mu
+  real(wp)                               :: w_lambda !! final value for lambda
+  character(len=16)                      :: w_tail   !! final tail option
+  real(wp)                               :: p        !! returned probability integral
 
 ! ==== Instructions
 
 ! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume lambda = 1 if not specified
+  if (present(lambda)) then
+     w_lambda = lambda
+  else
+     w_lambda = 1.0_wp
+  endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
@@ -582,10 +627,12 @@ pure function f_dst_exp_cdf(x, lambda, tail) result(p)
 ! ---- compute CDF
 
   ! compute integral (left tailed)
-  if (x .lt. 0.0_wp) then
+  if (x .lt. w_mu) then
+     p = 0.0_wp
+  elseif (w_lambda .lt. 0.0_wp) then
      p = 0.0_wp
   else
-     p = 1.0_wp - exp(-lambda * x)
+     p = 1.0_wp - exp( -lambda * (x - w_mu) )
   endif
 
   ! tail options
@@ -604,42 +651,58 @@ end function f_dst_exp_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_ppf(p, lambda) result(x)
+pure function f_dst_exp_ppf(p, mu, lambda) result(x)
 
 ! ==== Description
 !! Percent point function(PPF) (quantile function or inverse CDF) for exponential distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
-! TODO: TEST
-! TODO: include location/mu as option, set default to 0
-! TODO: make lambda optional, set detault to 1
 
 ! ==== Declarations
-  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in) :: lambda           !! lambda parameter
-  integer(i4), parameter  :: i_max = 200      !! max. iteration numbers
-  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                :: a, b             !! section bounds for bisection algorithm
-  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)             :: i                !! for iteration
-  real(wp)                :: x                !! sample position
+  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in), optional :: mu               !! location/mus parameter
+  real(wp)   , intent(in), optional :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mean
+  real(wp)                          :: w_mu             !! final value for mu
+  real(wp)                          :: w_lambda         !! final value for lambda
+  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
+  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                          :: a, b             !! section bounds for bisection algorithm
+  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)                       :: i                !! for iteration
+  real(wp)                          :: x                !! sample position
 
 ! ==== Instructions
+
+! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume lambda = 1 if not specified
+  if (present(lambda)) then
+     w_lambda = lambda
+  else
+     w_lambda = 1.0_wp
+  endif
 
 ! ---- compute inverse CDF
 
   ! set initial section (min possible approaches 0)
-  a = 0.0_wp
-  b = -log(1.0_wp - p) / lambda * 10.0_wp
+  a = w_mu
+  b = w_mu - log(1.0_wp - p) / w_lambda * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_exp_cdf(x_mid, lambda, tail="left") - p
+     p_mid = f_dst_exp_cdf(x_mid, w_mu, w_lambda, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
-        x = x_mid  ! TODO: adjust for mu
+        x = x_mid
         return
      elseif (p_mid .lt. 0.0_wp) then
         a = x_mid
