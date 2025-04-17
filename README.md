@@ -114,11 +114,10 @@ Each distribution comes with procedures for the following functions: Probability
 | ---------------------- | ------- |
 | Normal                 | ✓       |
 | T                      | ✓       |
-| (Gamma)                | -       |
-| Exponential            | -       |
-| (Generalised Pareto)   | -       |
+| Exponential            | ✓       |
 | Chi-Squared            | -       |
-
+| (Gamma)                | -       |
+| (Generalised Pareto)   | -       |
 
 #### Hypothesis Testing
 
@@ -138,11 +137,11 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
 | Multiple OLS Regression       | -       |
-| (LASSO Regression)            | -       |
-| (Ridge Regression)            | -       |
 | Pincipal Component Analysis   | -       |
 | Discriminant Analysis (LDA)   | -       |
 | Bayesian Classification       | -       |
+| (LASSO Regression)            | -       |
+| (Ridge Regression)            | -       |
 
 #### Non-Linear Models (NLM)
 
@@ -150,9 +149,9 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 
 | Non-Linear Models (NLM)     | Covered |
 | --------------------------- | ------- |
-| (Random Forests Regression) | -       |
 | Hierarchical Clustering     | -       |
 | K-Means Clustering          | -       |
+| (Random Forests Regression) | -       |
 | (Simple Neural Networks)    | -       |
 
 #### Additional Functionality
