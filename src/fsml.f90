@@ -5,14 +5,14 @@ module fsml
 ! |                                                                    |
 ! | about                                                              |
 ! | -----                                                              |
-! | Main module.                                                       |
+! | Main module; provides interfaces.                                  |
 ! |                                                                    |
 ! | license : MIT                                                      |
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! FSML module.
+!! FSML interface module.
 
   ! load modules
   use :: fsml_typ
@@ -24,12 +24,16 @@ module fsml
   implicit none
   private
 
-  ! declare public procedures
+  ! declare public statistics procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
+  ! declare public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
   public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
+  public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
+  ! declare public utility procedures
   public :: fsml_read_csv
+  ! declare public derived types
   public :: fsml_typ_df
 
 ! ==== Interfaces (API)
@@ -84,34 +88,49 @@ interface fsml_norm_ppf
   module procedure f_dst_norm_ppf
 end interface
 
-! student t distribution pdf
+! t distribution pdf
 interface fsml_t_pdf
   module procedure f_dst_t_pdf
 end interface
 
-! student t distribution cdf
+! t distribution cdf
 interface fsml_t_cdf
   module procedure f_dst_t_cdf
 end interface
 
-! student t distribution ppf
+! t distribution ppf
 interface fsml_t_ppf
   module procedure f_dst_t_ppf
 end interface
 
-! student exponential distribution pdf
+! exponential distribution pdf
 interface fsml_exp_pdf
   module procedure f_dst_exp_pdf
 end interface
 
-! student exponential distribution cdf
+! exponential distribution cdf
 interface fsml_exp_cdf
   module procedure f_dst_exp_cdf
 end interface
 
-! student exponential distribution ppf
+! exponential distribution ppf
 interface fsml_exp_ppf
   module procedure f_dst_exp_ppf
+end interface
+
+! generalised pareto distribution pdf
+interface fsml_gpd_pdf
+  module procedure f_dst_gpd_pdf
+end interface
+
+! generalised pareto distribution cdf
+interface fsml_gpd_cdf
+  module procedure f_dst_gpd_cdf
+end interface
+
+! generalised pareto distribution ppf
+interface fsml_gpd_ppf
+  module procedure f_dst_gpd_ppf
 end interface
 
 ! ---- Utilities

@@ -26,8 +26,11 @@ module fsml_dst
   public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
   public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
+  public :: f_dst_gpd_pdf, f_dst_gpd_cdf, f_dst_gpd_ppf
 
 contains
+
+! TODO: handle invalid arguments (e.g., sigma = negative)
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
@@ -715,6 +718,192 @@ pure function f_dst_exp_ppf(p, mu, lambda) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
 
 end function f_dst_exp_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
+
+! ==== Description
+!! Probability density function for generalised pareto distribution.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: xi      !! distribution shape parameter
+  real(wp), intent(in), optional :: mu      !! distribution location (mean)
+  real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
+  real(wp)                       :: w_mu    !! final value of mu
+  real(wp)                       :: w_sigma !! final value of sigma
+  real(wp)                       :: z       !! z-score
+  real(wp)                       :: fx
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute PDF
+
+  ! compute z-score
+  z = (x - w_mu) / w_sigma
+
+  ! calculate probability/fx
+  if (xi .eq. 0.0_wp) then
+     if (z .lt. 0.0_wp) then
+        fx = 0.0_wp
+     else
+        fx = exp(-z) / sigma
+     endif
+  else
+     if (z .lt. 0.0_wp .or. &
+     &  (xi .lt. 0.0_wp .and. z .gt. -1.0_wp / xi)) then
+        fx = 0.0_wp
+     else
+        fx = (1.0_wp + xi * z) ** (-1.0_wp / xi - 1.0_wp) / sigma
+     endif
+  endif
+
+end function f_dst_gpd_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for generalised pareto distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: x       !! sample position
+  real(wp)        , intent(in)           :: xi      !! distribution shape parameter
+  real(wp)        , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
+  character(len=*), intent(in), optional :: tail    !! tail options
+  real(wp)                               :: w_mu    !! final value of mu
+  real(wp)                               :: w_sigma !! final value of sigma
+  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: z       !! z-score
+  real(wp)                               :: p       !! returned probability integral
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+  ! assume left-tailed if not specified
+  if (present(tail)) then
+     w_tail = tail
+  else
+     w_tail = "left"
+  endif
+
+! ---- compute CDF
+
+  ! compute z-score
+  z = (x - w_mu) / w_sigma
+
+  ! compute integral (left tailed)
+  if (xi .eq. 0.0_wp) then
+     if (z .lt. 0.0_wp) then
+        p = 0.0_wp
+     else
+        p = 1.0_wp - exp(-z)
+     end if
+  else
+     if (z .lt. 0.0_wp .or. &
+     &  (xi .lt. 0.0_wp .and. z .gt. -1.0_wp / xi)) then
+        p = 0.0_wp
+     else
+        p = 1.0_wp - (1.0_wp + xi * z) ** (-1.0_wp / xi)
+     endif
+  endif
+
+  ! tail options
+  select case(w_tail)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+   end select
+
+end function f_dst_gpd_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function for generalised pareto distribution.
+!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: p       !! probability between 0.0 - 1.0
+  real(wp)        , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
+  real(wp)        , intent(in), optional :: xi      !! distribution shape parameter
+  real(wp)                               :: w_mu    !! final value of mu
+  real(wp)                               :: w_sigma !! final value of sigma
+  real(wp)                               :: x       !! sample position
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0 if not passed
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not passed
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute PPF
+
+  ! compute inverse cdf based on xi
+    if (abs(xi) .lt. 1.0e-12_wp) then
+      ! if xi is approximately zero, use exponential distribution
+      x = w_mu - w_sigma * log(1.0_wp - p)
+    else
+      ! if xi is not zero, use general formula
+      x = w_mu + (w_sigma / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
+    endif
+
+end function f_dst_gpd_ppf
 
 
 end module fsml_dst
