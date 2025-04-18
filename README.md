@@ -117,10 +117,10 @@ Each distribution comes with procedures for the following functions: Probability
 | ---------------------- | ------- |
 | Normal                 | ✓       |
 | T                      | ✓       |
+| Gamma                  | -       |
 | Exponential            | ✓       |
 | Generalised Pareto     | ✓       |
 | Chi-Squared            | -       |
-| (Gamma)                | -       |
 
 #### Hypothesis Testing
 
