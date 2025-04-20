@@ -140,11 +140,11 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
 | Multiple OLS Regression       | -       |
+| LASSO Regression              | -       |
+| Ridge Regression              | -       |
 | Pincipal Component Analysis   | -       |
 | Discriminant Analysis (LDA)   | -       |
 | Bayesian Classification       | -       |
-| (LASSO Regression)            | -       |
-| (Ridge Regression)            | -       |
 
 #### Non-Linear Models (NLM)
 
@@ -154,8 +154,8 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 | --------------------------- | ------- |
 | Hierarchical Clustering     | -       |
 | K-Means Clustering          | -       |
-| (Random Forests Regression) | -       |
-| (Simple Neural Networks)    | -       |
+| Random Forests Regression   | -       |
+| Multilayer Perceptron       | -       |
 
 #### Additional Functionality
 
