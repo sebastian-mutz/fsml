@@ -809,7 +809,7 @@ pure function f_dst_exp_pdf(x, mu, lambda) result(fx)
 
 ! ==== Declarations
   real(wp), intent(in)           :: x        !! sample position
-  real(wp), intent(in), optional :: mu       !! location/mus parameter
+  real(wp), intent(in), optional :: mu       !! location/mu parameter
   real(wp), intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mean
   real(wp)                       :: w_mu     !! final value for mu
   real(wp)                       :: w_lambda !! final value for lambda
@@ -856,7 +856,7 @@ pure function f_dst_exp_cdf(x, mu, lambda, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x        !! sample position
-  real(wp)        , intent(in), optional :: mu       !! location/mus parameter
+  real(wp)        , intent(in), optional :: mu       !! location/mu parameter
   real(wp)        , intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mean
   character(len=*), intent(in), optional :: tail     !! tail options
   real(wp)                               :: w_mu     !! final value for mu
@@ -924,7 +924,7 @@ pure function f_dst_exp_ppf(p, mu, lambda) result(x)
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in), optional :: mu               !! location/mus parameter
+  real(wp)   , intent(in), optional :: mu               !! location/mu parameter
   real(wp)   , intent(in), optional :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mean
   real(wp)                          :: w_mu             !! final value for mu
   real(wp)                          :: w_lambda         !! final value for lambda
