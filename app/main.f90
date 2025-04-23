@@ -56,4 +56,7 @@ program main
   ! gamma distribution pdf
   print*, fsml_gamma_pdf(0.2_dp, mu=0.0_dp, alpha=1.2_dp, beta=0.6_dp)
 
+  ! chi square distribution pdf
+  !print*, fsml_chi2_pdf(1.2_dp, df=20)!, mu=0.0_dp, sigma=1.0_dp)
+
 end program main

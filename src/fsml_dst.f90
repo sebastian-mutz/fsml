@@ -27,6 +27,7 @@ module fsml_dst
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
   public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf
   public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
+  public :: f_dst_chi2_pdf, f_dst_chi2_cdf, f_dst_chi2_ppf
   public :: f_dst_gpd_pdf, f_dst_gpd_cdf, f_dst_gpd_ppf
 
 contains
@@ -195,7 +196,7 @@ pure function f_dst_norm_ppf(p, mu, sigma) result(x)
      w_sigma = 1.0_wp
   endif
 
-! ---- compute inverse CDF
+! ---- compute PPF
 
   ! set initial section
   a = -20.0_wp
@@ -328,9 +329,9 @@ pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
 
   ! compute integral (left tailed)
   if (z .ge. 0.0_wp) then
-    p = 1.0_wp - 0.5_wp * beta_inc(xbeta, a, b)
+    p = 1.0_wp - 0.5_wp * f_dst_beta_inc(xbeta, a, b)
   else
-    p = 0.5_wp * beta_inc(xbeta, a, b)
+    p = 0.5_wp * f_dst_beta_inc(xbeta, a, b)
   endif
 
   ! tail options
@@ -357,112 +358,6 @@ pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
            p = 1.0_wp - 2.0_wp * p
         endif
    end select
-
-  contains
-  ! beta_inc and beta_cf algorithms are based on several public domain Fortran and C code, Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
-
-     ! --------------------------------------------------------------- !
-     pure function beta_inc(x, a, b) result(betai)
-
-     ! ==== Description
-     !! Computes the regularised incomplete beta function.
-
-     ! ==== Declarations
-     real(wp), intent(in) :: x      !! upper limit of integral
-     real(wp), intent(in) :: a, b   !! shape parameters for beta dist.
-     real(wp)             :: betai  !! regularised incomplete beta function
-     real(wp)             :: lnbeta !! log of beta function
-     real(wp)             :: bt     !! pre-multiplier
-     real(wp)             :: cf     !! continued fraction
-
-     ! ==== Instructions
-
-     ! handle edge cases
-     if (x .le. 0.0_wp) then
-        betai = 0.0_wp
-        return
-     elseif (x .ge. 1.0_wp) then
-        betai = 1.0_wp
-        return
-     elseif (a .le. 0.0_wp .or. b .le. 0.0_wp) then
-        betai = 0.0_wp  ! alternative: signal an error
-        return
-     endif
-
-     ! compute log(beta(a, b)) for numerical stability
-     lnbeta = log_gamma(a) + log_gamma(b) - log_gamma(a + b)
-
-     ! avoid problems from large a/b
-     bt = exp(a * log(x) + b * log(1.0_wp - x) - lnbeta)
-
-     ! switch x with 1-x for num. stability if x > (a+1)/(a+b+2)
-     if (x .lt. (a + 1.0_wp) / (a + b + 2.0_wp)) then
-       cf = beta_cf(x, a, b)
-       betai = bt * cf / a
-     else
-       cf = beta_cf(1.0_wp - x, b, a)
-       betai = 1.0_wp - bt * cf / b
-     endif
-
-     end function beta_inc
-
-     ! --------------------------------------------------------------- !
-     pure function beta_cf(x, a, b) result(cf)
-
-     ! ==== Description
-     !! computes the continued fraction expansion of incomplete beta function.
-     !! Based on Lentz's algorithm (1976)
-
-     ! ==== Declarations
-     real(wp), intent(in)   :: x                  !! upper limit of integral
-     real(wp), intent(in)   :: a, b               !! shape parameters for beta dist.
-     real(wp)               :: cf                 !! continued fraction
-     real(wp)               :: c, d
-     real(wp)               :: aa, del, qab, qam, qap
-     real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
-     real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
-     integer(i4), parameter :: i_max = 200        !! max. iteration numbers
-     integer(i4)            :: i
-
-     ! ==== Instructions
-
-    ! starting conditions
-     qab = a + b
-     qap = a + 1.0_wp
-     qam = a - 1.0_wp
-
-     c = 1.0_wp
-     d = 1.0_wp - qab * x / qap
-     if (abs(d) .lt. fpmin) d = fpmin
-     d = 1.0_wp / d
-     cf = d
-
-     ! iterative approx.
-     do i = 1, i_max
-        ! even term
-        aa = i * (b - i) * x / ((qam + 2.0_wp * i) * (a + 2.0_wp * i))
-        d = 1.0_wp + aa * d
-        if (abs(d) .lt. fpmin) d = fpmin
-        c = 1.0_wp + aa / c
-        if (abs(c) .lt. fpmin) c = fpmin
-        d = 1.0_wp / d
-        cf = cf * d * c
-
-        ! odd term
-        aa = -(a + i) * (qab + i) * x / ((a + 2.0_wp * i) * (qap + 2.0_wp * i))
-        d = 1.0_wp + aa * d
-        if (abs(d) .lt. fpmin) d = fpmin
-        c = 1.0_wp + aa / c
-        if (abs(c) .lt. fpmin) c = fpmin
-        d = 1.0_wp / d
-        del = d * c
-        cf = cf * del
-
-        ! check if fractional delta against convergence threshold
-        if (abs(del - 1.0_wp) .lt. eps) exit
-     enddo
-
-   end function beta_cf
 
 end function f_dst_t_cdf
 
@@ -509,7 +404,7 @@ pure function f_dst_t_ppf(p, df, mu, sigma) result(x)
      w_sigma = 1.0_wp
   endif
 
-! ---- compute inverse CDF
+! ---- compute PPF
 
   ! set initial section bounds
   a = -20.0_wp
@@ -656,7 +551,7 @@ pure function f_dst_gamma_cdf(x, mu, alpha, beta, tail) result(p)
      p = 0.0_wp
   else
      z = (x - w_mu) / w_beta
-     p = gamma_inc(alpha, z)
+     p = f_dst_gamma_inc(alpha, z)
   endif
 
   ! tail options
@@ -674,78 +569,6 @@ pure function f_dst_gamma_cdf(x, mu, alpha, beta, tail) result(p)
      case("confidence")
         p = 1.0_wp - 2.0_wp * (1.0_wp - p)
    end select
-
-  contains
-
-     ! --------------------------------------------------------------- !
-     pure function gamma_inc(a, x) result(p)
-
-     ! ==== Description
-     !! Incomplete gamma function.
-     !! Uses Fortran 2008+ intrinsics.
-
-     ! ==== Declarations
-     real(wp), intent(in)   :: a, x
-     real(wp)               :: p
-     real(wp)               :: sum, term, lngamma_a
-     real(wp)               :: ap, del, b, c, d, h
-     real(wp)   , parameter :: eps = 1.0e-12_wp     !! Convergence threshold
-     real(wp)   , parameter :: fpmin = 1.0e-30_wp   !! small number to prevent division by zero
-     integer(i4), parameter :: i_max = 200          !! max. iteration numbers
-     integer(i4)            :: i
-
-     ! ==== Instructions
-     if (x .lt. 0.0_wp .or. a .le. 0.0_wp) then
-        p = 0.0_wp
-        return
-     endif
-
-     if (x .eq. 0.0_wp) then
-        p = 0.0_wp
-        return
-     endif
-
-     lngamma_a = log(gamma(a))
-
-     if (x .lt. a + 1.0_wp) then
-        ! use series expansion
-        sum = 1.0_wp / a
-        term = sum
-        ap = a
-        do
-           ap = ap + 1.0_wp
-           term = term * x / ap
-           sum = sum + term
-           if (abs(term) .lt. abs(sum) * eps) exit
-        enddo
-        p = sum * exp(-x + a * log(x) - lngamma_a)
-     else
-        ! use continued fraction expansion
-        b = x + 1.0_wp - a
-        c = 1.0_wp / fpmin
-        d = 1.0_wp / b
-        h = d
-        i = 1
-        do
-          i = i + 1
-          if (mod(i, 2) .eq. 0) then
-             del = (i / 2) * (a - (i / 2))
-          else
-             del = -((i - 1) / 2) * ((i - 1) / 2)
-          endif
-          b = b + 2.0_wp
-          d = del * d + b
-          if (abs(d) .lt. fpmin) d = fpmin
-          c = b + del / c
-          if (abs(c) .lt. fpmin) c = fpmin
-          d = 1.0_wp / d
-          h = h * d * c
-          if (abs(d * c - 1.0_wp) .lt. eps) exit
-       enddo
-       p = 1.0_wp - exp(-x + a * log(x) - lngamma_a) * h
-     endif
-
-    end function gamma_inc
 
 end function f_dst_gamma_cdf
 
@@ -798,7 +621,7 @@ pure function f_dst_gamma_ppf(p, mu, alpha, beta) result(x)
      w_mu = 0.0_wp
   endif
 
-! ---- compute inverse CDF
+! ---- compute PPF
 
   ! set initial section
   a = w_mu
@@ -981,7 +804,7 @@ pure function f_dst_exp_ppf(p, mu, lambda) result(x)
      w_lambda = 1.0_wp
   endif
 
-! ---- compute inverse CDF
+! ---- compute PPF
 
   ! set initial section (min possible approaches 0)
   a = w_mu
@@ -1008,6 +831,194 @@ pure function f_dst_exp_ppf(p, mu, lambda) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
 
 end function f_dst_exp_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_chi2_pdf(x, df, mu, sigma) result(fx)
+
+! ==== Description
+!! Probability density function for the chi-squared distribution.
+!! Uses intrinsic exp and gamma function.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: df      !! degrees of freedom
+  real(wp), intent(in), optional :: mu      !! location parameter
+  real(wp), intent(in), optional :: sigma   !! scale parameter
+  real(wp)                       :: w_mu    !! final value for mu
+  real(wp)                       :: w_sigma !! final value for sigma
+  real(wp)                       :: fx      !! resulting PDF value
+  real(wp)                       :: z       !! standardised variable
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not specified
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ----compute PDF
+  z = x - w_mu / w_sigma
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. w_sigma .le. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * gamma(df / 2.0_wp))) * &
+          z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp) / w_sigma
+  endif
+
+end function f_dst_chi2_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_chi2_cdf(x, df, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for the chi-squared distribution.
+
+  ! ==== Declarations
+  real(wp)        , intent(in)           :: x       !! sample position
+  real(wp)        , intent(in), optional :: df      !! degrees of freedom
+  real(wp)        , intent(in), optional :: mu      !! location parameter
+  real(wp)        , intent(in), optional :: sigma   !! scale parameter
+  character(len=*), intent(in), optional :: tail    !! tail options
+  real(wp)                               :: w_mu    !! final value for mu
+  real(wp)                               :: w_sigma !! final value for sigma
+  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: p       !! resulting CDF value
+  real(wp)                               :: z       !! standardised variable
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not specified
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ----compute CDF
+
+  ! compute integral (left tailed)
+  z = (x - w_mu) / w_sigma
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. w_sigma .le. 0.0_wp) then
+     p = 0.0_wp
+  else
+     p = f_dst_gamma_inc(df / 2.0_wp, z / 2.0_wp)
+  endif
+
+  ! tail options
+  select case(w_tail)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+     ! two-tailed
+     case("two")
+        if (x .gt. w_mu) then
+           p = 2.0_wp * (1.0_wp - p)
+        elseif (x .le. w_mu) then
+           p = 2.0_wp * p
+        endif
+     ! confidence interval
+     case("confidence")
+        if (x .gt. w_mu) then
+           p = 1.0_wp - 2.0_wp * (1.0_wp - p)
+        elseif (x .le. w_mu) then
+           p = 1.0_wp - 2.0_wp * p
+        endif
+   end select
+
+end function f_dst_chi2_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_chi2_ppf(p, df, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function (PPF) for the chi-squared distribution.
+!! Uses the bisection method for numerical inversion of the CDF.
+
+! ==== Declarations
+  real(wp), intent(in)           :: p                !! probability between 0.0 and 1.0
+  real(wp), intent(in), optional :: df               !! degrees of freedom
+  real(wp), intent(in), optional :: mu               !! location parameter
+  real(wp), intent(in), optional :: sigma            !! scale parameter
+  real(wp)                       :: w_mu             !! final value for mu
+  real(wp)                       :: w_sigma          !! final value for sigma
+  integer(i4), parameter         :: i_max = 200      !! maximum iterations
+  real(wp), parameter            :: tol = 1.0e-12_wp !! tolerance for convergence
+  real(wp)                       :: a, b             !! interval bounds
+  real(wp)                       :: x_mid, p_mid     !! midpoint and corresponding CDF value
+  integer(i4)                    :: i                !! iteration counter
+  real(wp)                       :: x                !! sample position
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume mu = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+  ! assume sigma = 1 if not specified
+  if (present(sigma)) then
+     w_sigma = sigma
+  else
+     w_sigma = 1.0_wp
+  endif
+
+! ---- compute PPF
+
+  ! set initial section (min possible approaches 0)
+  a = w_mu
+  b = w_mu + df * 10.0_wp
+
+  ! iteratively refine with bisection method
+  do i = 1, i_max
+     x_mid = 0.5_wp * (a + b)
+     p_mid = f_dst_chi2_cdf(x_mid, df, mu=w_mu, sigma=w_sigma) - p
+     if (abs(p_mid) .lt. tol) then
+        x = w_mu + x_mid * w_sigma
+        return
+     else if (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     end if
+  end do
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
+
+end function f_dst_chi2_ppf
 
 
 ! ==================================================================== !
@@ -1195,5 +1206,185 @@ pure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 end function f_dst_gpd_ppf
 
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_gamma_inc(a, x) result(p)
+
+! ==== Description
+!! Incomplete gamma function. Needed by gamma and chi-squared cdf.
+!! Uses Fortran 2008+ intrinsics.
+
+! ==== Declarations
+  real(wp), intent(in)   :: a, x
+  real(wp)               :: p
+  real(wp)               :: sum, term, lngamma_a
+  real(wp)               :: ap, del, b, c, d, h
+  real(wp)   , parameter :: eps = 1.0e-12_wp     !! convergence threshold
+  real(wp)   , parameter :: fpmin = 1.0e-30_wp   !! small number to prevent division by zero
+  integer(i4), parameter :: i_max = 200          !! max. iteration numbers
+  integer(i4)            :: i
+
+! ==== Instructions
+  if (x .lt. 0.0_wp .or. a .le. 0.0_wp) then
+     p = 0.0_wp
+     return
+  endif
+
+  if (x .eq. 0.0_wp) then
+     p = 0.0_wp
+     return
+  endif
+
+  lngamma_a = log(gamma(a))
+
+  if (x .lt. a + 1.0_wp) then
+     ! use series expansion
+     sum = 1.0_wp / a
+     term = sum
+     ap = a
+     do
+        ap = ap + 1.0_wp
+        term = term * x / ap
+        sum = sum + term
+        if (abs(term) .lt. abs(sum) * eps) exit
+     enddo
+     p = sum * exp(-x + a * log(x) - lngamma_a)
+  else
+     ! use continued fraction expansion
+     b = x + 1.0_wp - a
+     c = 1.0_wp / fpmin
+     d = 1.0_wp / b
+     h = d
+     i = 1
+     do
+       i = i + 1
+       if (mod(i, 2) .eq. 0) then
+          del = (i / 2) * (a - (i / 2))
+       else
+          del = -((i - 1) / 2) * ((i - 1) / 2)
+       endif
+       b = b + 2.0_wp
+       d = del * d + b
+       if (abs(d) .lt. fpmin) d = fpmin
+       c = b + del / c
+       if (abs(c) .lt. fpmin) c = fpmin
+       d = 1.0_wp / d
+       h = h * d * c
+       if (abs(d * c - 1.0_wp) .lt. eps) exit
+    enddo
+    p = 1.0_wp - exp(-x + a * log(x) - lngamma_a) * h
+  endif
+
+end function f_dst_gamma_inc
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_dst_beta_inc(x, a, b) result(betai)
+
+! ==== Description
+!! Computes the regularised incomplete beta function. beta_inc and beta_cf
+!!  algorithms are based on several public domain Fortran and C code,
+!!  Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
+
+! ==== Declarations
+  real(wp), intent(in) :: x      !! upper limit of integral
+  real(wp), intent(in) :: a, b   !! shape parameters for beta dist.
+  real(wp)             :: betai  !! regularised incomplete beta function
+  real(wp)             :: lnbeta !! log of beta function
+  real(wp)             :: bt     !! pre-multiplier
+  real(wp)             :: cf     !! continued fraction
+
+! ==== Instructions
+
+  ! handle edge cases
+  if (x .le. 0.0_wp) then
+     betai = 0.0_wp
+     return
+  elseif (x .ge. 1.0_wp) then
+     betai = 1.0_wp
+     return
+  elseif (a .le. 0.0_wp .or. b .le. 0.0_wp) then
+     betai = 0.0_wp  ! alternative: signal an error
+     return
+  endif
+
+  ! compute log(beta(a, b)) for numerical stability
+  lnbeta = log_gamma(a) + log_gamma(b) - log_gamma(a + b)
+
+  ! avoid problems from large a/b
+  bt = exp(a * log(x) + b * log(1.0_wp - x) - lnbeta)
+
+  ! switch x with 1-x for num. stability if x > (a+1)/(a+b+2)
+  if (x .lt. (a + 1.0_wp) / (a + b + 2.0_wp)) then
+    cf = beta_cf(x, a, b)
+    betai = bt * cf / a
+  else
+    cf = beta_cf(1.0_wp - x, b, a)
+    betai = 1.0_wp - bt * cf / b
+  endif
+
+  contains
+
+     ! --------------------------------------------------------------- !
+     pure function beta_cf(x, a, b) result(cf)
+
+     ! ==== Description
+     !! computes the continued fraction expansion of incomplete beta function.
+     !! Based on Lentz's algorithm (1976)
+
+     ! ==== Declarations
+     real(wp), intent(in)   :: x                  !! upper limit of integral
+     real(wp), intent(in)   :: a, b               !! shape parameters for beta dist.
+     real(wp)               :: cf                 !! continued fraction
+     real(wp)               :: c, d
+     real(wp)               :: aa, del, qab, qam, qap
+     real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
+     real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
+     integer(i4), parameter :: i_max = 200        !! max. iteration numbers
+     integer(i4)            :: i
+
+     ! ==== Instructions
+
+     ! starting conditions
+     qab = a + b
+     qap = a + 1.0_wp
+     qam = a - 1.0_wp
+
+     c = 1.0_wp
+     d = 1.0_wp - qab * x / qap
+     if (abs(d) .lt. fpmin) d = fpmin
+     d = 1.0_wp / d
+     cf = d
+
+     ! iterative approx.
+     do i = 1, i_max
+        ! even term
+        aa = i * (b - i) * x / ((qam + 2.0_wp * i) * (a + 2.0_wp * i))
+        d = 1.0_wp + aa * d
+        if (abs(d) .lt. fpmin) d = fpmin
+        c = 1.0_wp + aa / c
+        if (abs(c) .lt. fpmin) c = fpmin
+        d = 1.0_wp / d
+        cf = cf * d * c
+
+        ! odd term
+        aa = -(a + i) * (qab + i) * x / ((a + 2.0_wp * i) * (qap + 2.0_wp * i))
+        d = 1.0_wp + aa * d
+        if (abs(d) .lt. fpmin) d = fpmin
+        c = 1.0_wp + aa / c
+        if (abs(c) .lt. fpmin) c = fpmin
+        d = 1.0_wp / d
+        del = d * c
+        cf = cf * del
+
+        ! check if fractional delta against convergence threshold
+        if (abs(del - 1.0_wp) .lt. eps) exit
+     enddo
+
+   end function beta_cf
+
+end function f_dst_beta_inc
 
 end module fsml_dst

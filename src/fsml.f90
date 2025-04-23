@@ -31,6 +31,7 @@ module fsml
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
   public :: fsml_gamma_pdf, fsml_gamma_cdf, fsml_gamma_ppf
   public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
+  public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! declare public utility procedures
   public :: fsml_read_csv
@@ -40,6 +41,9 @@ module fsml
 ! ==== Interfaces (API)
 ! API: interfaces to offer simpler, consistent public procedure names
 
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 ! ---- Basic Statistics
 
 ! arithmetic mean
@@ -72,6 +76,9 @@ interface fsml_corr
   module procedure f_sts_corr
 end interface
 
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 ! ---- Statistical Distributions
 
 ! normal distribution pdf
@@ -134,6 +141,21 @@ interface fsml_exp_ppf
   module procedure f_dst_exp_ppf
 end interface
 
+! chi-squared distribution pdf
+interface fsml_chi2_pdf
+  module procedure f_dst_chi2_pdf
+end interface
+
+! chi-squared distribution cdf
+interface fsml_chi2_cdf
+  module procedure f_dst_chi2_cdf
+end interface
+
+! chi-squared distribution ppf
+interface fsml_chi2_ppf
+  module procedure f_dst_chi2_ppf
+end interface
+
 ! generalised pareto distribution pdf
 interface fsml_gpd_pdf
   module procedure f_dst_gpd_pdf
@@ -149,6 +171,8 @@ interface fsml_gpd_ppf
   module procedure f_dst_gpd_ppf
 end interface
 
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 ! ---- Utilities
 
 ! read csv file into dataframe
