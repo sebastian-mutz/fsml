@@ -29,6 +29,7 @@ module fsml
   ! declare public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
+  public :: fsml_gamma_pdf, fsml_gamma_cdf, fsml_gamma_ppf
   public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! declare public utility procedures
@@ -101,6 +102,21 @@ end interface
 ! t distribution ppf
 interface fsml_t_ppf
   module procedure f_dst_t_ppf
+end interface
+
+! gamma distribution pdf
+interface fsml_gamma_pdf
+  module procedure f_dst_gamma_pdf
+end interface
+
+! gamma distribution cdf
+interface fsml_gamma_cdf
+  module procedure f_dst_gamma_cdf
+end interface
+
+! gamma distribution ppf
+interface fsml_gamma_ppf
+  module procedure f_dst_gamma_ppf
 end interface
 
 ! exponential distribution pdf

@@ -25,6 +25,7 @@ module fsml_dst
 ! declare public procedures
   public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
+  public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf
   public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
   public :: f_dst_gpd_pdf, f_dst_gpd_cdf, f_dst_gpd_ppf
 
@@ -358,7 +359,7 @@ pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
    end select
 
   contains
-  ! NOTE: beta_inc and beta_cf algorithms are based on several public domain Fortran and C code, Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
+  ! beta_inc and beta_cf algorithms are based on several public domain Fortran and C code, Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
 
      ! --------------------------------------------------------------- !
      pure function beta_inc(x, a, b) result(betai)
@@ -539,19 +540,21 @@ end function f_dst_t_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_pdf(x, alpha, beta) result(fx)
+pure function f_dst_gamma_pdf(x, mu, alpha, beta) result(fx)
 
 ! ==== Description
 !! Probability density function for gamma distribution.
 !! Uses intrinsic exp function.
-!! TODO: think about mu/sigma options
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
   real(wp), intent(in), optional :: alpha   !! shape  parameter
   real(wp), intent(in), optional :: beta    !! scale parameter
+  real(wp), intent(in), optional :: mu      !! location parameter
   real(wp)                       :: w_alpha !! final value for mu
   real(wp)                       :: w_beta  !! final value for lambda
+  real(wp)                       :: w_mu    !! final value for loc
+  real(wp)                       :: z       !! shifted and scaled variable
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -572,13 +575,22 @@ pure function f_dst_gamma_pdf(x, alpha, beta) result(fx)
      w_beta = 1.0_wp
   endif
 
+  ! assume mu/loc = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
+
 ! ---- compute PDF
 
   ! calculate probability/fx
   if (x .le. 0.0_wp .or. w_alpha .le. 0.0_wp .or. w_beta .le. 0.0_wp) then
      fx = 0.0_wp
   else
-     fx = ( x ** (w_alpha - 1.0_wp) ) * exp(-x / w_beta) / &
+     z = (x - w_mu) / w_beta
+     fx = ( x ** (w_alpha - 1.0_wp) ) * exp( -z) / &
         & ( w_beta ** w_alpha * gamma(w_alpha))
   endif
 
@@ -587,20 +599,22 @@ end function f_dst_gamma_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_cdf(x, alpha, beta, tail) result(p)
+pure function f_dst_gamma_cdf(x, mu, alpha, beta, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for gamma distribution.
-!! TODO: think about mu/sigma options
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
   real(wp)        , intent(in), optional :: alpha   !! shape  parameter
   real(wp)        , intent(in), optional :: beta    !! scale parameter
+  real(wp)        , intent(in), optional :: mu      !! location parameter
   character(len=*), intent(in), optional :: tail    !! tail options
   real(wp)                               :: w_alpha !! final value for mu
   real(wp)                               :: w_beta  !! final value for lambda
+  real(wp)                               :: w_mu    !! final value for loc
   character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: z       !! standardised variable
   real(wp)                               :: p       !! returned probability integral
 
 ! ==== Instructions
@@ -621,6 +635,13 @@ pure function f_dst_gamma_cdf(x, alpha, beta, tail) result(p)
      w_beta = 1.0_wp
   endif
 
+  ! assume mu/loc = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
   ! assume left-tailed if not specified
   if (present(tail)) then
      w_tail = tail
@@ -631,10 +652,11 @@ pure function f_dst_gamma_cdf(x, alpha, beta, tail) result(p)
 ! ---- compute CDF
 
   ! compute integral (left tailed)
-  if (x .le. 0.0_wp .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
+  if (x .le. w_mu .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
      p = 0.0_wp
   else
-     p = gamma_inc(alpha, x / beta)
+     z = (x - w_mu) / w_beta
+     p = gamma_inc(alpha, z)
   endif
 
   ! tail options
@@ -646,11 +668,9 @@ pure function f_dst_gamma_cdf(x, alpha, beta, tail) result(p)
      case("right")
         p = 1.0_wp - p
      ! two-tailed
-     ! TODO: mu
      case("two")
         p = 2.0_wp * (1.0_wp - p)
      ! confidence interval
-     ! TODO: mu
      case("confidence")
         p = 1.0_wp - 2.0_wp * (1.0_wp - p)
    end select
@@ -732,19 +752,20 @@ end function f_dst_gamma_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_ppf(p, alpha, beta) result(x)
+pure function f_dst_gamma_ppf(p, mu, alpha, beta) result(x)
 
 ! ==== Description
 !! Percent point function(PPF) (quantile function or inverse CDF) for gamma distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
-!! TODO: think about mu/sigma options
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
   real(wp)   , intent(in), optional :: alpha            !! shape  parameter
   real(wp)   , intent(in), optional :: beta             !! scale parameter
+  real(wp)   , intent(in), optional :: mu               !! location parameter
   real(wp)                          :: w_alpha          !! final value for mu
   real(wp)                          :: w_beta           !! final value for lambda
+  real(wp)                          :: w_mu             !! final value for loc
   integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
@@ -770,17 +791,24 @@ pure function f_dst_gamma_ppf(p, alpha, beta) result(x)
      w_beta = 1.0_wp
   endif
 
+  ! assume mu/loc = 0 if not specified
+  if (present(mu)) then
+     w_mu = mu
+  else
+     w_mu = 0.0_wp
+  endif
+
 ! ---- compute inverse CDF
 
   ! set initial section
-  a = 0.0_wp
-  b = w_alpha * w_beta * 10.0_wp
+  a = w_mu
+  b = w_mu + w_alpha * w_beta * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_gamma_cdf(x_mid, w_alpha, w_beta, tail="left") - p
+     p_mid = f_dst_gamma_cdf(x_mid, w_alpha, w_beta, w_mu, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value

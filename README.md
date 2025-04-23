@@ -117,7 +117,7 @@ Each distribution comes with procedures for the following functions: Probability
 | ---------------------- | ------- |
 | Normal                 | ✓       |
 | T                      | ✓       |
-| Gamma                  | -       |
+| Gamma                  | ✓       |
 | Exponential            | ✓       |
 | Generalised Pareto     | ✓       |
 | Chi-Squared            | -       |
@@ -157,6 +157,16 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 | Random Forests Regression   | -       |
 | Multilayer Perceptron       | -       |
 
+#### Extensions for Machine Learning Algorithms
+
+Additional procedures are provided to make the application of the methods above in a machine learning framework easier.
+
+| Additional Functionality    | Covered |
+| --------------------------- | ------- |
+| Bootstrapping Functions     | -       |
+| Cross-Validation Setting    | -       |
+| Model Performance Metrics   | -       |
+
 #### Additional Functionality
 
 | Additional Functionality    | Covered |
@@ -164,8 +174,6 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 | Read from CSV file          | ✓       |
 | Read from netCDF file       | -       |
 | Simple Fortran Dataframe    | ✓       |
-| Cross-Validation            | -       |
-| Bootstrapping               | -       |
 
 ## <span style="color:#734f96">Installation</span>
 
