@@ -842,14 +842,14 @@ pure function f_dst_chi2_pdf(x, df, mu, sigma) result(fx)
 !! Uses intrinsic exp and gamma function.
 
 ! ==== Declarations
-  real(wp), intent(in)           :: x       !! sample position
-  real(wp), intent(in)           :: df      !! degrees of freedom
-  real(wp), intent(in), optional :: mu      !! location parameter
-  real(wp), intent(in), optional :: sigma   !! scale parameter
-  real(wp)                       :: w_mu    !! final value for mu
-  real(wp)                       :: w_sigma !! final value for sigma
-  real(wp)                       :: fx      !! resulting PDF value
-  real(wp)                       :: z       !! standardised variable
+  real(wp)   , intent(in)           :: x       !! sample position
+  integer(i4), intent(in)           :: df      !! degrees of freedom
+  real(wp)   , intent(in), optional :: mu      !! location parameter
+  real(wp)   , intent(in), optional :: sigma   !! scale parameter
+  real(wp)                          :: w_mu    !! final value for mu
+  real(wp)                          :: w_sigma !! final value for sigma
+  real(wp)                          :: fx      !! resulting PDF value
+  real(wp)                          :: z       !! standardised variable
 
 ! ==== Instructions
 
@@ -870,12 +870,13 @@ pure function f_dst_chi2_pdf(x, df, mu, sigma) result(fx)
   endif
 
 ! ----compute PDF
-  z = x - w_mu / w_sigma
+  z = (x - w_mu) / w_sigma
   if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. w_sigma .le. 0.0_wp) then
      fx = 0.0_wp
   else
-     fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * gamma(df / 2.0_wp))) * &
-          z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp) / w_sigma
+     fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * &
+        & gamma(df / 2.0_wp) * w_sigma)) * &
+        & z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp)
   endif
 
 end function f_dst_chi2_pdf
@@ -890,7 +891,7 @@ pure function f_dst_chi2_cdf(x, df, mu, sigma, tail) result(p)
 
   ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
-  real(wp)        , intent(in), optional :: df      !! degrees of freedom
+  integer(i4)     , intent(in)           :: df      !! degrees of freedom
   real(wp)        , intent(in), optional :: mu      !! location parameter
   real(wp)        , intent(in), optional :: sigma   !! scale parameter
   character(len=*), intent(in), optional :: tail    !! tail options
@@ -965,7 +966,7 @@ pure function f_dst_chi2_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Declarations
   real(wp), intent(in)           :: p                !! probability between 0.0 and 1.0
-  real(wp), intent(in), optional :: df               !! degrees of freedom
+  integer(i4), intent(in)        :: df               !! degrees of freedom
   real(wp), intent(in), optional :: mu               !! location parameter
   real(wp), intent(in), optional :: sigma            !! scale parameter
   real(wp)                       :: w_mu             !! final value for mu
@@ -1006,7 +1007,7 @@ pure function f_dst_chi2_ppf(p, df, mu, sigma) result(x)
      x_mid = 0.5_wp * (a + b)
      p_mid = f_dst_chi2_cdf(x_mid, df, mu=w_mu, sigma=w_sigma) - p
      if (abs(p_mid) .lt. tol) then
-        x = w_mu + x_mid * w_sigma
+        x = x_mid
         return
      else if (p_mid .lt. 0.0_wp) then
         a = x_mid

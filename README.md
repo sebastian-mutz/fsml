@@ -65,6 +65,12 @@ program fortran_statistics
   ! genrealised pareto distribution cdf
   print*, fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail="left")
 
+  ! gamma distribution pdf
+  print*, fsml_gamma_pdf(0.2_dp, mu=0.0_dp, alpha=1.2_dp, beta=0.6_dp)
+
+  ! chi square distribution ppf
+  print*, fsml_chi2_ppf(0.2_dp, df=10, mu=2.0_dp, sigma=1.2_dp)
+
 end program fortran_statistics
 ```
 
@@ -120,7 +126,7 @@ Each distribution comes with procedures for the following functions: Probability
 | Gamma                  | ✓       |
 | Exponential            | ✓       |
 | Generalised Pareto     | ✓       |
-| Chi-Squared            | -       |
+| Chi-Squared            | ✓       |
 
 #### Hypothesis Testing
 
