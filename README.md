@@ -163,11 +163,11 @@ Models for clustering and/or capture non-linear relationships, either explicitly
 | Random Forests Regression   | -       |
 | Multilayer Perceptron       | -       |
 
-#### Extensions for Machine Learning Algorithms
+#### Machine Learning Framework Extensions
 
 Additional procedures are provided to make the application of the methods above in a machine learning framework easier.
 
-| Additional Functionality    | Covered |
+| ML Framework Extensions     | Covered |
 | --------------------------- | ------- |
 | Bootstrapping Functions     | -       |
 | Cross-Validation Setting    | -       |
