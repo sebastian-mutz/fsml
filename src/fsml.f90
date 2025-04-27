@@ -25,7 +25,7 @@ module fsml
   private
 
   ! declare public statistics procedures
-  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_reg, fsml_corr
+  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_trend, fsml_corr
   ! declare public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
@@ -67,8 +67,8 @@ interface fsml_cov
 end interface
 
 ! linear trend (regression coefficient)
-interface fsml_reg
-  module procedure f_sts_reg
+interface fsml_trend
+  module procedure f_sts_trend
 end interface
 
 ! Pearson correlation coefficient

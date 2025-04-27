@@ -22,7 +22,7 @@ module fsml_sts
   private
 
   ! declare public procedures
-  public :: f_sts_mean, f_sts_var, f_sts_std, f_sts_cov, f_sts_reg, f_sts_corr
+  public :: f_sts_mean, f_sts_var, f_sts_std, f_sts_cov, f_sts_trend, f_sts_corr
 
 contains
 
@@ -36,15 +36,9 @@ pure function f_sts_mean(x) result(mean)
 ! ==== Declarations
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
   real(wp)             :: mean   !! arithmetic mean
-  real(wp)             :: sum
-  integer(kind=4)      :: i
 
 ! ==== Instructions
-  sum = 0.0_wp
-  do i = 1, size(x)
-     sum = sum + x(i)
-  enddo
-  mean = sum / size(x)
+  mean = sum(x) / size(x)
 
 end function f_sts_mean
 
@@ -59,15 +53,9 @@ pure function f_sts_var(x) result(var)
 ! ==== Declarations
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
   real(wp)             :: var    !! variance
-  real(wp)             :: sum
-  integer(i4)          :: i
 
 ! ==== Instructions
-  sum = 0.0_wp
-  do i = 1, size(x)
-     sum = sum + ( x(i) - f_sts_mean(x) ) * (x(i) - f_sts_mean(x) )
-  enddo
-  var = sum / size(x)
+  var = sum( ( x - f_sts_mean(x) ) * (x - f_sts_mean(x) ) ) / size(x)
 
 end function f_sts_var
 
@@ -100,22 +88,16 @@ pure function f_sts_cov(x,y) result(cov)
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
   real(wp), intent(in) :: y(:)   !! y vector (assumed size array)
   real(wp)             :: cov    !! covariance
-  real(wp)             :: sum
-  integer(i4)          :: i
 
 ! ==== Instructions
-  sum = 0.0_wp
-  do i = 1, size(x)
-     sum = sum + ( x(i) - f_sts_mean(x) ) * (y(i) - f_sts_mean(y) )
-  enddo
-  cov = sum / size(x)
+  cov = sum ( ( x - f_sts_mean(x) ) * (y - f_sts_mean(y) ) ) / size(x)
 
 end function f_sts_cov
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_reg(x,y) result(trend)
+pure function f_sts_trend(x,y) result(trend)
 
 ! ==== Description
 !! Computes regression coefficient/trend. x and y must be the same size.
@@ -128,7 +110,7 @@ pure function f_sts_reg(x,y) result(trend)
 ! ==== Instructions
   trend = f_sts_cov(x,y) / f_sts_var(x)
 
-end function f_sts_reg
+end function f_sts_trend
 
 
 ! ==================================================================== !
