@@ -112,7 +112,7 @@ Basic Statistics (descriptive measures for understanding data).
 | Variance               | ✓       |
 | Standard Deviation     | ✓       |
 | Covariance             | ✓       |
-| Trend (reg. slope)     | ✓       |
+| Linear Trend           | ✓       |
 | Correlation            | ✓       |
 
 #### Distributions and Functions

@@ -235,13 +235,13 @@ pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 !! Uses intrinsic gamma function (Fortran 2008 and later)
 
 ! ==== Declarations
-  real(wp), intent(in)           :: x       !! sample position
-  real(wp), intent(in)           :: df      !! degrees of freedom
-  real(wp), intent(in), optional :: mu      !! distribution location (~mean)
-  real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
-  real(wp)                       :: w_mu    !! final value of mu
-  real(wp)                       :: w_sigma !! final value of sigma
-  real(wp)                       :: fx
+  real(wp)   , intent(in)           :: x       !! sample position
+  integer(i4), intent(in)           :: df      !! degrees of freedom
+  real(wp)   , intent(in), optional :: mu      !! distribution location (~mean)
+  real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
+  real(wp)                          :: w_mu    !! final value of mu
+  real(wp)                          :: w_sigma !! final value of sigma
+  real(wp)                          :: fx
 
 ! ==== Instructions
 
