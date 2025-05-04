@@ -34,6 +34,8 @@ module fsml_dst
 contains
 
 ! TODO: handle invalid arguments (e.g., sigma = negative)
+! TODO: specify optional arguments passed in ppf procedures to cdf procedures
+!       to not rely on guessing by order
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
@@ -653,7 +655,7 @@ end function f_dst_gamma_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_pdf(x, loc, lambda) result(fx)
+pure function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
 ! ==== Description
 !! Probability density function for exponential distribution.
@@ -701,7 +703,7 @@ end function f_dst_exp_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_cdf(x, loc, lambda, tail) result(p)
+pure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for exponential distribution.
@@ -768,7 +770,7 @@ end function f_dst_exp_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_ppf(p, loc, lambda) result(x)
+pure function f_dst_exp_ppf(p, lambda, loc) result(x)
 
 ! ==== Description
 !! Percent point function(PPF) (quantile function or inverse CDF) for exponential distribution.
@@ -815,7 +817,7 @@ pure function f_dst_exp_ppf(p, loc, lambda) result(x)
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_exp_cdf(x_mid, w_loc, w_lambda, tail="left") - p
+     p_mid = f_dst_exp_cdf(x_mid, lambda=w_lambda, loc=w_loc, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
