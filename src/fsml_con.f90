@@ -12,7 +12,7 @@ module fsml_con
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Constants module.
+!! Module for mathematical constants.
 
 ! load modules
   use :: fsml_typ
@@ -25,6 +25,6 @@ module fsml_con
   public :: c_pi
 
 ! constants
-  real(wp), parameter :: c_pi = 3.14159265358979323846_wp  !! pi (real64 can handle)
+  real(wp), parameter :: c_pi = 3.1415926535897932384626433832795028841972_wp
 
 end module fsml_con

@@ -12,8 +12,8 @@ module fsml_dst
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Statistical distribution module. The arguments for functions use common
-!! mathematical notation (e.g., mu for the normal distribution mean).
+!! Statistical distribution module. Common parameterisation and mathematical
+!! notation is used. Additional parameters are sometimes added to enhance functionality.
 
 ! load modules
   use :: fsml_typ

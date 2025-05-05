@@ -12,7 +12,7 @@ module fsml_typ
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! FSML kinds and derived types.
+!! Module for kinds and derived types; sets working precision.
 
   ! load modules
   use :: iso_fortran_env, only: int32, int64, real32, real64, real128 &
@@ -23,7 +23,7 @@ module fsml_typ
   private
 
   ! declare public
-  public :: dp, sp, wp, i4, i8
+  public :: hp, qd, dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
   public :: fsml_typ_df
 

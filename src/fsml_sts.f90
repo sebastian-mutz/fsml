@@ -12,7 +12,7 @@ module fsml_sts
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Module for basic statistics.
+!! Module for  basic sample statistics.
 
   ! load modules
   use :: fsml_typ
