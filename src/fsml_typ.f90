@@ -15,7 +15,7 @@ module fsml_typ
 !! FSML kinds and derived types.
 
   ! load modules
-  use :: iso_fortran_env, only: int32, int64, real32, real64&
+  use :: iso_fortran_env, only: int32, int64, real32, real64, real128 &
                             &, input_unit, output_unit, error_unit
 
   ! basic options
@@ -30,9 +30,11 @@ module fsml_typ
 ! ==== Declarations
 
   ! define kinds (used consistently and explicitly in derived types and entire project)
-  integer, parameter :: sp = real32 !! single precision
-  integer, parameter :: dp = real64 !! double precision
-  integer, parameter :: wp = dp     !! working precision
+  integer, parameter :: hp = selected_real_kind(p=33, r=4931) !! very high precision (for testing)
+  integer, parameter :: qp = real128                          !! quadrouple precision
+  integer, parameter :: dp = real64                           !! double precision
+  integer, parameter :: sp = real32                           !! single precision
+  integer, parameter :: wp = dp                               !! working precision
   integer, parameter :: i4 = int32
   integer, parameter :: i8 = int64
 

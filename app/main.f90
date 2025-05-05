@@ -12,14 +12,14 @@ program main
 ! |--------------------------------------------------------------------|
 
   use :: fsml
-  use :: iso_fortran_env, dp => real64
+  use :: fsml_typ !iso_fortran_env, wp => real64
 
   implicit none
 
   type(fsml_typ_df)  :: df
   character(len=128) :: infile
   integer            :: i
-  real(dp)           :: r
+  real(wp)           :: r
 
   infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
 
@@ -42,22 +42,22 @@ program main
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
   ! exponential pdf (x=0.8)
-  print*, fsml_exp_pdf(0.8_dp)
+  print*, fsml_exp_pdf(0.8_wp)
 
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
-  print*, fsml_norm_cdf(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
+  print*, fsml_norm_cdf(2.0_wp, mu=0.3_wp, sigma=1.3_wp, tail="left")
 
   ! left-tailed p-value for t distribution with specified degrees of freedom
-  print*, fsml_t_ppf(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
+  print*, fsml_t_ppf(0.9_wp, df=20, mu=0.2_wp, sigma=1.2_wp)
 
   ! genrealised pareto distribution cdf
-  print*, fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail="left")
+  print*, fsml_gpd_cdf(1.9_wp, xi=1.2_wp, mu=0.6_wp, sigma=2.2_wp, tail="left")
 
   ! gamma distribution pdf
-  print*, fsml_gamma_pdf(0.2_dp, alpha=1.2_dp, beta=0.6_dp, loc=0.0_dp)
+  print*, fsml_gamma_pdf(0.2_wp, alpha=1.2_wp, beta=0.6_wp, loc=0.0_wp)
 
   ! chi square distribution ppf
-  print*, fsml_chi2_ppf(0.2_dp, df=10, loc=2.0_dp, scale=1.2_dp)
+  print*, fsml_chi2_ppf(0.2_wp, df=10, loc=2.0_wp, scale=1.2_wp)
 
 
 
