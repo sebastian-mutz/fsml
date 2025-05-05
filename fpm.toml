@@ -39,6 +39,7 @@ linkedin = "https://www.linkedin.com/in/sebastian-gerhard-m-5b9952210/"
 website = "http://mutz.science/"
 license = "MIT license"
 doc_license = "by"
+favicon = "./assets/logo/FSML_icon.png"
 project_download = "https://github.com/sebastian-mutz/fsml"
 preprocess = true
 display = ["public", "protected", "private"]

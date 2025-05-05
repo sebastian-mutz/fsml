@@ -43,6 +43,7 @@ pure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for normal distribution.
+!! $$ f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{ -\frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2 } $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -84,7 +85,7 @@ end function f_dst_norm_pdf
 pure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for normal distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -163,7 +164,7 @@ end function f_dst_norm_cdf
 pure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function(PPF) (quantile function or inverse CDF) for normal distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
 !! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 !! will return large negative or positive numbers (highly dependent on the tolerance threshold).
@@ -234,7 +235,9 @@ pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for student t distribution.
-!! Uses intrinsic gamma function (Fortran 2008 and later)
+!! Uses intrinsic gamma function (Fortran 2008 and later).
+!! $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \pi}\,\Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
+!! where  \(v\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: x       !! sample position
@@ -279,7 +282,7 @@ end function f_dst_t_pdf
 pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for student t distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
 !! Degrees of freedom must be positive.
 
 ! ==== Declarations
@@ -370,7 +373,7 @@ end function f_dst_t_cdf
 pure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function(PPF) (quantile function or inverse CDF) for t distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for t distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
 !! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 !! will return large negative or positive numbers (highly dependent on the tolerance threshold).
@@ -443,6 +446,7 @@ pure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 ! ==== Description
 !! Probability density function for gamma distribution.
 !! Uses intrinsic exp function.
+!! $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} x^{\alpha - 1} e^{-\lambda x}, \quad x > 0, \ \alpha > 0, \ \lambda > 0 $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -500,7 +504,7 @@ end function f_dst_gamma_pdf
 pure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for gamma distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -581,7 +585,7 @@ end function f_dst_gamma_cdf
 pure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Description
-!! Percent point function(PPF) (quantile function or inverse CDF) for gamma distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
 
 ! ==== Declarations
@@ -660,6 +664,7 @@ pure function f_dst_exp_pdf(x, lambda, loc) result(fx)
 ! ==== Description
 !! Probability density function for exponential distribution.
 !! Uses intrinsic exp function.
+!! $$ f(x) = \lambda e^{-\lambda x}, \quad x \geq 0, \ \lambda > 0 $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x        !! sample position
@@ -706,7 +711,7 @@ end function f_dst_exp_pdf
 pure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for exponential distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x        !! sample position
@@ -773,7 +778,7 @@ end function f_dst_exp_cdf
 pure function f_dst_exp_ppf(p, lambda, loc) result(x)
 
 ! ==== Description
-!! Percent point function(PPF) (quantile function or inverse CDF) for exponential distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for exponential distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
 
 ! ==== Declarations
@@ -843,6 +848,8 @@ pure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 ! ==== Description
 !! Probability density function for the chi-squared distribution.
 !! Uses intrinsic exp and gamma function.
+!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} e^{-x/2}}{2^{\frac{k}{2}} \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
+!! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: x       !! sample position
@@ -890,7 +897,7 @@ end function f_dst_chi2_pdf
 pure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for the chi-squared distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squared distribution.
 
   ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -964,7 +971,7 @@ end function f_dst_chi2_cdf
 pure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ==== Description
-!! Percent point function (PPF) for the chi-squared distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for the chi-squared distribution.
 !! Uses the bisection method for numerical inversion of the CDF.
 
 ! ==== Declarations
@@ -1031,11 +1038,13 @@ pure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for generalised pareto distribution.
+!! $$ f(x) = \frac{1}{\sigma} \left( 1 + \frac{\xi (x - \mu)}{\sigma} \right)^{-\frac{1}{\xi} - 1}, \quad x \geq \mu, \ \sigma > 0, \ \xi \in \mathbb{R} $$
+!! where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigma), \(\mu\) (mu) is the location (not mean).
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
   real(wp), intent(in)           :: xi      !! distribution shape parameter
-  real(wp), intent(in), optional :: mu      !! distribution location (mean)
+  real(wp), intent(in), optional :: mu      !! distribution location
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   real(wp)                       :: w_mu    !! final value of mu
   real(wp)                       :: w_sigma !! final value of sigma
@@ -1089,12 +1098,12 @@ end function f_dst_gpd_pdf
 pure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function for generalised pareto distribution.
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised pareto distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
   real(wp)        , intent(in)           :: xi      !! distribution shape parameter
-  real(wp)        , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)        , intent(in), optional :: mu      !! distribution location
   real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   character(len=*), intent(in), optional :: tail    !! tail options
   real(wp)                               :: w_mu    !! final value of mu
@@ -1167,12 +1176,12 @@ end function f_dst_gpd_cdf
 pure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function for generalised pareto distribution.
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
 !! Procedure uses bisection method. p should be between 0.0 and 1.0.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: p       !! probability between 0.0 - 1.0
-  real(wp)        , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)        , intent(in), optional :: mu      !! distribution location
   real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   real(wp)        , intent(in), optional :: xi      !! distribution shape parameter
   real(wp)                               :: w_mu    !! final value of mu
