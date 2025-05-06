@@ -23,7 +23,7 @@ module fsml_typ
   private
 
   ! declare public
-  public :: hp, qd, dp, sp, wp, i4, i8
+  public :: hp, qp, dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
   public :: fsml_typ_df
 
@@ -31,7 +31,7 @@ module fsml_typ
 
   ! define kinds (used consistently and explicitly in derived types and entire project)
   integer, parameter :: hp = selected_real_kind(p=33, r=4931) !! very high precision (for testing)
-  integer, parameter :: qp = real128                          !! quadrouple precision
+  integer, parameter :: qp = real128                          !! quadruple precision
   integer, parameter :: dp = real64                           !! double precision
   integer, parameter :: sp = real32                           !! single precision
   integer, parameter :: wp = dp                               !! working precision

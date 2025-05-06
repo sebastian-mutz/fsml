@@ -141,7 +141,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 #### Linear Parametric Models (LPM)
 
- Models that assume a linear relationship between the features and target, and estimate parameters (coefficients). Methods in brackets are optional, new implementations (rather than reworked old code).
+ Models that assume a linear relationship between the features/independent variables and target variable, and estimate parameters (coefficients).
 
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
@@ -154,14 +154,14 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 #### Non-Linear Models (NLM)
 
-Models for clustering and/or capture non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
+Models for clustering and/or capturing non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
 
 | Non-Linear Models (NLM)     | Covered |
 | --------------------------- | ------- |
 | Hierarchical Clustering     | -       |
 | K-Means Clustering          | -       |
 | Random Forests Regression   | -       |
-| Multilayer Perceptron       | -       |
+| (Multilayer Perceptron)     | -       |
 
 #### Machine Learning Framework Extensions
 
