@@ -35,7 +35,7 @@ contains
 
 ! TODO: handle invalid arguments (e.g., sigma = negative)
 ! TODO: specify optional arguments passed in ppf procedures to cdf procedures
-!       to not rely on guessing by order
+!       to not rely on guessing by order; also check where locs/scale are passed
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
@@ -638,7 +638,8 @@ pure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_gamma_cdf(x_mid, w_alpha, w_beta, w_loc, tail="left") - p
+     p_mid = f_dst_gamma_cdf(x_mid, alpha=w_alpha, beta=w_beta&
+          &, loc=w_loc, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
