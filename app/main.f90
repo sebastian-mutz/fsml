@@ -41,8 +41,8 @@ program main
   ! correlation of msl and t2m
   print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
 
-  ! exponential pdf (x=0.8)
-  print*, fsml_exp_pdf(0.8_wp)
+  ! exponential pdf (x=0.8, lambda=0.5)
+  print*, fsml_exp_pdf(0.8_wp, lambda=0.5_wp)
 
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
   print*, fsml_norm_cdf(2.0_wp, mu=0.3_wp, sigma=1.3_wp, tail="left")
