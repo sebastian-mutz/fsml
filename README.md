@@ -137,6 +137,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Student T-Test           | -       |
 | Kolmogorov Smirnov Test  | -       |
 | Kruskall Wallis Test     | -       |
+| (Mann–Whitney U)         | -       |
 | Analysis of Variance     | -       |
 
 #### Linear Parametric Models (LPM)

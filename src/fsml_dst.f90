@@ -35,7 +35,7 @@ contains
 
 ! TODO: handle invalid arguments (e.g., sigma = negative)
 ! TODO: specify optional arguments passed in ppf procedures to cdf procedures
-!       to not rely on guessing by order; also check where locs/scale are passed
+!       to not rely on guessing by order; also check where loc/scale are passed
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
