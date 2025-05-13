@@ -39,7 +39,7 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_norm_pdf(x, mu, sigma) result(fx)
+elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for normal distribution.
@@ -82,7 +82,7 @@ end function f_dst_norm_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
+elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
@@ -161,7 +161,7 @@ end function f_dst_norm_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_norm_ppf(p, mu, sigma) result(x)
+elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
@@ -231,7 +231,7 @@ end function f_dst_norm_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
+elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for student t distribution.
@@ -279,7 +279,7 @@ end function f_dst_t_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
+elemental function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
@@ -370,7 +370,7 @@ end function f_dst_t_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_t_ppf(p, df, mu, sigma) result(x)
+elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for t distribution.
@@ -441,7 +441,7 @@ end function f_dst_t_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
+elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
 !! Probability density function for gamma distribution.
@@ -501,7 +501,7 @@ end function f_dst_gamma_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
+elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distribution.
@@ -582,7 +582,7 @@ end function f_dst_gamma_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
+elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
@@ -660,7 +660,7 @@ end function f_dst_gamma_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_pdf(x, lambda, loc) result(fx)
+elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
 ! ==== Description
 !! Probability density function for exponential distribution.
@@ -709,7 +709,7 @@ end function f_dst_exp_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
+elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential distribution.
@@ -776,7 +776,7 @@ end function f_dst_exp_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_exp_ppf(p, lambda, loc) result(x)
+elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for exponential distribution.
@@ -844,7 +844,7 @@ end function f_dst_exp_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
+elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
 ! ==== Description
 !! Probability density function for the chi-squared distribution.
@@ -895,7 +895,7 @@ end function f_dst_chi2_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
+elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squared distribution.
@@ -969,7 +969,7 @@ end function f_dst_chi2_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
+elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for the chi-squared distribution.
@@ -1035,7 +1035,7 @@ end function f_dst_chi2_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
+elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for generalised pareto distribution.
@@ -1096,7 +1096,7 @@ end function f_dst_gpd_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
+elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised pareto distribution.
@@ -1174,7 +1174,7 @@ end function f_dst_gpd_cdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
+elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
@@ -1223,7 +1223,7 @@ end function f_dst_gpd_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_gamma_inc(a, x) result(p)
+elemental function f_dst_gamma_inc(a, x) result(p)
 
 ! ==== Description
 !! Incomplete gamma function. Needed by gamma and chi-squared cdf.
@@ -1295,7 +1295,7 @@ end function f_dst_gamma_inc
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_dst_beta_inc(x, a, b) result(betai)
+elemental function f_dst_beta_inc(x, a, b) result(betai)
 
 ! ==== Description
 !! Computes the regularised incomplete beta function. beta_inc and beta_cf
@@ -1342,7 +1342,7 @@ pure function f_dst_beta_inc(x, a, b) result(betai)
   contains
 
      ! --------------------------------------------------------------- !
-     pure function beta_cf(x, a, b) result(cf)
+     elemental function beta_cf(x, a, b) result(cf)
 
      ! ==== Description
      !! computes the continued fraction expansion of incomplete beta function.
