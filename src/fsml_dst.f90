@@ -15,15 +15,15 @@ module fsml_dst
 !! Statistical distribution module. Common parameterisation and mathematical
 !! notation is used. Additional parameters are sometimes added to enhance functionality.
 
-! load modules
+  ! load modules
   use :: fsml_typ
   use :: fsml_con
 
-! basic options
+  ! basic options
   implicit none
   private
 
-! declare public procedures
+  ! declare public procedures
   public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
   public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf

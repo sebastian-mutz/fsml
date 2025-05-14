@@ -38,8 +38,8 @@ module fsml
   ! declare public derived types
   public :: fsml_typ_df
 
-! ==== Interfaces (API)
-! API: interfaces to offer simpler, consistent public procedure names
+! ==== Interfaces
+! Interfaces to offer simpler, consistent public procedure names
 
 
 ! ==================================================================== !

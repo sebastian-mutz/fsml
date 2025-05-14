@@ -14,14 +14,14 @@ module fsml_utl
 ! FORD
 !! Utilities module; includes io procedures.
 
-! load modules
+  ! load modules
   use :: fsml_typ
 
-! basic options
+  ! basic options
   implicit none
   private
 
-! declare public procedures
+  ! declare public procedures
   public :: s_utl_read_csv
 
 contains
