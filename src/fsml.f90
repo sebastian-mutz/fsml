@@ -18,24 +18,27 @@ module fsml
   use :: fsml_typ
   use :: fsml_sts
   use :: fsml_dst
+  use :: fsml_tst
   use :: fsml_utl
 
   ! basic options
   implicit none
   private
 
-  ! declare public statistics procedures
+  ! public statistics procedures
   public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_trend, fsml_corr
-  ! declare public distribution procedures
+  ! public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
   public :: fsml_gamma_pdf, fsml_gamma_cdf, fsml_gamma_ppf
   public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
   public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
-  ! declare public utility procedures
+  ! public statistical tests
+  public :: fsml_ttest_1s
+  ! public utility procedures
   public :: fsml_read_csv
-  ! declare public derived types
+  ! public derived types
   public :: fsml_typ_df
 
 ! ==== Interfaces
@@ -169,6 +172,15 @@ end interface
 ! generalised pareto distribution ppf
 interface fsml_gpd_ppf
   module procedure f_dst_gpd_ppf
+end interface
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+! ---- Common Statistical Tests
+
+! 1 sample t-test
+interface fsml_ttest_1s
+  module procedure s_tst_t1s
 end interface
 
 ! ==================================================================== !
