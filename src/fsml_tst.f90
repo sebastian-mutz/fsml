@@ -30,7 +30,7 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_tst_t1s(x, mu0, t, df, p, h1)
+pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
 
 ! ==== Description
 !! 1 sample t-test, testing if the sample mean has the value specified in the null hypothesis.
