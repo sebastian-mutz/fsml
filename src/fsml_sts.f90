@@ -32,7 +32,7 @@ pure function f_sts_mean(x) result(mean)
 
 ! ==== Description
 !! Computes arithmetic mean.
-!! $$ \bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i $$
+!! $$ \bar{x} = \frac{1}{n} \cdot \sum_{i=1}^{n} x_i $$
 !! where \( n \) is the size of (or number of observations in) vector x,
 !! \( x_i \) are individual elements in x, and
 !! \( \bar{x} \) is the arithmetic mean of x.
@@ -42,7 +42,7 @@ pure function f_sts_mean(x) result(mean)
   real(wp)             :: mean   !! arithmetic mean
 
 ! ==== Instructions
-  mean = sum(x) / size(x)
+  mean = sum(x) / real(size(x), kind=wp)
 
 end function f_sts_mean
 
@@ -53,7 +53,7 @@ pure function f_sts_var(x) result(var)
 
 ! ==== Description
 !! Computes variance.
-!! $$ \operatorname{var}(x) = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
+!! $$ \operatorname{var}(x) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
 !! where \( n \) is the size of (or number of observations in) vector x,
 !! \( x_i \) are individual elements in x, and
 !! \( \bar{x} \) is the arithmetic mean of x.
@@ -63,7 +63,8 @@ pure function f_sts_var(x) result(var)
   real(wp)             :: var    !! variance
 
 ! ==== Instructions
-  var = sum( ( x - f_sts_mean(x) ) * (x - f_sts_mean(x) ) ) / size(x)
+  var = sum( ( x - f_sts_mean(x) ) * (x - f_sts_mean(x) ) ) / &
+      & real(size(x), kind=wp)
 
 end function f_sts_var
 
@@ -93,7 +94,7 @@ pure function f_sts_cov(x,y) result(cov)
 
 ! ==== Description
 !! Computes covariance. x and y must be the same size.
-!! $$ \operatorname{cov}(x, y) = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y}) $$
+!! $$ \operatorname{cov}(x, y) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
 !! where \( n \) is the size of (or number of observations in) vectors x and y,
 !! \( x_i \) and \( y_i \) are individual elements in x and y, and
 !! \( \bar{x} \) and \( \bar{y} \) are the arithmetic means of x and y.
@@ -104,7 +105,8 @@ pure function f_sts_cov(x,y) result(cov)
   real(wp)             :: cov    !! covariance
 
 ! ==== Instructions
-  cov = sum ( ( x - f_sts_mean(x) ) * (y - f_sts_mean(y) ) ) / size(x)
+  cov = sum ( ( x - f_sts_mean(x) ) * (y - f_sts_mean(y) ) ) / &
+      & real(size(x), kind=wp)
 
 end function f_sts_cov
 
@@ -137,7 +139,7 @@ pure function f_sts_corr(x,y) result(corr)
 
 ! ==== Description
 !! Computes Pearson correlation coefficient. x and y must be the same size.
-!! $$ \rho_{x,y} = \frac{\operatorname{cov}(x, y)}{\sigma_x \sigma_y} $$
+!! $$ \rho_{x,y} = \frac{\operatorname{cov}(x, y)}{\sigma_x \cdot \sigma_y} $$
 !! where \( \rho_{x,y} \) is the Pearson correlation coefficient for vectors x and y,
 !! \( \operatorname{cov}(x, y) \) is the covariance of x and y, and
 !! \( \sigma_{x} \) and \( \sigma_{y} \) are the standard deviations of x and y.

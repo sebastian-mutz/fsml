@@ -35,7 +35,7 @@ module fsml
   public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! public statistical tests
-  public :: fsml_ttest_1s
+  public :: fsml_ttest_1sample
   ! public utility procedures
   public :: fsml_read_csv
   ! public derived types
@@ -176,10 +176,10 @@ end interface
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-! ---- Common Statistical Tests
+! ---- Statistical Tests
 
 ! 1 sample t-test
-interface fsml_ttest_1s
+interface fsml_ttest_1sample
   module procedure s_tst_t1s
 end interface
 

@@ -90,11 +90,11 @@ I will consider the library to be in "alpha" once FSML covers the functionality 
 
 ### <span style="color:#734f96">Beta</span>
 
-This stage is reached once:
+This stage is reached once FSML:
 
-- FSML is able to reproduce all of the above mentioned type of analyses without issues.
-- FSML fully works with GFortran, LFortran, and Flang compilers.
-- FSML has proper documentation.
+- has undergone substantial testing (incl. comparisons to other libs)
+- has proper documentation.
+- fully works with GFortran, LFortran, and Flang compilers.
 
 ### <span style="color:#734f96">Progress</span>
 
@@ -108,12 +108,12 @@ Basic Statistics (descriptive measures for understanding data).
 
 | Basic Statistics (STS) | Covered |
 | ---------------------- | ------- |
-| Mean                   | ✓       |
-| Variance               | ✓       |
-| Standard Deviation     | ✓       |
-| Covariance             | ✓       |
-| Linear Trend           | ✓       |
-| Correlation            | ✓       |
+| mean                   | ✓       |
+| variance               | ✓       |
+| standard deviation     | ✓       |
+| covariance             | ✓       |
+| linear trend           | ✓       |
+| correlation            | ✓       |
 
 #### Distributions and Functions
 
@@ -122,23 +122,24 @@ Each distribution comes with procedures for the following functions: Probability
 | Distributions (DST)    | Covered |
 | ---------------------- | ------- |
 | Normal                 | ✓       |
-| T                      | ✓       |
+| Student's t            | ✓       |
 | Gamma                  | ✓       |
 | Exponential            | ✓       |
 | Generalised Pareto     | ✓       |
-| Chi-Squared            | ✓       |
+| Chi-squared            | ✓       |
 
 #### Hypothesis Testing
 
 Hypothesis Testing (statistical tests for inference and comparing groups).
 
-| Hypothesis Testing (TST) | Covered |
-| ------------------------ | ------- |
-| Student T-Test           | -       |
-| Kolmogorov Smirnov Test  | -       |
-| Kruskall Wallis Test     | -       |
-| (Mann–Whitney U)         | -       |
-| Analysis of Variance     | -       |
+| Hypothesis Testing (TST)   | Covered |
+| -------------------------- | ------- |
+| Student t-test (1 sample)  | ✓       |
+| Welch's t-test (2 samples) | -       |
+| Kolmogorov Smirnov test    | -       |
+| Kruskall Wallis test       | -       |
+| (Mann–Whitney U)           | -       |
+| Analysis of variance       | -       |
 
 #### Linear Parametric Models (LPM)
 
@@ -146,12 +147,12 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 | Linear Parametric Models (LPM)| Covered |
 | ----------------------------- | ------- |
-| Multiple OLS Regression       | -       |
-| LASSO Regression              | -       |
-| Ridge Regression              | -       |
-| Pincipal Component Analysis   | -       |
-| Discriminant Analysis (LDA)   | -       |
-| Bayesian Classification       | -       |
+| Multiple OLS regression       | -       |
+| LASSO regression              | -       |
+| Ridge regression              | -       |
+| Pincipal component analysis   | -       |
+| Discriminant analysis (LDA)   | -       |
+| Bayesian classification       | -       |
 
 #### Non-Linear Models (NLM)
 
@@ -159,10 +160,10 @@ Models for clustering and/or capturing non-linear relationships, either explicit
 
 | Non-Linear Models (NLM)     | Covered |
 | --------------------------- | ------- |
-| Hierarchical Clustering     | -       |
-| K-Means Clustering          | -       |
-| Random Forests Regression   | -       |
-| (Multilayer Perceptron)     | -       |
+| Hierarchical clustering     | -       |
+| K-means clustering          | -       |
+| Random forests regression   | -       |
+| (Multilayer perceptron)     | -       |
 
 #### Machine Learning Framework Extensions
 
@@ -170,9 +171,9 @@ Additional procedures are provided to make the application of the methods above 
 
 | ML Framework Extensions     | Covered |
 | --------------------------- | ------- |
-| Bootstrapping Functions     | -       |
-| Cross-Validation Setting    | -       |
-| Model Performance Metrics   | -       |
+| Bootstrapping functions     | -       |
+| Cross-validation setting    | -       |
+| Model performance metrics   | -       |
 
 #### Additional Functionality
 
@@ -180,7 +181,7 @@ Additional procedures are provided to make the application of the methods above 
 | --------------------------- | ------- |
 | Read from CSV file          | ✓       |
 | Read from netCDF file       | -       |
-| Simple Fortran Dataframe    | ✓       |
+| Simple fortran dataframe    | ✓       |
 
 ## <span style="color:#734f96">Installation</span>
 

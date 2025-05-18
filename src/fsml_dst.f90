@@ -43,14 +43,14 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for normal distribution.
-!! $$ f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{ -\frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2 } $$
+!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2 } $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
   real(wp), intent(in), optional :: mu      !! distribution location (mean)
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
-  real(wp)                       :: w_mu    !! final value of mu
-  real(wp)                       :: w_sigma !! final value of sigma
+  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: sigma_w !! final value of sigma
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -59,23 +59,23 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PDF
 
   ! calculate probability/fx
-  fx = (1.0_wp / (w_sigma * sqrt(2.0_wp * c_pi))) * &
-     & exp(-0.5_wp * ((x - w_mu) / w_sigma)**2.0_wp)
+  fx = (1.0_wp / (sigma_w * sqrt(2.0_wp * c_pi))) * &
+     & exp(-0.5_wp * ((x - mu_w) / sigma_w)**2.0_wp)
 
 end function f_dst_norm_pdf
 
@@ -92,9 +92,9 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
   real(wp)        , intent(in), optional :: mu      !! distribution location (mean)
   real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: w_mu    !! final value of mu
-  real(wp)                               :: w_sigma !! final value of sigma
-  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: sigma_w !! final value of sigma
+  character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: z       !! z-score
   real(wp)                               :: p       !! returned probability integral
 
@@ -104,36 +104,36 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
-     w_tail = tail
+     tail_w = tail
   else
-     w_tail = "left"
+     tail_w = "left"
   endif
 
 ! ---- compute CDF
 
   ! compute z-score
-  z = (x - w_mu) / (w_sigma * sqrt(2.0_wp))
+  z = (x - mu_w) / (sigma_w * sqrt(2.0_wp))
 
   ! compute integral (left tailed)
   p = 0.5_wp * (1.0_wp + erf(z))
 
   ! tail options
   ! NOTE: alternatively, compare z to 0.0 instead of x to mu
-  select case(w_tail)
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -142,16 +142,16 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (x .gt. w_mu) then
+        if (x .gt. mu_w) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (x .le. w_mu) then
+        elseif (x .le. mu_w) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (x .gt. w_mu) then
+        if (x .gt. mu_w) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (x .le. w_mu) then
+        elseif (x .le. mu_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
    end select
@@ -173,8 +173,8 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
   real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
-  real(wp)                          :: w_mu             !! final value of mu
-  real(wp)                          :: w_sigma          !! final value of sigma
+  real(wp)                          :: mu_w             !! final value of mu
+  real(wp)                          :: sigma_w          !! final value of sigma
   integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
@@ -188,16 +188,16 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PPF
@@ -214,7 +214,7 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value and adjust for mu and sigma
-        x = w_mu + w_sigma * x_mid
+        x = mu_w + sigma_w * x_mid
         return
      elseif (p_mid .lt. 0.0_wp) then
         a = x_mid
@@ -236,7 +236,7 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 ! ==== Description
 !! Probability density function for student t distribution.
 !! Uses intrinsic gamma function (Fortran 2008 and later).
-!! $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \pi}\,\Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
+!! $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \cdot \pi}\, \cdot \Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
 !! where  \(v\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
@@ -244,8 +244,8 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   integer(i4), intent(in)           :: df      !! degrees of freedom
   real(wp)   , intent(in), optional :: mu      !! distribution location (~mean)
   real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
-  real(wp)                          :: w_mu    !! final value of mu
-  real(wp)                          :: w_sigma !! final value of sigma
+  real(wp)                          :: mu_w    !! final value of mu
+  real(wp)                          :: sigma_w !! final value of sigma
   real(wp)                          :: fx
 
 ! ==== Instructions
@@ -254,24 +254,24 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PDF
 
   ! calculate probability/fx
   fx = gamma((df + 1.0_wp) / 2.0_wp) / &
-     & (w_sigma * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
-     & (1.0_wp + ( ( (x - w_mu) / w_sigma )**2 ) / df)** &
+     & (sigma_w * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
+     & (1.0_wp + ( ( (x - mu_w) / sigma_w )**2 ) / df)** &
      & (-(df + 1.0_wp) / 2.0_wp)
 
 end function f_dst_t_pdf
@@ -279,21 +279,21 @@ end function f_dst_t_pdf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
+elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
 !! Degrees of freedom must be positive.
 
 ! ==== Declarations
-  real(wp)        , intent(in)           :: t           !! sample position
+  real(wp)        , intent(in)           :: x           !! sample position
   integer(i4)     , intent(in)           :: df          !! degrees of freedom
   real(wp)        , intent(in), optional :: mu          !! distribution location (mean)
   real(wp)        , intent(in), optional :: sigma       !! distribution dispersion/scale (standard deviation)
   character(len=*), intent(in), optional :: tail        !! tail options
-  real(wp)                               :: w_mu        !! final value of mu
-  real(wp)                               :: w_sigma     !! final value of sigma
-  character(len=16)                      :: w_tail      !! final tail option
+  real(wp)                               :: mu_w        !! final value of mu
+  real(wp)                               :: sigma_w     !! final value of sigma
+  character(len=16)                      :: tail_w      !! final tail option
   real(wp)                               :: z           !! z-score
   real(wp)                               :: xbeta, a, b !! parameters for beta function
   real(wp)                               :: p           !! returned probability integral
@@ -304,29 +304,29 @@ elemental function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
-     w_tail = tail
+     tail_w = tail
   else
-     w_tail = "left"
+     tail_w = "left"
   endif
 
 ! ---- compute CDF
 
   ! compute z-score
-  z = (t - w_mu) / w_sigma
+  z = (x - mu_w) / sigma_w
 
   ! shape parameters for beta function
   a = 0.5_wp * df
@@ -341,8 +341,8 @@ elemental function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
   endif
 
   ! tail options
-  ! NOTE: alternatively, compare z to 0.0 instead of t to mu
-  select case(w_tail)
+  ! NOTE: alternatively, compare z to 0.0 instead of x to mu
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -351,16 +351,16 @@ elemental function f_dst_t_cdf(t, df, mu, sigma, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (t .gt. w_mu) then
+        if (x .gt. mu_w) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (t .le. w_mu) then
+        elseif (x .le. mu_w) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (t .gt. w_mu) then
+        if (x .gt. mu_w) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (t .le. w_mu) then
+        elseif (x .le. mu_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
    end select
@@ -383,8 +383,8 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
   integer(i4), intent(in)           :: df               !! degrees of freedom
   real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
-  real(wp)                          :: w_mu             !! final value of mu
-  real(wp)                          :: w_sigma          !! final value of sigma
+  real(wp)                          :: mu_w             !! final value of mu
+  real(wp)                          :: sigma_w          !! final value of sigma
   integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
@@ -398,16 +398,16 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PPF
@@ -424,7 +424,7 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value and adjust for mu and sigma
-        x = w_mu + w_sigma * x_mid
+        x = mu_w + sigma_w * x_mid
         return
      elseif (p_mid .lt. 0.0_wp) then
         a = x_mid
@@ -453,9 +453,9 @@ elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
   real(wp), intent(in), optional :: alpha   !! shape  parameter
   real(wp), intent(in), optional :: beta    !! scale parameter
   real(wp), intent(in), optional :: loc     !! location parameter
-  real(wp)                       :: w_alpha !! final value for alpha
-  real(wp)                       :: w_beta  !! final value for beta
-  real(wp)                       :: w_loc   !! final value for loc
+  real(wp)                       :: alpha_w !! final value for alpha
+  real(wp)                       :: beta_w  !! final value for beta
+  real(wp)                       :: loc_w   !! final value for loc
   real(wp)                       :: z       !! shifted and scaled variable
   real(wp)                       :: fx
 
@@ -465,35 +465,35 @@ elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
   ! assume alpha = 1 if not specified
   if (present(alpha)) then
-     w_alpha = alpha
+     alpha_w = alpha
   else
-     w_alpha = 1.0_wp
+     alpha_w = 1.0_wp
   endif
 
   ! assume beta = 1 if not specified
   if (present(beta)) then
-     w_beta = beta
+     beta_w = beta
   else
-     w_beta = 1.0_wp
+     beta_w = 1.0_wp
   endif
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
 
 ! ---- compute PDF
 
   ! calculate probability/fx
-  if (x .le. 0.0_wp .or. w_alpha .le. 0.0_wp .or. w_beta .le. 0.0_wp) then
+  if (x .le. 0.0_wp .or. alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
      fx = 0.0_wp
   else
-     z = (x - w_loc) / w_beta
-     fx = ( x ** (w_alpha - 1.0_wp) ) * exp( -z) / &
-        & ( w_beta ** w_alpha * gamma(w_alpha))
+     z = (x - loc_w) / beta_w
+     fx = ( x ** (alpha_w - 1.0_wp) ) * exp( -z) / &
+        & ( beta_w ** alpha_w * gamma(alpha_w))
   endif
 
 end function f_dst_gamma_pdf
@@ -512,10 +512,10 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
   real(wp)        , intent(in), optional :: beta    !! scale parameter
   real(wp)        , intent(in), optional :: loc     !! location parameter
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: w_alpha !! final value for alpha
-  real(wp)                               :: w_beta  !! final value for beta
-  real(wp)                               :: w_loc   !! final value for loc
-  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: alpha_w !! final value for alpha
+  real(wp)                               :: beta_w  !! final value for beta
+  real(wp)                               :: loc_w   !! final value for loc
+  character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: z       !! standardised variable
   real(wp)                               :: p       !! returned probability integral
 
@@ -525,44 +525,44 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
   ! assume alpha = 1 if not specified
   if (present(alpha)) then
-     w_alpha = alpha
+     alpha_w = alpha
   else
-     w_alpha = 1.0_wp
+     alpha_w = 1.0_wp
   endif
 
   ! assume beta = 1 if not specified
   if (present(beta)) then
-     w_beta = beta
+     beta_w = beta
   else
-     w_beta = 1.0_wp
+     beta_w = 1.0_wp
   endif
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
-     w_tail = tail
+     tail_w = tail
   else
-     w_tail = "left"
+     tail_w = "left"
   endif
 
 ! ---- compute CDF
 
   ! compute integral (left tailed)
-  if (x .le. w_loc .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
+  if (x .le. loc_w .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
      p = 0.0_wp
   else
-     z = (x - w_loc) / w_beta
+     z = (x - loc_w) / beta_w
      p = f_dst_gamma_inc(alpha, z)
   endif
 
   ! tail options
-  select case(w_tail)
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -593,9 +593,9 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   real(wp)   , intent(in), optional :: alpha            !! shape  parameter
   real(wp)   , intent(in), optional :: beta             !! scale parameter
   real(wp)   , intent(in), optional :: loc              !! location parameter
-  real(wp)                          :: w_alpha          !! final value for alpha
-  real(wp)                          :: w_beta           !! final value for beta
-  real(wp)                          :: w_loc            !! final value for loc
+  real(wp)                          :: alpha_w          !! final value for alpha
+  real(wp)                          :: beta_w           !! final value for beta
+  real(wp)                          :: loc_w            !! final value for loc
   integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
@@ -609,37 +609,37 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
   ! assume alpha = 1 if not specified
   if (present(alpha)) then
-     w_alpha = alpha
+     alpha_w = alpha
   else
-     w_alpha = 1.0_wp
+     alpha_w = 1.0_wp
   endif
 
   ! assume beta = 1 if not specified
   if (present(beta)) then
-     w_beta = beta
+     beta_w = beta
   else
-     w_beta = 1.0_wp
+     beta_w = 1.0_wp
   endif
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
 ! ---- compute PPF
 
   ! set initial section
-  a = w_loc
-  b = w_loc + w_alpha * w_beta * 10.0_wp
+  a = loc_w
+  b = loc_w + alpha_w * beta_w * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_gamma_cdf(x_mid, alpha=w_alpha, beta=w_beta&
-          &, loc=w_loc, tail="left") - p
+     p_mid = f_dst_gamma_cdf(x_mid, alpha=alpha_w, beta=beta_w&
+          &, loc=loc_w, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
@@ -671,8 +671,8 @@ elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
   real(wp), intent(in)           :: x        !! sample position
   real(wp), intent(in), optional :: loc      !! location parameter
   real(wp), intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mu/mean
-  real(wp)                       :: w_loc    !! final value for loc
-  real(wp)                       :: w_lambda !! final value for lambda
+  real(wp)                       :: loc_w    !! final value for loc
+  real(wp)                       :: lambda_w !! final value for lambda
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -681,27 +681,27 @@ elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume lambda = 1 if not specified
   if (present(lambda)) then
-     w_lambda = lambda
+     lambda_w = lambda
   else
-     w_lambda = 1.0_wp
+     lambda_w = 1.0_wp
   endif
 
 ! ---- compute PDF
 
   ! calculate probability/fx
-  if (x .lt. w_loc) then
+  if (x .lt. loc_w) then
      fx = 0.0_wp
-  elseif (w_lambda .lt. 0.0_wp) then
+  elseif (lambda_w .lt. 0.0_wp) then
      fx = 0.0_wp
   else
-     fx = w_lambda * exp( -w_lambda * (x - w_loc) )
+     fx = lambda_w * exp( -lambda_w * (x - loc_w) )
   endif
 
 end function f_dst_exp_pdf
@@ -719,9 +719,9 @@ elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
   real(wp)        , intent(in), optional :: loc      !! location parameter
   real(wp)        , intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mu/mean
   character(len=*), intent(in), optional :: tail     !! tail options
-  real(wp)                               :: w_loc    !! final value for loc
-  real(wp)                               :: w_lambda !! final value for lambda
-  character(len=16)                      :: w_tail   !! final tail option
+  real(wp)                               :: loc_w    !! final value for loc
+  real(wp)                               :: lambda_w !! final value for lambda
+  character(len=16)                      :: tail_w   !! final tail option
   real(wp)                               :: p        !! returned probability integral
 
 ! ==== Instructions
@@ -730,38 +730,38 @@ elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume lambda = 1 if not specified
   if (present(lambda)) then
-     w_lambda = lambda
+     lambda_w = lambda
   else
-     w_lambda = 1.0_wp
+     lambda_w = 1.0_wp
   endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
-     w_tail = tail
+     tail_w = tail
   else
-     w_tail = "left"
+     tail_w = "left"
   endif
 
 ! ---- compute CDF
 
   ! compute integral (left tailed)
-  if (x .lt. w_loc) then
+  if (x .lt. loc_w) then
      p = 0.0_wp
-  elseif (w_lambda .lt. 0.0_wp) then
+  elseif (lambda_w .lt. 0.0_wp) then
      p = 0.0_wp
   else
-     p = 1.0_wp - exp( -lambda * (x - w_loc) )
+     p = 1.0_wp - exp( -lambda * (x - loc_w) )
   endif
 
   ! tail options
-  select case(w_tail)
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -786,8 +786,8 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
   real(wp)   , intent(in), optional :: loc              !! location parameter
   real(wp)   , intent(in), optional :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
-  real(wp)                          :: w_loc            !! final value for loc
-  real(wp)                          :: w_lambda         !! final value for lambda
+  real(wp)                          :: loc_w            !! final value for loc
+  real(wp)                          :: lambda_w         !! final value for lambda
   integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
@@ -801,29 +801,29 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume lambda = 1 if not specified
   if (present(lambda)) then
-     w_lambda = lambda
+     lambda_w = lambda
   else
-     w_lambda = 1.0_wp
+     lambda_w = 1.0_wp
   endif
 
 ! ---- compute PPF
 
   ! set initial section (min possible approaches 0)
-  a = w_loc
-  b = w_loc - log(1.0_wp - p) / w_lambda * 10.0_wp
+  a = loc_w
+  b = loc_w - log(1.0_wp - p) / lambda_w * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_exp_cdf(x_mid, lambda=w_lambda, loc=w_loc, tail="left") - p
+     p_mid = f_dst_exp_cdf(x_mid, lambda=lambda_w, loc=loc_w, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
@@ -849,7 +849,7 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 ! ==== Description
 !! Probability density function for the chi-squared distribution.
 !! Uses intrinsic exp and gamma function.
-!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} e^{-x/2}}{2^{\frac{k}{2}} \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
+!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{-x/2}}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
 !! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
@@ -857,8 +857,8 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
   integer(i4), intent(in)           :: df      !! degrees of freedom
   real(wp)   , intent(in), optional :: loc     !! location parameter
   real(wp)   , intent(in), optional :: scale   !! scale parameter
-  real(wp)                          :: w_loc   !! final value for loc
-  real(wp)                          :: w_scale !! final value for scale
+  real(wp)                          :: loc_w   !! final value for loc
+  real(wp)                          :: scale_w !! final value for scale
   real(wp)                          :: fx      !! resulting PDF value
   real(wp)                          :: z       !! standardised variable
 
@@ -868,25 +868,25 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume scale = 1 if not specified
   if (present(scale)) then
-     w_scale = scale
+     scale_w = scale
   else
-     w_scale = 1.0_wp
+     scale_w = 1.0_wp
   endif
 
 ! ----compute PDF
-  z = (x - w_loc) / w_scale
-  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. w_scale .le. 0.0_wp) then
+  z = (x - loc_w) / scale_w
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale_w .le. 0.0_wp) then
      fx = 0.0_wp
   else
      fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * &
-        & gamma(df / 2.0_wp) * w_scale)) * &
+        & gamma(df / 2.0_wp) * scale_w)) * &
         & z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp)
   endif
 
@@ -906,9 +906,9 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
   real(wp)        , intent(in), optional :: loc     !! location parameter
   real(wp)        , intent(in), optional :: scale   !! scale parameter
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: w_loc   !! final value for loc
-  real(wp)                               :: w_scale !! final value for scale
-  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: loc_w   !! final value for loc
+  real(wp)                               :: scale_w !! final value for scale
+  character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: p       !! resulting CDF value
   real(wp)                               :: z       !! standardised variable
 
@@ -918,30 +918,30 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume scale = 1 if not specified
   if (present(scale)) then
-     w_scale = scale
+     scale_w = scale
   else
-     w_scale = 1.0_wp
+     scale_w = 1.0_wp
   endif
 
 ! ----compute CDF
 
   ! compute integral (left tailed)
-  z = (x - w_loc) / w_scale
-  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. w_scale .le. 0.0_wp) then
+  z = (x - loc_w) / scale_w
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale_w .le. 0.0_wp) then
      p = 0.0_wp
   else
      p = f_dst_gamma_inc(df / 2.0_wp, z / 2.0_wp)
   endif
 
   ! tail options
-  select case(w_tail)
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -950,16 +950,16 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (x .gt. w_loc) then
+        if (x .gt. loc_w) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (x .le. w_loc) then
+        elseif (x .le. loc_w) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (x .gt. w_loc) then
+        if (x .gt. loc_w) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (x .le. w_loc) then
+        elseif (x .le. loc_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
    end select
@@ -980,8 +980,8 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   integer(i4), intent(in)        :: df               !! degrees of freedom
   real(wp), intent(in), optional :: loc              !! location parameter
   real(wp), intent(in), optional :: scale            !! scale parameter
-  real(wp)                       :: w_loc            !! final value for loc
-  real(wp)                       :: w_scale          !! final value for scale
+  real(wp)                       :: loc_w            !! final value for loc
+  real(wp)                       :: scale_w          !! final value for scale
   integer(i4), parameter         :: i_max = 200      !! maximum iterations
   real(wp), parameter            :: tol = 1.0e-12_wp !! tolerance for convergence
   real(wp)                       :: a, b             !! interval bounds
@@ -995,28 +995,28 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
   ! assume loc = 0 if not specified
   if (present(loc)) then
-     w_loc = loc
+     loc_w = loc
   else
-     w_loc = 0.0_wp
+     loc_w = 0.0_wp
   endif
 
   ! assume scale = 1 if not specified
   if (present(scale)) then
-     w_scale = scale
+     scale_w = scale
   else
-     w_scale = 1.0_wp
+     scale_w = 1.0_wp
   endif
 
 ! ---- compute PPF
 
   ! set initial section (min possible approaches 0)
-  a = w_loc
-  b = w_loc + df * 10.0_wp
+  a = loc_w
+  b = loc_w + df * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
-     p_mid = f_dst_chi2_cdf(x_mid, df, loc=w_loc, scale=w_scale) - p
+     p_mid = f_dst_chi2_cdf(x_mid, df, loc=loc_w, scale=scale_w) - p
      if (abs(p_mid) .lt. tol) then
         x = x_mid
         return
@@ -1047,8 +1047,8 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
   real(wp), intent(in)           :: xi      !! distribution shape parameter
   real(wp), intent(in), optional :: mu      !! distribution location
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
-  real(wp)                       :: w_mu    !! final value of mu
-  real(wp)                       :: w_sigma !! final value of sigma
+  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: sigma_w !! final value of sigma
   real(wp)                       :: z       !! z-score
   real(wp)                       :: fx
 
@@ -1058,22 +1058,22 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PDF
 
   ! compute z-score
-  z = (x - w_mu) / w_sigma
+  z = (x - mu_w) / sigma_w
 
   ! calculate probability/fx
   if (xi .eq. 0.0_wp) then
@@ -1107,9 +1107,9 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   real(wp)        , intent(in), optional :: mu      !! distribution location
   real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: w_mu    !! final value of mu
-  real(wp)                               :: w_sigma !! final value of sigma
-  character(len=16)                      :: w_tail  !! final tail option
+  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: sigma_w !! final value of sigma
+  character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: z       !! z-score
   real(wp)                               :: p       !! returned probability integral
 
@@ -1119,29 +1119,29 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
   ! assume left-tailed if not specified
   if (present(tail)) then
-     w_tail = tail
+     tail_w = tail
   else
-     w_tail = "left"
+     tail_w = "left"
   endif
 
 ! ---- compute CDF
 
   ! compute z-score
-  z = (x - w_mu) / w_sigma
+  z = (x - mu_w) / sigma_w
 
   ! compute integral (left tailed)
   if (xi .eq. 0.0_wp) then
@@ -1160,7 +1160,7 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   endif
 
   ! tail options
-  select case(w_tail)
+  select case(tail_w)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -1185,8 +1185,8 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
   real(wp)        , intent(in), optional :: mu      !! distribution location
   real(wp)        , intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   real(wp)        , intent(in), optional :: xi      !! distribution shape parameter
-  real(wp)                               :: w_mu    !! final value of mu
-  real(wp)                               :: w_sigma !! final value of sigma
+  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: sigma_w !! final value of sigma
   real(wp)                               :: x       !! sample position
 
 ! ==== Instructions
@@ -1195,16 +1195,16 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
   ! assume location/mean = 0 if not passed
   if (present(mu)) then
-     w_mu = mu
+     mu_w = mu
   else
-     w_mu = 0.0_wp
+     mu_w = 0.0_wp
   endif
 
   ! assume sigma = 1 if not passed
   if (present(sigma)) then
-     w_sigma = sigma
+     sigma_w = sigma
   else
-     w_sigma = 1.0_wp
+     sigma_w = 1.0_wp
   endif
 
 ! ---- compute PPF
@@ -1212,10 +1212,10 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
   ! compute inverse cdf based on xi
     if (abs(xi) .lt. 1.0e-12_wp) then
       ! if xi is approximately zero, use exponential distribution
-      x = w_mu - w_sigma * log(1.0_wp - p)
+      x = mu_w - sigma_w * log(1.0_wp - p)
     else
       ! if xi is not zero, use general formula
-      x = w_mu + (w_sigma / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
+      x = mu_w + (sigma_w / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
     endif
 
 end function f_dst_gpd_ppf
@@ -1325,6 +1325,7 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
   endif
 
   ! compute log(beta(a, b)) for numerical stability
+  ! NOTE: no intrinsic log_beta function; could improve
   lnbeta = log_gamma(a) + log_gamma(b) - log_gamma(a + b)
 
   ! avoid problems from large a/b
@@ -1354,7 +1355,7 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
      real(wp)               :: cf                 !! continued fraction
      real(wp)               :: c, d
      real(wp)               :: aa, del, qab, qam, qap
-     real(wp)   , parameter :: eps   = 1.0e-12_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
+     real(wp)   , parameter :: eps   = 1.0e-14_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
      integer(i4), parameter :: i_max = 200        !! max. iteration numbers
      integer(i4)            :: i

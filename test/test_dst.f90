@@ -52,7 +52,7 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, fg_color_cyan // "  > passed" // style_reset
+     print*, fg_color_cyan // "  passed" // style_reset
   else
      print*,  fg_color_red // "  > error: one or more failed" // style_reset
      stop
