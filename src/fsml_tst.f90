@@ -148,7 +148,7 @@ pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
 !!
 !! If variances are assumed to be equal (`eq_var = .true.`),
 !! the procedure conducts a 2 sample t-test for equal variances, using the pooled standard
-!! deciation \( s_p \) to calculate the t-statistic:
+!! deviation \( s_p \) to calculate the t-statistic:
 !! $$ t = \frac{\bar{x}_1 - \bar{x}_2}{s_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} $$
 !!
 !! In case of assumed equal variances, the degrees of freedom is calculated as follows:
