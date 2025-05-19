@@ -24,7 +24,7 @@ module fsml_tst
   private
 
   ! declare public procedures
-  public :: s_tst_t1s
+  public :: s_tst_t1s, s_tst_t2s
 
 contains
 
@@ -33,7 +33,11 @@ contains
 pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
 
 ! ==== Description
-!! 1 sample t-test, testing if the sample mean has the value specified in the null hypothesis.
+!! The 1-sample t-test determines if the sample mean has the value specified in the null hypothesis.
+!!
+!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
+!! \( H_{0} \): \( \bar{x}  =  \mu_0 \), and \( H_{1} \): \( \bar{x} \neq \mu_0 \)
+!!
 !! The test statstic \( t \) is calculated as follows:
 !! $$ t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}$$
 !! where \( \bar{x} \) is the sample mean,
@@ -41,22 +45,20 @@ pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
 !! \( n \) is the sample size, and
 !! \( \mu_0 \) is the population mean.
 !!
-!! The degrees of freedom \( \nu \) are:
+!! The degrees of freedom \( \nu \) is calculated as follows:
 !! $$ \nu = n -1 $$
-!!
-!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
-!! \( H_{0} \): \( \bar{x}  =  \mu_0 \), and \( H_{1} \): \( \bar{x} \neq \mu_0 \)
 
 ! ==== Declarations
   real(wp)         , intent(in)           :: x(:) !! x vector (samples)
   real(wp)         , intent(in)           :: mu0  !! population mean (null hypothesis expected value)
   character(len=*) , intent(in), optional :: h1   !! \( H_{1} \) option: two (default), le, ge
   real(wp)         , intent(out)          :: t    !! test statistic
-  integer(i4)      , intent(out)          :: df   !! degrees of freedom
+  real(wp)         , intent(out)          :: df   !! degrees of freedom
   real(wp)         , intent(out)          :: p    !! p-value
-  character(len=16)                       :: w_h1 !! final value for h1
+  character(len=16)                       :: h1_w !! final value for h1
   real(wp)                                :: xbar !! sample mean
   real(wp)                                :: s    !! sample standard deviation
+  integer(i4)                             :: n    !! sample size
 
 ! ==== Instructions
 
@@ -64,51 +66,58 @@ pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
 
   ! assume two-sided if option not passed
   if (present(h1)) then
-     w_h1 = h1
+     h1_w = h1
   else
-     w_h1 = "two"
+     h1_w = "two"
   endif
 
 ! ---- conduct test
 
-  ! get sample standard deviation (using n-1)
+  ! get mean, sample size, and sample standard deviation (using n-1)
   xbar = f_sts_mean(x)
-  s = sqrt( sum( (x - xbar) * (x - xbar) ) / real( (size(x)-1), kind=wp ) )
+  n = size(x)
+  s = sqrt( dot_product( (x - xbar), (x - xbar) ) / real( (n-1), kind=wp ) )
 
   ! get test statistic
-  t = f_tst_t1s_t( f_sts_mean(x), s, size(x), mu0 )
+  t = f_tst_t1s_t(xbar, s, n, mu0)
 
   ! get degrees of freedom
-  df = size(x) - 1
+  df = real(n, kind=wp) - 1.0_wp
 
   ! get p-value
-  select case (w_h1)
+  select case(h1_w)
+     ! less than
      case("lt")
         p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "left")
+     ! greater than
      case("gt")
         p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "right")
+     ! two-sided
      case("two")
         p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "two")
+     ! invalid option
+     case default
+        p = -1.0_wp
   end select
 
   contains
 
   ! --------------------------------------------------------------- !
-  elemental function f_tst_t1s_t(x, s, n, mu0) result(t)
+  pure function f_tst_t1s_t(xbar, s, n, mu0) result(t)
 
   ! ==== Description
   !! Calculates the test statstic \( t \) for 1 sample t-test.
-  ! NOTE: Alternatively offer as a separate public procedure.
+  ! TODO: Think about making elemental and public for batch processing
 
   ! ==== Declarations
-  real(wp)   , intent(in) :: x   !! sample mean
-  real(wp)   , intent(in) :: s   !! sample standard deviation
-  integer(i4), intent(in) :: n   !! sample size
-  real(wp)   , intent(in) :: mu0 !! population mean
-  real(wp)                :: t   !! test statistic
+  real(wp)   , intent(in) :: xbar !! sample mean
+  real(wp)   , intent(in) :: s    !! sample standard deviation
+  integer(i4), intent(in) :: n    !! sample size
+  real(wp)   , intent(in) :: mu0  !! population mean
+  real(wp)                :: t    !! test statistic
 
   ! ==== Instructions
-  t = (x - mu0) / ( s / sqrt( real(n, kind=wp) ) )
+  t = (xbar - mu0) / ( s / sqrt( real(n, kind=wp) ) )
 
   end function f_tst_t1s_t
 
@@ -119,47 +128,172 @@ end subroutine s_tst_t1s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_t2s(x1, x2, t, df, p, h1)
+pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
 
 ! ==== Description
-!! Welch's t-test (the generalised version for the 2 sample t-test),
-!! testing if two population means \( \mu_1 \) and \( \mu_2\) are the same.
-!! The test does not assume equal variances.
-!! The test statstic \( t \) is calculated as follows:
+!! The 2-sample t-test determines if two population means \( \mu_1 \) and \( \mu_2\) are the same.
+!! The procedure can handle 2-sample t-tests for equal variances and Welch's t-tests for unequal variances.
+!!
+!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
+!! \( H_{0} \): \( \mu_1 \ = \mu_2 \), and \( H_{1} \): \( \mu_1 \ \neq \mu_2\)
+!!
+!! The procedure defaults to Welch's t-test for unequal variances if `eq_var` is not specified.
+!! In this case, the test statstic \( t \) is calculated as follows:
 !! $$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2} }} $$
 !! where \( \bar{x}_1 \) and \( \bar{x}_2 \) are the sample means
 !! \( s^2_1 \) and \( s^2_2 \) are the sample standard deviations, and
 !! \( n_1 \) and \( n_1 \) are the sample sizes.
-!!
-!! The degrees of freedom \( \nu \) is approximated as follows:
+!! The degrees of freedom \( \nu \) is approximated with the Welch–Satterthwaite equation:
 !! $$ \nu = \frac{\left( \frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} \right)^2} {\frac{\left( \frac{s_1^2}{n_1} \right)^2}{n_1 - 1} + \frac{\left( \frac{s_2^2}{n_2} \right)^2}{n_2 - 1}} $$
 !!
-!! If the variances are equal, it is the equivalent of the 2 sample t-test for equal variances:
+!! If variances are assumed to be equal (`eq_var = .true.`),
+!! the procedure conducts a 2 sample t-test for equal variances, using the pooled standard
+!! deciation \( s_p \) to calculate the t-statistic:
 !! $$ t = \frac{\bar{x}_1 - \bar{x}_2}{s_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} $$
 !!
-!! With \( \nu \) degrees of freedom:
-!! $$ \nu = 2 \cdot n - 2 $$
-!!
-!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
-!! \( H_{0} \): \( \mu_1 \ = \mu_2 \), and \( H_{1} \): \( \mu_1 \ \neq \mu_2\)
+!! In case of assumed equal variances, the degrees of freedom is calculated as follows:
+!! $$ \nu = n_1 + n_2 - 2 $$
 
 ! ==== Declarations
-  real(wp)        , intent(in)           :: x1(:) !! x vector 1 (of samples)
-  real(wp)        , intent(in)           :: x2(:) !! x vector 2 (of samples)
-  character(len=*), intent(in), optional :: h1    !! \( H_{1} \) option: two (default), le, ge
-  real(wp)        , intent(out)          :: t     !! test statistic
-  integer(i4)     , intent(out)          :: df    !! degrees of freedom
-  real(wp)        , intent(out)          :: p     !! p-value
-  real(wp)                               :: s1    !! sample 1 standard deviation
-  real(wp)                               :: s2    !! sample 2 standard deviation
+  real(wp)        , intent(in)           :: x1(:)    !! x1 vector (samples)
+  real(wp)        , intent(in)           :: x2(:)    !! x2 vector (samples)
+  character(len=*), intent(in), optional :: h1       !! \( H_{1} \) option: two (default), le, ge
+  logical         , intent(in), optional :: eq_var   !! true if equal variances assumed
+  real(wp)        , intent(out)          :: t        !! test statistic
+  real(wp)        , intent(out)          :: df       !! degrees of freedom
+  real(wp)        , intent(out)          :: p        !! p-value
+  character(len=16)                      :: h1_w     !! final value for h1
+  logical                                :: eq_var_w !! final value for eq_var
+  real(wp)                               :: x1bar    !! sample mean for x1
+  real(wp)                               :: x2bar    !! sample mean for x2
+  real(wp)                               :: s1       !! sample 1 standard deviation
+  real(wp)                               :: s2       !! sample 2 standard deviation
+  integer(i4)                            :: n1       !! sample size for x1
+  integer(i4)                            :: n2       !! sample size for x2
+  real(wp)                               :: s1n, s2n !! equation terms
 
 ! ==== Instructions
-  t = 0.0_wp
-  p = 0.0_wp
+
+! ---- handle input
+
+  ! assume two-sided if option not passed
+  if (present(h1)) then
+     h1_w = h1
+  else
+     h1_w = "two"
+  endif
+
+  ! assume unequal variances if not specified
+  if (present(eq_var)) then
+     eq_var_w = eq_var
+  else
+     eq_var_w = .false.
+  endif
+
+
+! ---- conduct test
+
+  ! get means, sample sizes, and sample standard deviations (using n-1)
+  x1bar = f_sts_mean(x1)
+  x2bar = f_sts_mean(x2)
+  n1 = size(x1)
+  n2 = size(x2)
+  s1 = sqrt( dot_product( (x1 - x1bar), (x1 - x1bar) ) / &
+     & real( (n1-1), kind=wp ) )
+  s2 = sqrt( dot_product( (x2 - x2bar), (x2 - x2bar) ) / &
+     & real( (n2-1), kind=wp ) )
+
+  ! get test statistic
+  if (eq_var_w) then
+     t = f_tst_t2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2)
+  else
+     t = f_tst_t2s_welch_t(x1bar, x2bar, s1, s2, n1, n2)
+  endif
+
+  ! get degrees of freedom
+  if (eq_var_w) then
+     df = real( (n1 + n2 - 2), kind=wp )
+  else
+     s1n = (s1 * s1) / real( (n1), kind=wp )
+     s2n = (s2 * s2) / real( (n2), kind=wp )
+     df = ( (s1n + s2n) * (s1n + s2n) ) / ( &
+        & (s1n * s1n) / real( (n1-1), kind=wp ) + &
+        & (s2n * s2n) / real( (n2-1), kind=wp ) )
+  endif
+
+  ! get p-value
+  select case(h1_w)
+     ! less than
+     case("lt")
+        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "left")
+     ! greater than
+     case("gt")
+        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "right")
+     ! two-sided
+     case("two")
+        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "two")
+     ! invalid option
+     case default
+        p = -1.0_wp
+  end select
+
+  contains
+
+  ! --------------------------------------------------------------- !
+  pure function f_tst_t2s_welch_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
+
+  ! ==== Description
+  !! Calculates the test statstic \( t \) for 2 sample t-test for unequal variances.
+  ! TODO: Think about making elemental and public for batch processing
+
+  ! ==== Declarations
+  real(wp)   , intent(in) :: x1bar !! sample mean for x1
+  real(wp)   , intent(in) :: x2bar !! sample mean for x2
+  real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
+  real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
+  integer(i4), intent(in) :: n1    !! sample size for x1
+  integer(i4), intent(in) :: n2    !! sample size for x2
+  real(wp)                :: t     !! test statistic
+
+  ! ==== Instructions
+  t = (x1bar - x2bar) / ( sqrt( &
+    & ( (s1 * s1) / real(n1, kind=wp)) + &
+    & ( (s2 * s2) / real(n2, kind=wp)) ) )
+
+  end function f_tst_t2s_welch_t
+
+  ! --------------------------------------------------------------- !
+  pure function f_tst_t2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
+
+  ! ==== Description
+  !! Calculates the test statistic \( t \) for a two-sample t-test for equal variances.
+  !! The function uses the pooled standard deviation.
+  ! TODO: Think about making elemental and public for batch processing
+
+  ! ==== Declarations
+  real(wp)   , intent(in) :: x1bar !! sample mean for x1
+  real(wp)   , intent(in) :: x2bar !! sample mean for x2
+  real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
+  real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
+  integer(i4), intent(in) :: n1    !! sample size for x1
+  integer(i4), intent(in) :: n2    !! sample size for x2
+  real(wp)                :: t     !! test statistic
+  real(wp)                :: sp    !! pooled variance
+
+  ! ==== Instructions
+
+  ! pooled standard deviation
+  sp = sqrt( ( &
+     & real(n1 - 1, kind=wp) * (s1 * s1) + &
+     & real(n2 - 1, kind=wp) * (s2 * s2) ) / real(n1 + n2 - 2, kind=wp) )
+
+  ! test statistic
+  t = (x1bar - x2bar) / ( sp * sqrt( &
+    & 1.0_wp / real(n1, kind=wp) + 1.0_wp / real(n2, kind=wp) ) )
+
+  end function f_tst_t2s_pooled_t
 
 end subroutine s_tst_t2s
-
-
 
 
 end module fsml_tst

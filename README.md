@@ -135,7 +135,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Hypothesis Testing (TST)   | Covered |
 | -------------------------- | ------- |
 | Student t-test (1 sample)  | ✓       |
-| Welch's t-test (2 samples) | -       |
+| Welch's t-test (2 sample)  | ✓       |
 | Kolmogorov Smirnov test    | -       |
 | Kruskall Wallis test       | -       |
 | (Mann–Whitney U)           | -       |

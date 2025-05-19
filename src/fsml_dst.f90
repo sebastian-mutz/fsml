@@ -51,6 +51,7 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
   real(wp)                       :: mu_w    !! final value of mu
   real(wp)                       :: sigma_w !! final value of sigma
+  real(wp)                       :: z       !! z-score
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -73,9 +74,11 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ---- compute PDF
 
+  ! compute z-score
+  z = (x - mu_w) / sigma_w
+
   ! calculate probability/fx
-  fx = (1.0_wp / (sigma_w * sqrt(2.0_wp * c_pi))) * &
-     & exp(-0.5_wp * ((x - mu_w) / sigma_w)**2.0_wp)
+  fx = (1.0_wp / (sigma_w * sqrt(2.0_wp * c_pi))) * exp( -0.5_wp * (z * z) )
 
 end function f_dst_norm_pdf
 
@@ -154,6 +157,9 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
         elseif (x .le. mu_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 end function f_dst_norm_cdf
@@ -241,7 +247,7 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: x       !! sample position
-  integer(i4), intent(in)           :: df      !! degrees of freedom
+  real(wp), intent(in)           :: df      !! degrees of freedom
   real(wp)   , intent(in), optional :: mu      !! distribution location (~mean)
   real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
   real(wp)                          :: mu_w    !! final value of mu
@@ -287,7 +293,7 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x           !! sample position
-  integer(i4)     , intent(in)           :: df          !! degrees of freedom
+  real(wp)     , intent(in)           :: df          !! degrees of freedom
   real(wp)        , intent(in), optional :: mu          !! distribution location (mean)
   real(wp)        , intent(in), optional :: sigma       !! distribution dispersion/scale (standard deviation)
   character(len=*), intent(in), optional :: tail        !! tail options
@@ -363,6 +369,9 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
         elseif (x .le. mu_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 end function f_dst_t_cdf
@@ -380,7 +389,7 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  integer(i4), intent(in)           :: df               !! degrees of freedom
+  real(wp), intent(in)           :: df               !! degrees of freedom
   real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: mu_w             !! final value of mu
@@ -575,6 +584,9 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
      ! confidence interval
      case("confidence")
         p = 1.0_wp - 2.0_wp * (1.0_wp - p)
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 end function f_dst_gamma_cdf
@@ -768,6 +780,9 @@ elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
      ! right-tailed; P(z>x)
      case("right")
         p = 1.0_wp - p
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 
@@ -854,7 +869,7 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: x       !! sample position
-  integer(i4), intent(in)           :: df      !! degrees of freedom
+  real(wp), intent(in)           :: df      !! degrees of freedom
   real(wp)   , intent(in), optional :: loc     !! location parameter
   real(wp)   , intent(in), optional :: scale   !! scale parameter
   real(wp)                          :: loc_w   !! final value for loc
@@ -902,7 +917,7 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
   ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
-  integer(i4)     , intent(in)           :: df      !! degrees of freedom
+  real(wp)     , intent(in)           :: df      !! degrees of freedom
   real(wp)        , intent(in), optional :: loc     !! location parameter
   real(wp)        , intent(in), optional :: scale   !! scale parameter
   character(len=*), intent(in), optional :: tail    !! tail options
@@ -962,6 +977,9 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
         elseif (x .le. loc_w) then
            p = 1.0_wp - 2.0_wp * p
         endif
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 end function f_dst_chi2_cdf
@@ -977,7 +995,7 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ==== Declarations
   real(wp), intent(in)           :: p                !! probability between 0.0 and 1.0
-  integer(i4), intent(in)        :: df               !! degrees of freedom
+  real(wp), intent(in)        :: df               !! degrees of freedom
   real(wp), intent(in), optional :: loc              !! location parameter
   real(wp), intent(in), optional :: scale            !! scale parameter
   real(wp)                       :: loc_w            !! final value for loc
@@ -1016,7 +1034,7 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
-     p_mid = f_dst_chi2_cdf(x_mid, df, loc=loc_w, scale=scale_w) - p
+     p_mid = f_dst_chi2_cdf(x_mid, df, loc=loc_w, scale=scale_w, tail="left") - p
      if (abs(p_mid) .lt. tol) then
         x = x_mid
         return
@@ -1167,6 +1185,9 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
      ! right-tailed; P(z>x)
      case("right")
         p = 1.0_wp - p
+     ! invalid option
+     case default
+        p = -1.0_wp
    end select
 
 end function f_dst_gpd_cdf

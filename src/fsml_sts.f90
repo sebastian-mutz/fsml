@@ -60,11 +60,12 @@ pure function f_sts_var(x) result(var)
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)             :: xbar   !! mean of x
   real(wp)             :: var    !! variance
 
 ! ==== Instructions
-  var = sum( ( x - f_sts_mean(x) ) * (x - f_sts_mean(x) ) ) / &
-      & real(size(x), kind=wp)
+  xbar = f_sts_mean(x)
+  var  = dot_product( (x - xbar), (x - xbar) ) / real(size(x), kind=wp)
 
 end function f_sts_var
 
@@ -102,11 +103,14 @@ pure function f_sts_cov(x,y) result(cov)
 ! ==== Declarations
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
   real(wp), intent(in) :: y(:)   !! y vector (assumed size array)
+  real(wp)             :: xbar   !! mean of x
+  real(wp)             :: ybar   !! mean of y
   real(wp)             :: cov    !! covariance
 
 ! ==== Instructions
-  cov = sum ( ( x - f_sts_mean(x) ) * (y - f_sts_mean(y) ) ) / &
-      & real(size(x), kind=wp)
+  xbar = f_sts_mean(x)
+  ybar = f_sts_mean(y)
+  cov = dot_product( (x - xbar), (y - ybar) ) / real(size(x), kind=wp)
 
 end function f_sts_cov
 

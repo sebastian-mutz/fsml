@@ -45,20 +45,20 @@ program example_dst
   print*, "> student t distribution"
 
   ! standard t pdf with x=1.5 and df=10
-  print*, fsml_t_pdf(1.5_wp, df=10, mu=0.0_wp, sigma=1.0_wp)
+  print*, fsml_t_pdf(1.5_wp, df=10.0_wp, mu=0.0_wp, sigma=1.0_wp)
   ! 0.12744479428709160
 
   ! t distribution pdf with x=0.5, df=200, ~mu=0.8 and ~sigma=1.2
   ! similar to norm due to high df
-  print*, fsml_t_pdf(0.5_wp, df=200, mu=0.4_wp, sigma=1.2_wp)
+  print*, fsml_t_pdf(0.5_wp, df=200.0_wp, mu=0.4_wp, sigma=1.2_wp)
   ! 0.33087996676641318
 
   ! get confidence interval with t distribution cdf with x=2.3, df=10, ~mu=0.0 and ~signma=1.0
-  print*, fsml_t_cdf(2.3_wp, df=10, mu=0.0_wp, sigma=1.0_wp, tail="confidence")
+  print*, fsml_t_cdf(2.3_wp, df=10.0_wp, mu=0.0_wp, sigma=1.0_wp, tail="confidence")
   ! 0.95574568671571991
 
   ! t distribution ppf with p=0.9, df=15, ~mu=0.0 and ~signma=1.0
-  print*, fsml_t_ppf(0.9_wp, df=15, mu=0.0_wp, sigma=1.0_wp)
+  print*, fsml_t_ppf(0.9_wp, df=15.0_wp, mu=0.0_wp, sigma=1.0_wp)
   ! 1.3406056078565598
 
   print*
@@ -113,19 +113,19 @@ program example_dst
   print*, "> chi-squared distribution"
 
   ! chi squared pdf with x=20.0, df=20, loc=0.5 and scale=1.0
-  print*, fsml_chi2_pdf(20.0_wp, df=20, loc=0.5_wp, scale=1.0_wp)
+  print*, fsml_chi2_pdf(20.0_wp, df=20.0_wp, loc=0.5_wp, scale=1.0_wp)
   ! 6.3955413942221373E-002
 
   ! chi squared pdf with x=5.1, df=10, loc=0.0 and scale=0.5
-  print*, fsml_chi2_pdf(5.1_wp, df=10, loc=0.0_wp, scale=0.5_wp)
+  print*, fsml_chi2_pdf(5.1_wp, df=10.0_wp, loc=0.0_wp, scale=0.5_wp)
   ! 0.17185714984072062
 
   ! chi squared cdf with x=11.5, df=10, loc=0.0 and scale=1.0
-  print*, fsml_chi2_cdf(11.5_wp, df=10, loc=0.0_wp, scale=1.0_wp)
+  print*, fsml_chi2_cdf(11.5_wp, df=10.0_wp, loc=0.0_wp, scale=1.0_wp)
   ! 0.68008856946173257
 
   ! chi squared ppf with p=0.2, df=10, loc=2.0 and scale=1.2
-  print*, fsml_chi2_ppf(0.2_wp, df=10, loc=2.0_wp, scale=1.2_wp)
+  print*, fsml_chi2_ppf(0.2_wp, df=10.0_wp, loc=2.0_wp, scale=1.2_wp)
   ! 9.4148951072402269
 
   print*

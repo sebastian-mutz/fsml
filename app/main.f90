@@ -48,7 +48,7 @@ program main
   print*, fsml_norm_cdf(2.0_wp, mu=0.3_wp, sigma=1.3_wp, tail="left")
 
   ! left-tailed p-value for t distribution with specified degrees of freedom
-  print*, fsml_t_ppf(0.9_wp, df=20, mu=0.2_wp, sigma=1.2_wp)
+  print*, fsml_t_ppf(0.9_wp, df=20.0_wp, mu=0.2_wp, sigma=1.2_wp)
 
   ! genrealised pareto distribution cdf
   print*, fsml_gpd_cdf(1.9_wp, xi=1.2_wp, mu=0.6_wp, sigma=2.2_wp, tail="left")
@@ -57,7 +57,7 @@ program main
   print*, fsml_gamma_pdf(0.2_wp, alpha=1.2_wp, beta=0.6_wp, loc=0.0_wp)
 
   ! chi square distribution ppf
-  print*, fsml_chi2_ppf(0.2_wp, df=10, loc=2.0_wp, scale=1.2_wp)
+  print*, fsml_chi2_ppf(0.2_wp, df=10.0_wp, loc=2.0_wp, scale=1.2_wp)
 
 
 
