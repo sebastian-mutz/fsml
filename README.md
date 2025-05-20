@@ -17,7 +17,7 @@ FSML is in a pre-alpha state, and only suitable for developers at this point.
 
 ![logo](assets/logo/FSML_small.png)
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Kolmogorov-Smirnov), linear parametric methods and models (e.g., principal component analysis, discriminant analysis, Bayesian classifier), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U ), linear parametric methods and models (e.g., principal component analysis, discriminant analysis, Bayesian classifier), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
 **Key features:**
 
@@ -135,12 +135,13 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Hypothesis Testing (TST)   | Covered |
 | -------------------------- | ------- |
 | Student t-test (1 sample)  | ✓       |
+| Paired sample t-test       | ✓       |
 | Pooled t-test (2 sample)   | ✓       |
 | Welch's t-test (2 sample)  | ✓       |
-| Kolmogorov Smirnov test    | -       |
-| Kruskall Wallis test       | -       |
-| (Mann–Whitney U)           | -       |
 | Analysis of variance       | -       |
+| Mann–Whitney U             | -       |
+| Wilcoxon signed-rank       | -       |
+| Kruskall Wallis H          | -       |
 
 #### Linear Parametric Models (LPM)
 

@@ -24,13 +24,13 @@ module fsml_tst
   private
 
   ! declare public procedures
-  public :: s_tst_t1s, s_tst_t2s
+  public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
+pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 
 ! ==== Description
 !! The 1-sample t-test determines if the sample mean has the value specified in the null hypothesis.
@@ -79,7 +79,7 @@ pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
   s = sqrt( dot_product( (x - xbar), (x - xbar) ) / real( (n-1), kind=wp ) )
 
   ! get test statistic
-  t = f_tst_t1s_t(xbar, s, n, mu0)
+  t = f_tst_ttest_1s_t(xbar, s, n, mu0)
 
   ! get degrees of freedom
   df = real(n, kind=wp) - 1.0_wp
@@ -103,7 +103,7 @@ pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
   contains
 
   ! --------------------------------------------------------------- !
-  pure function f_tst_t1s_t(xbar, s, n, mu0) result(t)
+  pure function f_tst_ttest_1s_t(xbar, s, n, mu0) result(t)
 
   ! ==== Description
   !! Calculates the test statstic \( t \) for 1 sample t-test.
@@ -119,16 +119,67 @@ pure subroutine s_tst_t1s(x, mu0, t, df, p, h1)
   ! ==== Instructions
   t = (xbar - mu0) / ( s / sqrt( real(n, kind=wp) ) )
 
-  end function f_tst_t1s_t
+  end function f_tst_ttest_1s_t
 
-end subroutine s_tst_t1s
+end subroutine s_tst_ttest_1s
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
+pure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
+
+! ==== Description
+!! The paired sample t-test (or  dependent sample t-test) determines if
+!! the mean difference between two sample sets are zero.
+!! It is mathematically equivalent to the 1-sample t-test conducted
+!! on the difference vector \( d \) with \( \mu_0 = 0 \).
+!!
+!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
+!! \( H_{0} \): \( \bar{d}  =  0 \), and \( H_{1} \): \( \bar{d} \neq 0 \)
+!!
+!! The test statstic \( t \) is calculated as follows:
+!! $$ t = \frac{\bar{d} - 0}{s_d / \sqrt{n}}$$
+!! where \( \bar{d} \) is the mean of the differences between the sample sets,
+!! \( s_d \) is the standard deviation of the differences, and
+!! \( n \) is the number of paired samples.
+!!
+!! The degrees of freedom \( \nu \) is calculated as follows:
+!! $$ \nu = n -1 $$
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x1(:) !! x1 vector (samples)
+  real(wp)         , intent(in)           :: x2(:) !! x2 vector (samples); must be same length as x1
+  character(len=*) , intent(in), optional :: h1    !! \( H_{1} \) option: two (default), le, ge
+  real(wp)         , intent(out)          :: t     !! test statistic
+  real(wp)         , intent(out)          :: df    !! degrees of freedom
+  real(wp)         , intent(out)          :: p     !! p-value
+  character(len=16)                       :: h1_w  !! final value for h1
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume two-sided if option not passed
+  if (present(h1)) then
+     h1_w = h1
+  else
+     h1_w = "two"
+  endif
+
+! ---- conduct test on difference vector
+
+  call s_tst_ttest_1s( (x1 - x2), 0.0_wp, t, df, p, h1)
+
+end subroutine s_tst_ttest_paired
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 
 ! ==== Description
 !! The 2-sample t-test determines if two population means \( \mu_1 \) and \( \mu_2\) are the same.
@@ -205,9 +256,9 @@ pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
 
   ! get test statistic
   if (eq_var_w) then
-     t = f_tst_t2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2)
+     t = f_tst_ttest_2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2)
   else
-     t = f_tst_t2s_welch_t(x1bar, x2bar, s1, s2, n1, n2)
+     t = f_tst_ttest_2s_welch_t(x1bar, x2bar, s1, s2, n1, n2)
   endif
 
   ! get degrees of freedom
@@ -240,7 +291,7 @@ pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
   contains
 
   ! --------------------------------------------------------------- !
-  pure function f_tst_t2s_welch_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
+  pure function f_tst_ttest_2s_welch_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
 
   ! ==== Description
   !! Calculates the test statstic \( t \) for 2 sample t-test for unequal variances.
@@ -260,10 +311,10 @@ pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
     & ( (s1 * s1) / real(n1, kind=wp)) + &
     & ( (s2 * s2) / real(n2, kind=wp)) ) )
 
-  end function f_tst_t2s_welch_t
+  end function f_tst_ttest_2s_welch_t
 
   ! --------------------------------------------------------------- !
-  pure function f_tst_t2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
+  pure function f_tst_ttest_2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
 
   ! ==== Description
   !! Calculates the test statistic \( t \) for a two-sample t-test for equal variances.
@@ -291,9 +342,9 @@ pure subroutine s_tst_t2s(x1, x2, t, df, p, eq_var, h1)
   t = (x1bar - x2bar) / ( sp * sqrt( &
     & 1.0_wp / real(n1, kind=wp) + 1.0_wp / real(n2, kind=wp) ) )
 
-  end function f_tst_t2s_pooled_t
+  end function f_tst_ttest_2s_pooled_t
 
-end subroutine s_tst_t2s
+end subroutine s_tst_ttest_2s
 
 
 end module fsml_tst

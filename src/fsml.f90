@@ -35,7 +35,7 @@ module fsml
   public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! public statistical tests
-  public :: fsml_ttest_1sample, fsml_ttest_2sample
+  public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
   ! public utility procedures
   public :: fsml_read_csv
   ! public derived types
@@ -180,12 +180,17 @@ end interface
 
 ! 1 sample t-test
 interface fsml_ttest_1sample
-  module procedure s_tst_t1s
+  module procedure s_tst_ttest_1s
+end interface
+
+! paired sample t-test
+interface fsml_ttest_paired
+  module procedure s_tst_ttest_paired
 end interface
 
 ! 2 sample t-test
 interface fsml_ttest_2sample
-  module procedure s_tst_t2s
+  module procedure s_tst_ttest_2s
 end interface
 
 ! ==================================================================== !
