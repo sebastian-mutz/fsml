@@ -12,7 +12,7 @@ program example_dst
 ! |--------------------------------------------------------------------|
 
   use :: fsml
-  use :: fsml_typ ! import wp; alternatively: iso_fortran_env, wp => real64
+  use :: fsml_ini ! import wp; alternatively: iso_fortran_env, wp => real64
 
   implicit none
 

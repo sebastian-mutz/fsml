@@ -12,7 +12,7 @@ program test_dst
 ! |--------------------------------------------------------------------|
 
   use :: fsml
-  use :: fsml_typ
+  use :: fsml_ini
   use stdlib_ansi, only : fg_color_cyan, fg_color_red&
                        &, style_reset, operator(//)
   implicit none
