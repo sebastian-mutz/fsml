@@ -58,19 +58,13 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PDF
 
@@ -105,26 +99,17 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
-  ! assume left-tailed if not specified
-  if (present(tail)) then
-     tail_w = tail
-  else
-     tail_w = "left"
-  endif
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
 
 ! ---- compute CDF
 
@@ -192,19 +177,13 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PPF
 
@@ -246,31 +225,25 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 !! where  \(v\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
-  real(wp)   , intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: x       !! sample position
   real(wp), intent(in)           :: df      !! degrees of freedom
-  real(wp)   , intent(in), optional :: mu      !! distribution location (~mean)
-  real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
-  real(wp)                          :: mu_w    !! final value of mu
-  real(wp)                          :: sigma_w !! final value of sigma
-  real(wp)                          :: fx
+  real(wp), intent(in), optional :: mu      !! distribution location (~mean)
+  real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (~standard deviation)
+  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: sigma_w !! final value of sigma
+  real(wp)                       :: fx
 
 ! ==== Instructions
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PDF
 
@@ -293,7 +266,7 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x           !! sample position
-  real(wp)     , intent(in)           :: df          !! degrees of freedom
+  real(wp)        , intent(in)           :: df          !! degrees of freedom
   real(wp)        , intent(in), optional :: mu          !! distribution location (mean)
   real(wp)        , intent(in), optional :: sigma       !! distribution dispersion/scale (standard deviation)
   character(len=*), intent(in), optional :: tail        !! tail options
@@ -308,26 +281,17 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
-  ! assume left-tailed if not specified
-  if (present(tail)) then
-     tail_w = tail
-  else
-     tail_w = "left"
-  endif
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
 
 ! ---- compute CDF
 
@@ -389,7 +353,7 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp), intent(in)           :: df               !! degrees of freedom
+  real(wp)   , intent(in)           :: df               !! degrees of freedom
   real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: mu_w             !! final value of mu
@@ -405,19 +369,13 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PPF
 
@@ -472,27 +430,17 @@ elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
 ! ---- handle input
 
-  ! assume alpha = 1 if not specified
-  if (present(alpha)) then
-     alpha_w = alpha
-  else
-     alpha_w = 1.0_wp
-  endif
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
 
-  ! assume beta = 1 if not specified
-  if (present(beta)) then
-     beta_w = beta
-  else
-     beta_w = 1.0_wp
-  endif
+  ! assume beta = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
-
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
 ! ---- compute PDF
 
@@ -532,33 +480,21 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ---- handle input
 
-  ! assume alpha = 1 if not specified
-  if (present(alpha)) then
-     alpha_w = alpha
-  else
-     alpha_w = 1.0_wp
-  endif
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
 
-  ! assume beta = 1 if not specified
-  if (present(beta)) then
-     beta_w = beta
-  else
-     beta_w = 1.0_wp
-  endif
+  ! assume beta = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume left-tailed if not specified
-  if (present(tail)) then
-     tail_w = tail
-  else
-     tail_w = "left"
-  endif
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
 
 ! ---- compute CDF
 
@@ -619,26 +555,17 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
 ! ---- handle input
 
-  ! assume alpha = 1 if not specified
-  if (present(alpha)) then
-     alpha_w = alpha
-  else
-     alpha_w = 1.0_wp
-  endif
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
 
-  ! assume beta = 1 if not specified
-  if (present(beta)) then
-     beta_w = beta
-  else
-     beta_w = 1.0_wp
-  endif
+  ! assume beta = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
 ! ---- compute PPF
 
@@ -691,19 +618,13 @@ elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume lambda = 1 if not specified
-  if (present(lambda)) then
-     lambda_w = lambda
-  else
-     lambda_w = 1.0_wp
-  endif
+  ! assume lambda = 1, overwrite if specified
+  lambda_w = 1.0_wp
+  if (present(lambda)) lambda_w = lambda
 
 ! ---- compute PDF
 
@@ -740,26 +661,17 @@ elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume lambda = 1 if not specified
-  if (present(lambda)) then
-     lambda_w = lambda
-  else
-     lambda_w = 1.0_wp
-  endif
+  ! assume lambda = 1, overwrite if specified
+  lambda_w = 1.0_wp
+  if (present(lambda)) lambda_w = lambda
 
-  ! assume left-tailed if not specified
-  if (present(tail)) then
-     tail_w = tail
-  else
-     tail_w = "left"
-  endif
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
 
 ! ---- compute CDF
 
@@ -814,19 +726,13 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume lambda = 1 if not specified
-  if (present(lambda)) then
-     lambda_w = lambda
-  else
-     lambda_w = 1.0_wp
-  endif
+  ! assume lambda = 1, overwrite if specified
+  lambda_w = 1.0_wp
+  if (present(lambda)) lambda_w = lambda
 
 ! ---- compute PPF
 
@@ -868,32 +774,26 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 !! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
-  real(wp)   , intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: x       !! sample position
   real(wp), intent(in)           :: df      !! degrees of freedom
-  real(wp)   , intent(in), optional :: loc     !! location parameter
-  real(wp)   , intent(in), optional :: scale   !! scale parameter
-  real(wp)                          :: loc_w   !! final value for loc
-  real(wp)                          :: scale_w !! final value for scale
-  real(wp)                          :: fx      !! resulting PDF value
-  real(wp)                          :: z       !! standardised variable
+  real(wp), intent(in), optional :: loc     !! location parameter
+  real(wp), intent(in), optional :: scale   !! scale parameter
+  real(wp)                       :: loc_w   !! final value for loc
+  real(wp)                       :: scale_w !! final value for scale
+  real(wp)                       :: fx      !! resulting PDF value
+  real(wp)                       :: z       !! standardised variable
 
 ! ==== Instructions
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume scale = 1 if not specified
-  if (present(scale)) then
-     scale_w = scale
-  else
-     scale_w = 1.0_wp
-  endif
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
 
 ! ----compute PDF
   z = (x - loc_w) / scale_w
@@ -917,7 +817,7 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
   ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
-  real(wp)     , intent(in)           :: df      !! degrees of freedom
+  real(wp)        , intent(in)           :: df      !! degrees of freedom
   real(wp)        , intent(in), optional :: loc     !! location parameter
   real(wp)        , intent(in), optional :: scale   !! scale parameter
   character(len=*), intent(in), optional :: tail    !! tail options
@@ -931,19 +831,13 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume scale = 1 if not specified
-  if (present(scale)) then
-     scale_w = scale
-  else
-     scale_w = 1.0_wp
-  endif
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
 
 ! ----compute CDF
 
@@ -1011,19 +905,13 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ---- handle input
 
-  ! assume loc = 0 if not specified
-  if (present(loc)) then
-     loc_w = loc
-  else
-     loc_w = 0.0_wp
-  endif
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
-  ! assume scale = 1 if not specified
-  if (present(scale)) then
-     scale_w = scale
-  else
-     scale_w = 1.0_wp
-  endif
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
 
 ! ---- compute PPF
 
@@ -1074,19 +962,13 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PDF
 
@@ -1135,26 +1017,17 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
-  ! assume left-tailed if not specified
-  if (present(tail)) then
-     tail_w = tail
-  else
-     tail_w = "left"
-  endif
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
 
 ! ---- compute CDF
 
@@ -1214,19 +1087,13 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ---- handle input
 
-  ! assume location/mean = 0 if not passed
-  if (present(mu)) then
-     mu_w = mu
-  else
-     mu_w = 0.0_wp
-  endif
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
 
-  ! assume sigma = 1 if not passed
-  if (present(sigma)) then
-     sigma_w = sigma
-  else
-     sigma_w = 1.0_wp
-  endif
+  ! assume sigma = 1, overwrite if specified
+  sigma_w = 1.0_wp
+  if (present(sigma)) sigma_w = sigma
 
 ! ---- compute PPF
 
