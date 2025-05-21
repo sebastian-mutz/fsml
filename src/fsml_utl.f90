@@ -15,6 +15,7 @@ module fsml_utl
 !! Utilities module; includes io procedures.
 
   ! load modules
+  use :: fsml_ini
   use :: fsml_typ
 
   ! basic options

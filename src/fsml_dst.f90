@@ -16,7 +16,7 @@ module fsml_dst
 !! notation is used. Additional parameters are sometimes added to enhance functionality.
 
   ! load modules
-  use :: fsml_typ
+  use :: fsml_ini
   use :: fsml_con
 
   ! basic options

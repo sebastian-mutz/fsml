@@ -12,7 +12,7 @@ program main
 ! |--------------------------------------------------------------------|
 
   use :: fsml
-  use :: fsml_typ !iso_fortran_env, wp => real64
+  use :: fsml_ini !iso_fortran_env, wp => real64
 
   implicit none
 

@@ -15,6 +15,7 @@ module fsml
 !! FSML interface module.
 
   ! load modules
+  use :: fsml_ini
   use :: fsml_typ
   use :: fsml_sts
   use :: fsml_dst

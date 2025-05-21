@@ -15,7 +15,7 @@ module fsml_con
 !! Module for mathematical constants.
 
   ! load modules
-  use :: fsml_typ
+  use :: fsml_ini
 
   ! basic options
   implicit none

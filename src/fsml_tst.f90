@@ -15,7 +15,7 @@ module fsml_tst
 !! Module for common statistical tests.
 
   ! load modules
-  use :: fsml_typ
+  use :: fsml_ini
   use :: fsml_sts
   use :: fsml_dst
 

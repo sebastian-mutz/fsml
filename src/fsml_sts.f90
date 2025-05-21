@@ -15,7 +15,7 @@ module fsml_sts
 !! Module for basic sample statistics.
 
   ! load modules
-  use :: fsml_typ
+  use :: fsml_ini
 
   ! basic options
   implicit none
