@@ -64,12 +64,9 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 
 ! ---- handle input
 
-  ! assume two-sided if option not passed
-  if (present(h1)) then
-     h1_w = h1
-  else
-     h1_w = "two"
-  endif
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
 
 ! ---- conduct test
 
@@ -161,15 +158,13 @@ pure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
 
 ! ---- handle input
 
-  ! assume two-sided if option not passed
-  if (present(h1)) then
-     h1_w = h1
-  else
-     h1_w = "two"
-  endif
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
 
 ! ---- conduct test on difference vector
 
+  ! use procedure for 1-sample t-test and set mu0 to 0
   call s_tst_ttest_1s( (x1 - x2), 0.0_wp, t, df, p, h1)
 
 end subroutine s_tst_ttest_paired
@@ -227,20 +222,13 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 
 ! ---- handle input
 
-  ! assume two-sided if option not passed
-  if (present(h1)) then
-     h1_w = h1
-  else
-     h1_w = "two"
-  endif
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
 
-  ! assume unequal variances if not specified
-  if (present(eq_var)) then
-     eq_var_w = eq_var
-  else
-     eq_var_w = .false.
-  endif
-
+  ! assume unequal variances, overwrite if option is passed
+  eq_var_w = .false.
+  if (present(eq_var)) eq_var_w = eq_var
 
 ! ---- conduct test
 

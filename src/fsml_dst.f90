@@ -1231,13 +1231,13 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 ! ---- compute PPF
 
   ! compute inverse cdf based on xi
-    if (abs(xi) .lt. 1.0e-12_wp) then
-      ! if xi is approximately zero, use exponential distribution
-      x = mu_w - sigma_w * log(1.0_wp - p)
-    else
-      ! if xi is not zero, use general formula
-      x = mu_w + (sigma_w / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
-    endif
+  if (abs(xi) .lt. 1.0e-12_wp) then
+     ! if xi is approximately zero, use exponential distribution
+     x = mu_w - sigma_w * log(1.0_wp - p)
+  else
+     ! if xi is not zero, use general formula
+     x = mu_w + (sigma_w / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
+  endif
 
 end function f_dst_gpd_ppf
 
