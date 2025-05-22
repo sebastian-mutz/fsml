@@ -1230,8 +1230,8 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
 
   contains
 
-     ! --------------------------------------------------------------- !
-     elemental function beta_cf(x, a, b) result(cf)
+  ! --------------------------------------------------------------- !
+  elemental function beta_cf(x, a, b) result(cf)
 
      ! ==== Description
      !! computes the continued fraction expansion of incomplete beta function.
@@ -1286,7 +1286,7 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
         if (abs(del - 1.0_wp) .lt. eps) exit
      enddo
 
-   end function beta_cf
+  end function beta_cf
 
 end function f_dst_beta_inc
 

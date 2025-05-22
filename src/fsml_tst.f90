@@ -102,19 +102,19 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   ! --------------------------------------------------------------- !
   pure function f_tst_ttest_1s_t(xbar, s, n, mu0) result(t)
 
-  ! ==== Description
-  !! Calculates the test statstic \( t \) for 1 sample t-test.
-  ! TODO: Think about making elemental and public for batch processing
+     ! ==== Description
+     !! Calculates the test statstic \( t \) for 1 sample t-test.
+     ! TODO: Think about making elemental and public for batch processing
 
-  ! ==== Declarations
-  real(wp)   , intent(in) :: xbar !! sample mean
-  real(wp)   , intent(in) :: s    !! sample standard deviation
-  integer(i4), intent(in) :: n    !! sample size
-  real(wp)   , intent(in) :: mu0  !! population mean
-  real(wp)                :: t    !! test statistic
+     ! ==== Declarations
+     real(wp)   , intent(in) :: xbar !! sample mean
+     real(wp)   , intent(in) :: s    !! sample standard deviation
+     integer(i4), intent(in) :: n    !! sample size
+     real(wp)   , intent(in) :: mu0  !! population mean
+     real(wp)                :: t    !! test statistic
 
-  ! ==== Instructions
-  t = (xbar - mu0) / ( s / sqrt( real(n, kind=wp) ) )
+     ! ==== Instructions
+     t = (xbar - mu0) / ( s / sqrt( real(n, kind=wp) ) )
 
   end function f_tst_ttest_1s_t
 
@@ -281,58 +281,216 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   ! --------------------------------------------------------------- !
   pure function f_tst_ttest_2s_welch_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
 
-  ! ==== Description
-  !! Calculates the test statstic \( t \) for 2 sample t-test for unequal variances.
-  ! TODO: Think about making elemental and public for batch processing
+     ! ==== Description
+     !! Calculates the test statstic \( t \) for 2 sample t-test for unequal variances.
+     ! TODO: Think about making elemental and public for batch processing
 
-  ! ==== Declarations
-  real(wp)   , intent(in) :: x1bar !! sample mean for x1
-  real(wp)   , intent(in) :: x2bar !! sample mean for x2
-  real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
-  real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
-  integer(i4), intent(in) :: n1    !! sample size for x1
-  integer(i4), intent(in) :: n2    !! sample size for x2
-  real(wp)                :: t     !! test statistic
+     ! ==== Declarations
+     real(wp)   , intent(in) :: x1bar !! sample mean for x1
+     real(wp)   , intent(in) :: x2bar !! sample mean for x2
+     real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
+     real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
+     integer(i4), intent(in) :: n1    !! sample size for x1
+     integer(i4), intent(in) :: n2    !! sample size for x2
+     real(wp)                :: t     !! test statistic
 
-  ! ==== Instructions
-  t = (x1bar - x2bar) / ( sqrt( &
-    & ( (s1 * s1) / real(n1, kind=wp)) + &
-    & ( (s2 * s2) / real(n2, kind=wp)) ) )
+     ! ==== Instructions
+     t = (x1bar - x2bar) / ( sqrt( &
+       & ( (s1 * s1) / real(n1, kind=wp)) + &
+       & ( (s2 * s2) / real(n2, kind=wp)) ) )
 
   end function f_tst_ttest_2s_welch_t
 
   ! --------------------------------------------------------------- !
   pure function f_tst_ttest_2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2) result(t)
 
-  ! ==== Description
-  !! Calculates the test statistic \( t \) for a two-sample t-test for equal variances.
-  !! The function uses the pooled standard deviation.
-  ! TODO: Think about making elemental and public for batch processing
+     ! ==== Description
+     !! Calculates the test statistic \( t \) for a two-sample t-test for equal variances.
+     !! The function uses the pooled standard deviation.
+     ! TODO: Think about making elemental and public for batch processing
 
-  ! ==== Declarations
-  real(wp)   , intent(in) :: x1bar !! sample mean for x1
-  real(wp)   , intent(in) :: x2bar !! sample mean for x2
-  real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
-  real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
-  integer(i4), intent(in) :: n1    !! sample size for x1
-  integer(i4), intent(in) :: n2    !! sample size for x2
-  real(wp)                :: t     !! test statistic
-  real(wp)                :: sp    !! pooled variance
+     ! ==== Declarations
+     real(wp)   , intent(in) :: x1bar !! sample mean for x1
+     real(wp)   , intent(in) :: x2bar !! sample mean for x2
+     real(wp)   , intent(in) :: s1    !! sample 1 standard deviation
+     real(wp)   , intent(in) :: s2    !! sample 2 standard deviation
+     integer(i4), intent(in) :: n1    !! sample size for x1
+     integer(i4), intent(in) :: n2    !! sample size for x2
+     real(wp)                :: t     !! test statistic
+     real(wp)                :: sp    !! pooled variance
 
-  ! ==== Instructions
+     ! ==== Instructions
 
-  ! pooled standard deviation
-  sp = sqrt( ( &
-     & real(n1 - 1, kind=wp) * (s1 * s1) + &
-     & real(n2 - 1, kind=wp) * (s2 * s2) ) / real(n1 + n2 - 2, kind=wp) )
+     ! pooled standard deviation
+     sp = sqrt( ( &
+        & real(n1 - 1, kind=wp) * (s1 * s1) + &
+        & real(n2 - 1, kind=wp) * (s2 * s2) ) / real(n1 + n2 - 2, kind=wp) )
 
-  ! test statistic
-  t = (x1bar - x2bar) / ( sp * sqrt( &
-    & 1.0_wp / real(n1, kind=wp) + 1.0_wp / real(n2, kind=wp) ) )
+     ! test statistic
+     t = (x1bar - x2bar) / ( sp * sqrt( &
+       & 1.0_wp / real(n1, kind=wp) + 1.0_wp / real(n2, kind=wp) ) )
 
   end function f_tst_ttest_2s_pooled_t
 
 end subroutine s_tst_ttest_2s
 
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
+
+! ==== Description
+!! The ranks sum test (Wilcoxon rank-sum test or Mann–Whitney U test) is a
+!! nonparametric test to determine if two independent samples \( x_1 \) and
+!! \( x_2 \) are have the same distribution.
+!!
+!! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
+!! \( H_0 \): the distributions of \( x_1 \) and \( x_2 \) are equal.
+!! \( H_1 \): the distributions of \( x_1 \) and \( x_2 \) are not equal.
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x1(:)    !! x1 vector (samples)
+  real(wp)         , intent(in)           :: x2(:)    !! x2 vector (samples)
+  real(wp)         , intent(out)          :: u        !! U statistic
+  real(wp)         , intent(out)          :: p        !! p-value
+  character(len=*) , intent(in), optional :: h1       !! \( H_{1} \) option: "two" (default), "lt", or "gt"
+  character(len=16)                       :: h1_w     !! final value for h1
+  integer(i4)                             :: n1       !! sample size for x1
+  integer(i4)                             :: n2       !! sample size for x2
+  real(wp)         , allocatable          :: x(:)     !! combined x1 and x2
+  integer(i4)      , allocatable          :: ranks(:) !! stores ranks
+  real(wp)                                :: rx1      !! rank sum for x1
+  real(wp)                                :: rx2      !! rank sum for x2
+  real(wp)                                :: u1       !! U statistic 1
+  real(wp)                                :: u2       !! U statistic 2
+  real(wp)                                :: mu       !! mean of U (under H0)
+  real(wp)                                :: s        !! standard deviation of U (under H0)
+  real(wp)                                :: z        !! z statistic
+  integer(i4)                             :: i
+
+! ==== Instructions
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! combine and rank all values
+  n1 = size(x1)
+  n2 = size(x2)
+  allocate(x(n1+n2))
+  allocate(ranks(n1+n2))
+  x(1:n1)  = x1
+  x(n1+1:) = x2
+
+  ! assigns ranks, use stdlib procedure
+  call s_rank(x, ranks)
+
+  ! sum ranks of sample x
+  rx1 = sum(real(ranks(1:n1),  kind=wp))
+  rx2 = sum(real(ranks(n1+1:), kind=wp))
+
+  ! deallocate
+  deallocate(x)
+  deallocate(ranks)
+
+  ! compute U statistics
+  u1 = real(n1, kind=wp) * real(n2, kind=wp) + &
+     & (real(n1, kind=wp) * (real(n1, kind=wp) + 1.0_wp) / 2.0_wp) - rx1
+  u2 = real(n1, kind=wp) * real(n2, kind=wp) + &
+     & (real(n2, kind=wp) * (real(n2, kind=wp) + 1.0_wp) / 2.0_wp) - rx2
+  u  = min(u1, u2)
+
+  ! mean and standard deviation of U under H0
+  mu = n1 * n2 / 2.0_wp
+  s  = sqrt(n1 * n2 * (n1 + n2 + 1.0_wp) / 12.0_wp)
+
+  ! z statistic (U is approximately normal for large samples)
+  z = (u - mu) / s
+
+  ! get p-value
+  select case(h1_w)
+     ! less than
+     case("lt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
+     ! greater than
+     case("gt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
+     ! two-sided
+     case("two")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
+     ! invalid option
+     case default
+        p = -1.0_wp
+  end select
+
+  contains
+
+  ! --------------------------------------------------------------- !
+  pure subroutine s_rank(x, ranks)
+
+     ! ==== Description
+     !! Ranks all samples such that the smallest value obtains rank 1
+     !! and the largest rank n.
+
+     ! ==== Declarations
+     real(wp)                , intent(in)  :: x(:)
+     integer(i4), allocatable, intent(out) :: ranks(:)
+     integer(i4), allocatable              :: idx(:)
+     integer(i4), allocatable              :: sorted(:)
+     real(wp)                              :: rank_sum
+     integer(i4)                           :: count
+     integer(i4)                           :: n, i, j, k
+
+     ! ==== Instructions
+
+     ! allocate
+     n = size(x)
+     allocate(idx(n))
+     allocate(ranks(n))
+
+     ! create index vector
+     do i = 1, n
+        idx(i) = i
+     enddo
+
+     ! sort index based on x
+     do i = 2, n
+        j = i
+        do while (j .gt. 1 .and. x( idx(j) ) .lt. x( idx(j - 1) ))
+           k = idx(j)
+           idx(j) = idx(j - 1)
+           idx(j - 1) = k
+           j = j - 1
+        enddo
+     enddo
+
+     ! assign ranks (with tie averaging)
+     i = 1
+     do while (i .le. n)
+        rank_sum = real(i, kind=wp)
+        count = 1
+        do j = i + 1, n
+           if (x( idx(j) ) .eq. x( idx(i) )) then
+              rank_sum = rank_sum + real(j, kind=wp)
+              count = count + 1
+           else
+              exit
+           endif
+        enddo
+        rank_sum = rank_sum / real(count, kind=wp)
+        do k = i, i + count - 1
+           ranks(idx(k)) = rank_sum
+        enddo
+        i = i + count
+     enddo
+
+     ! deallocate
+     deallocate(idx)
+
+  end subroutine s_rank
+
+end subroutine s_tst_ranksum
 
 end module fsml_tst

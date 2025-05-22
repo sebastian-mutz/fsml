@@ -202,8 +202,8 @@ subroutine s_utl_read_csv(infile, df, labelcol, labelrow, delimiter)
 ! ---- conatined procedures
   contains
 
-     ! --------------------------------------------------------------- !
-     subroutine split_line(line, delimiter, ncol, cells)
+  ! --------------------------------------------------------------- !
+  subroutine split_line(line, delimiter, ncol, cells)
 
      ! ==== Description
      !! Splits passed line up into cells by delimiter.
@@ -232,10 +232,10 @@ subroutine s_utl_read_csv(infile, df, labelcol, labelrow, delimiter)
         endif
      enddo
 
-     end subroutine split_line
+  end subroutine split_line
 
-     ! --------------------------------------------------------------- !
-     pure function s2r(s) result(r)
+  ! --------------------------------------------------------------- !
+  pure function s2r(s) result(r)
 
      ! ==== Description
      !! Converts string to real.
@@ -247,7 +247,7 @@ subroutine s_utl_read_csv(infile, df, labelcol, labelrow, delimiter)
      ! ==== Instructions
      read(s, *) r
 
-     end function s2r
+  end function s2r
 
 end subroutine s_utl_read_csv
 
