@@ -16,6 +16,7 @@ module fsml_tst
 
   ! load modules
   use :: fsml_ini
+  use :: fsml_utl
   use :: fsml_sts
   use :: fsml_dst
 
@@ -385,7 +386,7 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   x(n1+1:) = x2
 
   ! assigns ranks, use stdlib procedure
-  call s_rank(x, ranks)
+  call s_utl_rank(x, ranks)
 
   ! sum ranks of sample x
   rx1 = sum(real(ranks(1:n1),  kind=wp))
@@ -424,72 +425,6 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
      case default
         p = -1.0_wp
   end select
-
-  contains
-
-  ! --------------------------------------------------------------- !
-  pure subroutine s_rank(x, ranks)
-
-     ! ==== Description
-     !! Ranks all samples such that the smallest value obtains rank 1
-     !! and the largest rank n.
-
-     ! ==== Declarations
-     real(wp)                , intent(in)  :: x(:)
-     integer(i4), allocatable, intent(out) :: ranks(:)
-     integer(i4), allocatable              :: idx(:)
-     integer(i4), allocatable              :: sorted(:)
-     real(wp)                              :: rank_sum
-     integer(i4)                           :: count
-     integer(i4)                           :: n, i, j, k
-
-     ! ==== Instructions
-
-     ! allocate
-     n = size(x)
-     allocate(idx(n))
-     allocate(ranks(n))
-
-     ! create index vector
-     do i = 1, n
-        idx(i) = i
-     enddo
-
-     ! sort index based on x
-     do i = 2, n
-        j = i
-        do while (j .gt. 1 .and. x( idx(j) ) .lt. x( idx(j - 1) ))
-           k = idx(j)
-           idx(j) = idx(j - 1)
-           idx(j - 1) = k
-           j = j - 1
-        enddo
-     enddo
-
-     ! assign ranks (with tie averaging)
-     i = 1
-     do while (i .le. n)
-        rank_sum = real(i, kind=wp)
-        count = 1
-        do j = i + 1, n
-           if (x( idx(j) ) .eq. x( idx(i) )) then
-              rank_sum = rank_sum + real(j, kind=wp)
-              count = count + 1
-           else
-              exit
-           endif
-        enddo
-        rank_sum = rank_sum / real(count, kind=wp)
-        do k = i, i + count - 1
-           ranks(idx(k)) = rank_sum
-        enddo
-        i = i + count
-     enddo
-
-     ! deallocate
-     deallocate(idx)
-
-  end subroutine s_rank
 
 end subroutine s_tst_ranksum
 

@@ -17,6 +17,7 @@ module fsml
   ! load modules
   use :: fsml_ini
   use :: fsml_typ
+  use :: fsml_dat
   use :: fsml_sts
   use :: fsml_dst
   use :: fsml_tst
@@ -38,6 +39,8 @@ module fsml
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
   ! public utility procedures
+  public :: fsml_rank
+  ! public data/io procedures
   public :: fsml_read_csv
   ! public derived types
   public :: fsml_typ_df
@@ -198,9 +201,18 @@ end interface
 ! -------------------------------------------------------------------- !
 ! ---- Utilities
 
+! ranks elements in an array
+interface fsml_rank
+  module procedure s_utl_rank
+end interface
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+! ---- Data Handling
+
 ! read csv file into dataframe
 interface fsml_read_csv
-  module procedure s_utl_read_csv
+  module procedure s_dat_read_csv
 end interface
 
 end module fsml
