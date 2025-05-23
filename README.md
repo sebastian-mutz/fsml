@@ -108,12 +108,12 @@ Basic Statistics (descriptive measures for understanding data).
 
 | Basic Statistics (STS) | Covered |
 | ---------------------- | ------- |
-| mean                   | ✓       |
-| variance               | ✓       |
-| standard deviation     | ✓       |
-| covariance             | ✓       |
-| linear trend           | ✓       |
-| correlation            | ✓       |
+| Mean                   | ✓       |
+| Variance               | ✓       |
+| Standard deviation     | ✓       |
+| Covariance             | ✓       |
+| Linear trend           | ✓       |
+| Correlation (Pearson)  | ✓       |
 
 #### Distributions and Functions
 
@@ -139,7 +139,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Pooled t-test (2 sample)   | ✓       |
 | Welch's t-test (2 sample)  | ✓       |
 | Analysis of variance       | -       |
-| Mann–Whitney U             | -       |
+| Mann–Whitney U (rank sum)  | -       |
 | Wilcoxon signed-rank       | -       |
 | Kruskall Wallis H          | -       |
 

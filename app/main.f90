@@ -11,8 +11,8 @@ program main
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
-  use :: fsml
   use :: fsml_ini !iso_fortran_env, wp => real64
+  use :: fsml
 
   implicit none
 
