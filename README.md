@@ -1,7 +1,7 @@
 # <span style="color:#734f96">FSML - Fortran Statistics and Machine Learning Library</span>
 
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-![10%](https://progress-bar.xyz/10?title=Alpha)
+![20%](https://progress-bar.xyz/20?title=Alpha)
 
 > [!IMPORTANT]
 > FSML is in a pre-alpha state, and only suitable for developers at this point.
