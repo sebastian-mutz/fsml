@@ -26,6 +26,7 @@ module fsml_tst
 
   ! declare public procedures
   public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
+  public :: s_tst_ranksum, s_tst_signedrank
 
 contains
 
@@ -366,7 +367,7 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   real(wp)                                :: rx2      !! rank sum for x2
   real(wp)                                :: u1       !! U statistic 1
   real(wp)                                :: u2       !! U statistic 2
-  real(wp)                                :: mu       !! mean of U (under H0)
+  real(wp)                                :: mu       !! expected value of U (under H0)
   real(wp)                                :: s        !! standard deviation of U (under H0)
   real(wp)                                :: z        !! z statistic
   integer(i4)                             :: i
@@ -392,10 +393,6 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   rx1 = sum(real(ranks(1:n1),  kind=wp))
   rx2 = sum(real(ranks(n1+1:), kind=wp))
 
-  ! deallocate
-  deallocate(x)
-  deallocate(ranks)
-
   ! compute U statistics
   u1 = real(n1, kind=wp) * real(n2, kind=wp) + &
      & (real(n1, kind=wp) * (real(n1, kind=wp) + 1.0_wp) / 2.0_wp) - rx1
@@ -403,7 +400,7 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
      & (real(n2, kind=wp) * (real(n2, kind=wp) + 1.0_wp) / 2.0_wp) - rx2
   u  = min(u1, u2)
 
-  ! mean and standard deviation of U under H0
+  ! expected value and standard deviation of U under H0
   mu = n1 * n2 / 2.0_wp
   s  = sqrt(n1 * n2 * (n1 + n2 + 1.0_wp) / 12.0_wp)
 
@@ -426,6 +423,106 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
         p = -1.0_wp
   end select
 
+  ! deallocate
+  deallocate(x)
+  deallocate(ranks)
+
 end subroutine s_tst_ranksum
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
+
+! ==== Description
+!! The Wilcoxon signed rank test is a nonparametric test that determines
+!! if two related paired samples come from the same distribution.
+!! (It is the nonparametric version of the paired t-test.)
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x1(:)     !! sample 1 (paired data)
+  real(wp)         , intent(in)           :: x2(:)     !! sample 2 (paired data)
+  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out)          :: p         !! p-value
+  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
+  character(len=16)                       :: h1_w      !! final value for h1
+  integer(i4)                             :: n         !! sample size
+  real(wp)         , allocatable          :: d(:)      !! differences
+  real(wp)         , allocatable          :: dm(:)     !! absolute (modulus of) differences
+  integer(i4)      , allocatable          :: ranks(:)  !! ranks of absolute differences
+  real(wp)                                :: rpos      !! sum of positive ranks
+  real(wp)                                :: rneg      !! sum of negative ranks
+  real(wp)                                :: mu        !! expected W under H0
+  real(wp)                                :: s         !! standard deviation under H0
+  real(wp)                                :: z         !! z statistic
+  integer(i4)                             :: i
+
+! ==== Instructions
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! allocate; assume x1 and x2 are the same size (they should be)
+  n = size(x1)
+  allocate(d(n))
+  allocate(dm(n))
+  allocate(ranks(n))
+
+  ! compute differences and absolute values
+  d = x1 - x2
+  dm = abs(d)
+
+  ! ignore zero differences by marking them invalid (set rank = 0 later)
+  do i = 1, n
+    if (dm(i) .eq. 0.0_wp) ranks(i) = 0
+  enddo
+
+  ! rank non-zero differences
+  call s_utl_rank(dm, ranks)
+
+  ! compute rank sums
+  rpos  = 0.0_wp
+  rneg = 0.0_wp
+  do i = 1, n
+    if (d(i) .gt. 0.0_wp) then
+      rpos = rpos + real(ranks(i), wp)
+    else if (d(i) .lt. 0.0_wp) then
+      rneg = rneg + real(ranks(i), wp)
+    endif
+  enddo
+
+  ! W is the smaller of the rank sums
+  w = min(rpos, rneg)
+
+  ! expected value and standard deviation under H0
+  mu = n * (n + 1.0_wp) / 4.0_wp
+  s  = sqrt(n * (n + 1.0_wp) * (2.0_wp * n + 1.0_wp) / 24.0_wp)
+
+  ! z-score
+  z = (w - mu) / s
+
+  ! get p-value
+  select case(h1_w)
+     ! less than
+     case("lt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
+     ! greater than
+     case("gt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
+     ! two-sided
+     case("two")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
+     ! invalid option
+     case default
+        p = -1.0_wp
+  end select
+
+  ! deallocate
+  deallocate(d)
+  deallocate(dm)
+  deallocate(ranks)
+
+end subroutine s_tst_signedrank
 
 end module fsml_tst

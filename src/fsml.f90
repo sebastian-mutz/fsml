@@ -38,6 +38,7 @@ module fsml
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
+  public :: fsml_signedrank, fsml_ranksum
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -195,6 +196,16 @@ end interface
 ! 2 sample t-test
 interface fsml_ttest_2sample
   module procedure s_tst_ttest_2s
+end interface
+
+! Wilcoxon rank-sum / Mann–Whitney U test
+interface fsml_ranksum
+  module procedure s_tst_ranksum
+end interface
+
+! Wilcoxon signed rank test
+interface fsml_signedrank
+  module procedure s_tst_signedrank
 end interface
 
 ! ==================================================================== !
