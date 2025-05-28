@@ -438,6 +438,10 @@ pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
 !! The Wilcoxon signed rank test is a nonparametric test that determines
 !! if two related paired samples come from the same distribution.
 !! (It is the nonparametric version of the paired t-test.)
+!! $$ W = \min \left( \sum_{d_i > 0} R_i, \sum_{d_i < 0} R_i \right) $$
+!! TODO: create 1 sample test and make paired sample test use the general
+!! 1 sample test, as done for 1-sample and paired t-test
+
 
 ! ==== Declarations
   real(wp)         , intent(in)           :: x1(:)     !! sample 1 (paired data)
@@ -470,7 +474,7 @@ pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
   allocate(ranks(n))
 
   ! compute differences and absolute values
-  d = x1 - x2
+  d  = x1 - x2
   dm = abs(d)
 
   ! ignore zero differences by marking them invalid (set rank = 0 later)
@@ -482,7 +486,7 @@ pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
   call s_utl_rank(dm, ranks)
 
   ! compute rank sums
-  rpos  = 0.0_wp
+  rpos = 0.0_wp
   rneg = 0.0_wp
   do i = 1, n
     if (d(i) .gt. 0.0_wp) then
@@ -499,7 +503,7 @@ pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
   mu = n * (n + 1.0_wp) / 4.0_wp
   s  = sqrt(n * (n + 1.0_wp) * (2.0_wp * n + 1.0_wp) / 24.0_wp)
 
-  ! z-score
+  ! z statistic
   z = (w - mu) / s
 
   ! get p-value
