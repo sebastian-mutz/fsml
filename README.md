@@ -132,16 +132,17 @@ Each distribution comes with procedures for the following functions: Probability
 
 Hypothesis Testing (statistical tests for inference and comparing groups).
 
-| Hypothesis Testing (TST)   | Covered |
-| -------------------------- | ------- |
-| Student t-test (1 sample)  | ✓       |
-| Paired sample t-test       | ✓       |
-| Pooled t-test (2 sample)   | ✓       |
-| Welch's t-test (2 sample)  | ✓       |
-| Analysis of variance       | -       |
-| Mann–Whitney U (rank sum)  | -       |
-| Wilcoxon signed-rank       | -       |
-| Kruskall Wallis H          | -       |
+| Hypothesis Testing (TST)           | Covered |
+| ---------------------------------- | ------- |
+| Student t-test (1 sample)          | ✓       |
+| Paired sample t-test               | ✓       |
+| Pooled t-test (2 sample)           | ✓       |
+| Welch's t-test (2 sample)          | ✓       |
+| Analysis of variance               | -       |
+| Mann–Whitney U rank-sum (2 sample) | ✓       |
+| Wilcoxon signed-rank (1 sample)    | ✓       |
+| Wilcoxon signed-rank (paired)      | ✓       |
+| Kruskall Wallis H                  | -       |
 
 #### Linear Parametric Models (LPM)
 

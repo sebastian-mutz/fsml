@@ -16,6 +16,11 @@ program example_tst
 
   implicit none
 
+! ==== Description
+!! The programme demonstrates the use of all statistical tests based on
+!! the same few data vectors.
+
+! ==== Declarations
   integer(i4), parameter :: n1 = 10, n2 = 13
   real(wp)   , parameter :: mu = 1.25_wp
   real(wp)   , parameter :: x1(n1) =        &
@@ -45,28 +50,115 @@ program example_tst
                                    1.12_wp]
   real(wp)               :: t, p, df
 
+! ==== Instructions
+
+! ---- Parametric Tests
+
+  print*
+  write(*,'(A)') " Parametric Tests"
+  write(*,'(A)') " ================"
   print*
 
-  ! ---- 1 Sample T-Test
-
+  ! 1-sample t-test
   call fsml_ttest_1sample(x1, mu, t, df, p, h1="two")
-  write(*,'(A)') "> 1 sample student's t-test"
-  write(*,'(A20,10F10.4)') " samples:", x1
-  write(*,'(A20,F10.4)') " test statistic:", t
-  write(*,'(A20,F10.4)') " degrees of freedom:", df
-  write(*,'(A20,F10.4)') " p-value:", p
+  write(*,'(A)') "> 1-sample student's t-test"
+  write(*,'(A,10F10.4)') "  samples:            ", x1
+  write(*,'(A,F10.4)')   "  test statistic (t): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
   print*
+  ! test statistic (t):     0.4672
+  ! degrees of freedom:     9.0000
+  ! p-value:                0.6514
 
-  ! ---- 2 Sample T-Test
 
+  ! paired t-test
+  call fsml_ttest_paired(x1, x2(:n1), t, df, p, h1="two")
+  write(*,'(A)') "> 2-sample paired t-test"
+  write(*,'(A,10F10.4)') "  samples 1:          ", x1
+  write(*,'(A,10F10.4)') "  samples 2:          ", x2(:n1)
+  write(*,'(A,F10.4)')   "  test statistic (t): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (t):     0.1584
+  ! degrees of freedom:     9.0000
+  ! p-value:                0.8776
+
+
+  ! 2-sample pooled t-test (assume equal variances)
+  call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.true., h1="two")
+  write(*,'(A)') "> 2-sample pooled t-test"
+  write(*,'(A,10F10.4)') "  samples 1:          ", x1
+  write(*,'(A,13F10.4)') "  samples 2:          ", x2
+  write(*,'(A,F10.4)')   "  test statistic (t): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (t):     0.4862
+  ! degrees of freedom:    21.0000
+  ! p-value:                0.6319
+
+
+  ! 2-sample t-test for unequal variances (Welch's t-test)
   call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1="two")
-  write(*,'(A)') "> 2 sample Welch's t-test"
-  write(*,'(A20,10F10.4)') " samples 1:", x1
-  write(*,'(A20,13F10.4)') " samples 2:", x2
-  write(*,'(A20,F10.4)') " test statistic:", t
-  write(*,'(A20,F10.4)') " degrees of freedom:", df
-  write(*,'(A20,F10.4)') " p-value:", p
+  write(*,'(A)') "> 2-sample Welch's t-test"
+  write(*,'(A,10F10.4)') "  samples 1:          ", x1
+  write(*,'(A,13F10.4)') "  samples 2:          ", x2
+  write(*,'(A,F10.4)')   "  test statistic (t): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (t):     0.4850
+  ! degrees of freedom:    19.3423
+  ! p-value:                0.6331
+
+
+! ---- Non-Parametric Tests
+
+  print*
+  write(*,'(A)') " Non-Parametric Tests"
+  write(*,'(A)') " ===================="
   print*
 
+  ! 1-sample Wilcoxon signed rank test
+  call fsml_signedrank_1sample(x1, mu, t, p, h1="two")
+  write(*,'(A)') "> 1-sample Wilcoxon signed rank test"
+  write(*,'(A,10F10.4)') "  samples:            ", x1
+  write(*,'(A,F10.4)')   "  test statistic (w): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (w):    25.0000
+  ! degrees of freedom:    19.3423
+  ! p-value:                0.7989
+
+
+  ! 2-sample (paired sample) Wilcoxon signed rank test
+  call fsml_signedrank_paired(x1, x2(:n1), t, p, h1="two")
+  write(*,'(A)') "> paired sample Wilcoxon signed rank test"
+  write(*,'(A,10F10.4)') "  samples 1:          ", x1
+  write(*,'(A,10F10.4)') "  samples 2:          ", x2(:n1)
+  write(*,'(A,F10.4)')   "  test statistic (w): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (w):    21.0000
+  ! degrees of freedom:    19.3423
+  ! p-value:                0.8590
+
+
+  ! 2-sample Wilcoxon Mann-Whitney U rank sum test
+  call fsml_ranksum(x1, x2, t, p, h1="two")
+  write(*,'(A)') "> Mann-Whitney U rank sum test"
+  write(*,'(A,10F10.4)') "  samples 1:          ", x1
+  write(*,'(A,13F10.4)') "  samples 2:          ", x2
+  write(*,'(A,F10.4)')   "  test statistic (U): ", t
+  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
+  write(*,'(A,F10.4)')   "  p-value:            ", p
+  print*
+  ! test statistic (U):    61.0000
+  ! degrees of freedom:    19.3423
+  ! p-value:                0.8041
 
 end program example_tst

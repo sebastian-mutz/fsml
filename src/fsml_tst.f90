@@ -26,7 +26,7 @@ module fsml_tst
 
   ! declare public procedures
   public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
-  public :: s_tst_ranksum, s_tst_signedrank
+  public :: s_tst_ranksum, s_tst_signedrank_1s, s_tst_signedrank_2s
 
 contains
 
@@ -341,16 +341,232 @@ end subroutine s_tst_ttest_2s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
+pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
+
+! ==== Description
+!! The 1-sample Wilcoxon signed rank test is a non-parametric test that
+!! determines if data comes from a symmetric population with centre \( mu_0 \).
+!! It can be regarded as a non-parametric version of the 1-sample t-test.
+!! The test statistic \( W \) is the smaller of the sum of positive and
+!! negative signed ranks:
+!! $$ W = \min \left( \sum_{d_i > 0} R_i, \sum_{d_i < 0} R_i \right) $$
+!!
+!!
+!! If the data consists of independent and similarly distributed samples
+!! from distribution \( D \), the null hypothesis \( H_0 \) can be expressed as:
+!!
+!! \( D \) is symmetric around \( \mu = \mu_0 \).
+!!
+!! The default alternative hypothesis \( H_1 \) is two-sided and also be
+!! set explicitly (`h1 = "two"`). It can be expressed as:
+!!
+!! \( D \) is symmetric around \( \mu \neq \mu_0 \)
+!!
+!! If the alternative hypothesis is set to "greater than" (`h1 = "gt"`), it is:
+!!
+!! \( D \) is symmetric around \( \mu > \mu_0 \)
+!!
+!! If the alternative hypothesis is set to "less than" (`h1 = "lt"`), it is:
+!!
+!! \( D \) is symmetric around \( \mu < \mu_0 \)
+!!
+!! The procedure takes into consideration tied ranks.
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x(:)      !! x vector (samples)
+  real(wp)         , intent(in)           :: mu0       !! population mean (null hypothesis expected value)
+  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out)          :: p         !! p-value
+  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
+  character(len=16)                       :: h1_w      !! final value for h1
+  integer(i4)                             :: n         !! sample size
+  integer(i4)                             :: m         !! non-zero sample size
+  real(wp)                                :: mr        !! float sample size for x
+  real(wp)         , allocatable          :: d(:)      !! differences
+  real(wp)         , allocatable          :: dm(:)     !! absolute (modulus of) differences
+  integer(i4)      , allocatable          :: ranks(:)  !! ranks of absolute differences
+  integer(i4)      , allocatable          :: idx(:)    !! indeces for x > 0
+  real(wp)                                :: rpos      !! sum of positive ranks
+  real(wp)                                :: rneg      !! sum of negative ranks
+  real(wp)                                :: mu        !! expected W under H0
+  real(wp)                                :: s         !! standard deviation under H0
+  real(wp)                                :: z         !! z statistic
+  integer(i4)                             :: i, j
+
+! ==== Instructions
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! get dims and allocate
+  n = size(x)
+  allocate(d(n))
+
+  ! compute differences and absolute values
+  d  = x - mu0
+^
+
+  ! filter out zero differences
+  m = count(abs(d) .gt. 0.0_wp)
+  if (m .eq. 0) then
+     w = 0.0_wp
+     p = 1.0_wp
+     return
+  endif
+
+  ! allocation based on new vector
+  allocate(dm(m))
+  allocate(ranks(m))
+  allocate(idx(m))
+  mr = real(m, kind=wp)
+
+  ! extract non-zero entries and their signs
+  i = 0
+  do j = 1, n
+     if (abs(d(j)) .gt. 0.0_wp) then
+        i = i + 1
+        dm(i)  = abs(d(j))
+        idx(i) = j
+     endif
+  enddo
+
+  ! rank non-zero differences
+  call s_utl_rank(dm, ranks)
+
+  ! compute rank sums
+  rpos = 0.0_wp
+  rneg = 0.0_wp
+  do i = 1, m
+     if (d(idx(i)) .gt. 0.0_wp) then
+        rpos = rpos + real(ranks(i), wp)
+     else
+        rneg = rneg + real(ranks(i), wp)
+     endif
+  enddo
+
+  ! W is the smaller of the rank sums
+  w = min(rpos, rneg)
+
+  ! expected value and standard deviation under H0
+  mu = mr * (mr + 1.0_wp) / 4.0_wp
+  s  = sqrt(mr * (mr + 1.0_wp) * (2.0_wp * mr + 1.0_wp) / 24.0_wp)
+
+  ! z statistic
+  z = (w - mu) / s
+
+  ! get p-value
+  select case(h1_w)
+     ! less than
+     case("lt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
+     ! greater than
+     case("gt")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
+     ! two-sided
+     case("two")
+        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
+     ! invalid option
+     case default
+        p = -1.0_wp
+  end select
+
+  ! deallocate
+  deallocate(d)
+  deallocate(dm)
+  deallocate(ranks)
+  deallocate(idx)
+
+end subroutine s_tst_signedrank_1s
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_signedrank_2s(x1, x2, w, p, h1)
+
+! ==== Description
+!! The Wilcoxon signed rank test is a non-parametric test that determines
+!! if two related paired samples come from the same distribution.
+!! It can be regarded as a non-parametric version of the paired t-test.
+!!
+!! The Wilcoxon signed rank test is mathematically equivalent to the
+!! 1-sample Wilcoxon signed rank test conducted on the difference vector
+!! \( d = x_1 - x_2 \) with \( mu_0 \) set to zero. Consequently, the
+!! the null hypothesis \( H_0 \)  can be expressed as:
+!!
+!! Samples \( x_1 - x_2 \) are symmetric around \( \mu = 0 \).
+!!
+!! The default alternative hypothesis \( H_1 \) is two-sided and also be
+!! set explicitly (`h1 = "two"`). It can be expressed as:
+!!
+!! Samples \( x_1 - x_2 \) are symmetric around \( \mu \neq 0 \)
+!!
+!! If the alternative hypothesis is set to "greater than" (`h1 = "gt"`), it is:
+!!
+!! Samples \( x_1 - x_2 \) are symmetric around \( \mu > 0 \)
+!!
+!! If the alternative hypothesis is set to "less than" (`h1 = "lt"`), it is:
+!!
+!! Samples \( x_1 - x_2 \) are symmetric around \( \mu < 0 \)
+!!
+!! The procedure takes into consideration tied ranks.
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x1(:)     !! sample 1 (paired data)
+  real(wp)         , intent(in)           :: x2(:)     !! sample 2 (paired data)
+  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out)          :: p         !! p-value
+  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
+  character(len=16)                       :: h1_w      !! final value for h1
+  real(wp)         , allocatable          :: d(:)      !! differences
+
+! ==== Instructions
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! get dims and allocate
+  allocate(d( size(x1) ))
+
+  ! compute differences and absolute values
+  d  = x1 - x2
+
+  ! use 1-sample signed-rank test with mu0 = 0
+  call s_tst_signedrank_1s(d, 0.0_wp, w, p, h1_w)
+
+  ! deallocate
+  deallocate(d)
+
+end subroutine s_tst_signedrank_2s
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
 
 ! ==== Description
 !! The ranks sum test (Wilcoxon rank-sum test or Mann–Whitney U test) is a
-!! nonparametric test to determine if two independent samples \( x_1 \) and
-!! \( x_2 \) are have the same distribution.
+!! non-parametric test to determine if two independent samples \( x_1 \) and
+!! \( x_2 \) are have the same distribution. It can be regarded as the non-parametric
+!! equivalent of the 2-sample t-test.
+!!
+!! The Mann–Whitney U statistic is calculated for each sample as follows:
+!! $$ U_i = R_i - \frac{n_i \cdot (n_i + 1)}{2} $$
+!! where \( R_i \) is the sum of ranks of sample set \( i \)
+!! and \( n_i \) is the sample size of sample set \( i \).
+!! The final U statistic is:
+!! $$ U = \min(U_1, U_2) $$
 !!
 !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
 !! \( H_0 \): the distributions of \( x_1 \) and \( x_2 \) are equal.
 !! \( H_1 \): the distributions of \( x_1 \) and \( x_2 \) are not equal.
+!!
+!! The procedure takes into consideration tied ranks.
 
 ! ==== Declarations
   real(wp)         , intent(in)           :: x1(:)    !! x1 vector (samples)
@@ -361,6 +577,8 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   character(len=16)                       :: h1_w     !! final value for h1
   integer(i4)                             :: n1       !! sample size for x1
   integer(i4)                             :: n2       !! sample size for x2
+  real(wp)                                :: n1r      !! float sample size for x1
+  real(wp)                                :: n2r      !! float sample size for x2
   real(wp)         , allocatable          :: x(:)     !! combined x1 and x2
   integer(i4)      , allocatable          :: ranks(:) !! stores ranks
   real(wp)                                :: rx1      !! rank sum for x1
@@ -378,9 +596,11 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   h1_w = "two"
   if (present(h1)) h1_w = h1
 
-  ! combine and rank all values
+  ! get dims and combine and rank all values
   n1 = size(x1)
   n2 = size(x2)
+  n1r = real(n1, kind=wp)
+  n2r = real(n2, kind=wp)
   allocate(x(n1+n2))
   allocate(ranks(n1+n2))
   x(1:n1)  = x1
@@ -394,15 +614,13 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   rx2 = sum(real(ranks(n1+1:), kind=wp))
 
   ! compute U statistics
-  u1 = real(n1, kind=wp) * real(n2, kind=wp) + &
-     & (real(n1, kind=wp) * (real(n1, kind=wp) + 1.0_wp) / 2.0_wp) - rx1
-  u2 = real(n1, kind=wp) * real(n2, kind=wp) + &
-     & (real(n2, kind=wp) * (real(n2, kind=wp) + 1.0_wp) / 2.0_wp) - rx2
+  u1 = n1r * n2r + (n1r * (n1r + 1.0_wp) / 2.0_wp) - rx1
+  u2 = n1r * n2r + (n2r * (n2r + 1.0_wp) / 2.0_wp) - rx2
   u  = min(u1, u2)
 
   ! expected value and standard deviation of U under H0
-  mu = n1 * n2 / 2.0_wp
-  s  = sqrt(n1 * n2 * (n1 + n2 + 1.0_wp) / 12.0_wp)
+  mu = n1r * n2r / 2.0_wp
+  s  = sqrt(n1r * n2r * (n1r + n2r + 1.0_wp) / 12.0_wp)
 
   ! z statistic (U is approximately normal for large samples)
   z = (u - mu) / s
@@ -428,105 +646,5 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   deallocate(ranks)
 
 end subroutine s_tst_ranksum
-
-
-! ==================================================================== !
-! -------------------------------------------------------------------- !
-pure subroutine s_tst_signedrank(x1, x2, w, p, h1)
-
-! ==== Description
-!! The Wilcoxon signed rank test is a nonparametric test that determines
-!! if two related paired samples come from the same distribution.
-!! (It is the nonparametric version of the paired t-test.)
-!! $$ W = \min \left( \sum_{d_i > 0} R_i, \sum_{d_i < 0} R_i \right) $$
-!! TODO: create 1 sample test and make paired sample test use the general
-!! 1 sample test, as done for 1-sample and paired t-test
-
-
-! ==== Declarations
-  real(wp)         , intent(in)           :: x1(:)     !! sample 1 (paired data)
-  real(wp)         , intent(in)           :: x2(:)     !! sample 2 (paired data)
-  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
-  real(wp)         , intent(out)          :: p         !! p-value
-  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
-  character(len=16)                       :: h1_w      !! final value for h1
-  integer(i4)                             :: n         !! sample size
-  real(wp)         , allocatable          :: d(:)      !! differences
-  real(wp)         , allocatable          :: dm(:)     !! absolute (modulus of) differences
-  integer(i4)      , allocatable          :: ranks(:)  !! ranks of absolute differences
-  real(wp)                                :: rpos      !! sum of positive ranks
-  real(wp)                                :: rneg      !! sum of negative ranks
-  real(wp)                                :: mu        !! expected W under H0
-  real(wp)                                :: s         !! standard deviation under H0
-  real(wp)                                :: z         !! z statistic
-  integer(i4)                             :: i
-
-! ==== Instructions
-
-  ! assume two-sided, overwrite if option is passed
-  h1_w = "two"
-  if (present(h1)) h1_w = h1
-
-  ! allocate; assume x1 and x2 are the same size (they should be)
-  n = size(x1)
-  allocate(d(n))
-  allocate(dm(n))
-  allocate(ranks(n))
-
-  ! compute differences and absolute values
-  d  = x1 - x2
-  dm = abs(d)
-
-  ! ignore zero differences by marking them invalid (set rank = 0 later)
-  do i = 1, n
-    if (dm(i) .eq. 0.0_wp) ranks(i) = 0
-  enddo
-
-  ! rank non-zero differences
-  call s_utl_rank(dm, ranks)
-
-  ! compute rank sums
-  rpos = 0.0_wp
-  rneg = 0.0_wp
-  do i = 1, n
-    if (d(i) .gt. 0.0_wp) then
-      rpos = rpos + real(ranks(i), wp)
-    else if (d(i) .lt. 0.0_wp) then
-      rneg = rneg + real(ranks(i), wp)
-    endif
-  enddo
-
-  ! W is the smaller of the rank sums
-  w = min(rpos, rneg)
-
-  ! expected value and standard deviation under H0
-  mu = n * (n + 1.0_wp) / 4.0_wp
-  s  = sqrt(n * (n + 1.0_wp) * (2.0_wp * n + 1.0_wp) / 24.0_wp)
-
-  ! z statistic
-  z = (w - mu) / s
-
-  ! get p-value
-  select case(h1_w)
-     ! less than
-     case("lt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
-     ! greater than
-     case("gt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
-     ! two-sided
-     case("two")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
-     ! invalid option
-     case default
-        p = -1.0_wp
-  end select
-
-  ! deallocate
-  deallocate(d)
-  deallocate(dm)
-  deallocate(ranks)
-
-end subroutine s_tst_signedrank
 
 end module fsml_tst
