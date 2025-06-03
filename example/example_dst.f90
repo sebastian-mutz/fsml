@@ -130,6 +130,28 @@ program example_dst
 
   print*
 
+  ! ---- F Distribution
+
+  print*, "> F distribution"
+
+  ! f distribution pdf with x=2.0, d1=5.0, d2=2.0, loc=0.5 and scale=1.0
+  print*, fsml_f_pdf(2.0_wp, d1=5.0_wp, d2=2.0_wp, loc=0.5_wp, scale=1.0_wp)
+  ! 0.19431184938882604
+
+  ! f distribution pdf with x=1.1, d1=5.0, d2=10, loc=0.0 and scale=0.5
+  print*, fsml_f_pdf(1.1_wp, d1=5.0_wp, d2=10.0_wp, loc=0.0_wp, scale=0.5_wp)
+  ! 0.25925652075006661
+
+  ! f distribution cdf with x=11.5, d1=20, d2=10, loc=0.0 and scale=1.0
+  print*, fsml_f_cdf(11.5_wp, d1=20.0_wp, d2=10.0_wp, loc=0.0_wp, scale=1.0_wp, tail="left")
+  ! 0.99981682497307667
+
+  ! f distribution ppf with p=0.2, d1=10, d2=20, loc=2.0 and scale=1.2
+  print*, fsml_f_ppf(0.2_wp, d1=10.0_wp, d2=20.0_wp, loc=0.0_wp, scale=1.2_wp)
+  ! 0.71332945788242341
+
+  print*
+
   ! ---- Generalised Pareto Distribution
 
   print*, "> generalised pareto distribution"

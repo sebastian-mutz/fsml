@@ -35,6 +35,7 @@ module fsml
   public :: fsml_gamma_pdf, fsml_gamma_cdf, fsml_gamma_ppf
   public :: fsml_exp_pdf, fsml_exp_cdf, fsml_exp_ppf
   public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
+  public :: fsml_f_pdf, fsml_f_cdf, fsml_f_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
@@ -162,6 +163,21 @@ end interface
 ! chi-squared distribution ppf
 interface fsml_chi2_ppf
   module procedure f_dst_chi2_ppf
+end interface
+
+! f distribution pdf
+interface fsml_f_pdf
+  module procedure f_dst_f_pdf
+end interface
+
+! f distribution cdf
+interface fsml_f_cdf
+  module procedure f_dst_f_cdf
+end interface
+
+! f distribution ppf
+interface fsml_f_ppf
+  module procedure f_dst_f_ppf
 end interface
 
 ! generalised pareto distribution pdf

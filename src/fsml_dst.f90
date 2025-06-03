@@ -29,6 +29,7 @@ module fsml_dst
   public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf
   public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
   public :: f_dst_chi2_pdf, f_dst_chi2_cdf, f_dst_chi2_ppf
+  public :: f_dst_f_pdf, f_dst_f_cdf, f_dst_f_ppf
   public :: f_dst_gpd_pdf, f_dst_gpd_cdf, f_dst_gpd_ppf
 
 contains
@@ -43,7 +44,7 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for normal distribution.
-!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2 } $$
+!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left( \frac{x - \mu}{\sigma} \right)^2 } $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -413,7 +414,7 @@ elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 ! ==== Description
 !! Probability density function for gamma distribution.
 !! Uses intrinsic exp function.
-!! $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} x^{\alpha - 1} e^{-\lambda x}, \quad x > 0, \ \alpha > 0, \ \lambda > 0 $$
+!! $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} \cdot x^{\alpha - 1} \cdot e^{-\lambda \cdot x}, \quad x > 0, \ \alpha > 0, \ \lambda > 0 $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -604,7 +605,7 @@ elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
 ! ==== Description
 !! Probability density function for exponential distribution.
 !! Uses intrinsic exp function.
-!! $$ f(x) = \lambda e^{-\lambda x}, \quad x \geq 0, \ \lambda > 0 $$
+!! $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
 
 ! ==== Declarations
   real(wp), intent(in)           :: x        !! sample position
@@ -770,7 +771,7 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 ! ==== Description
 !! Probability density function for the chi-squared distribution.
 !! Uses intrinsic exp and gamma function.
-!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{-x/2}}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
+!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{ - \frac{x}{2} }}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
 !! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
 
 ! ==== Declarations
@@ -941,11 +942,212 @@ end function f_dst_chi2_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
+elemental function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
+
+! ==== Description
+!! Probability density function for the F distribution.
+!! $$ f(x) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)} \cdot \left( \frac{d_1}{d_2} \right)^{ \frac{d_1}{2} } \cdot \frac{x^{ \frac{d_1}{2} - 1}}{\left(1 + \frac{d_1}{d_2} x \right)^{ \frac{d_1 + d_2}{2} }}, \quad x > 0 $$
+!! where \(d_1\) = numerator degrees of freedom, \(d_2\) = denominator degrees of freedom and \( B \) is the complete beta function.
+!! (Uses intrinsic gamma function for beta.)
+!!
+!! The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), where \( U_1 \) and \( U_2 \) are are random variables with chi-square distributions with \( d_1 \) and \( d_2 \) degrees of freedom, respectively.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in)           :: d1      !! numerator degrees of freedom
+  real(wp), intent(in)           :: d2      !! denominator degrees of freedom
+  real(wp), intent(in), optional :: loc     !! location parameter
+  real(wp), intent(in), optional :: scale   !! scale parameter
+  real(wp)                       :: loc_w   !! final location
+  real(wp)                       :: scale_w !! final scale
+  real(wp)                       :: B       !! beta(0.5*d1, 0.5*d2)
+  real(wp)                       :: z       !! standardised variable
+  real(wp)                       :: fx
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
+
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+! ----compute PDF
+
+  ! get z score (standardise)
+  z = (x - loc_w) / scale_w
+
+  ! calculate beta(0.5*d1, 0.5*d2) from gamma functions
+  B = gamma(0.5_wp * d1) * gamma(0.5_wp * d2) / &
+    & gamma(0.5_wp * d1 + 0.5_wp * d2)
+
+  ! calculate probability/fx
+  if (z .le. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     fx = sqrt(( (d1 * z) ** d1 * d2 ** d2 ) / &
+       & ( (d1 * z + d2)**(d1 + d2) )) / z / (scale_w * B)
+  endif
+
+end function f_dst_f_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
+
+! ==== Description
+!! Cumulative density function \(F(x) = \mathbb{P}(X \leq x)\) for the F distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: x       !! sample position
+  real(wp)        , intent(in)           :: d1      !! numerator degrees of freedom
+  real(wp)        , intent(in)           :: d2      !! denominator degrees of freedom
+  real(wp)        , intent(in), optional :: loc     !! location parameter
+  real(wp)        , intent(in), optional :: scale   !! scale parameter
+  character(len=*), intent(in), optional :: tail    !! tail option
+  real(wp)                               :: loc_w   !! final location
+  real(wp)                               :: scale_w !! final scale
+  character(len=16)                      :: tail_w  !! tail option final
+  real(wp)                               :: z       !! standardised variable
+  real(wp)                               :: xbeta   !! beta variable
+  real(wp)                               :: p       !! output probability
+
+! ==== Instructions
+
+! ---- handle input
+
+
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
+
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
+
+! ----compute CDF
+
+  ! get z score (standardise)
+  z = (x - loc_w) / scale_w
+
+  ! z must be positive non-zero; return 0 if not
+  if (z .le. 0.0_wp) then
+    p = 0.0_wp
+    return
+  endif
+
+  ! transform to beta domain
+  xbeta = (d1 * z) / (d1 * z + d2)
+  p = f_dst_beta_inc(xbeta, 0.5_wp * d1, 0.5_wp * d2)
+
+  ! tail options
+  select case(tail_w)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+     ! two-tailed
+     case("two")
+        if (z .lt. 1.0_wp) then
+           p = 2.0_wp * p
+        else
+           p = 2.0_wp * (1.0_wp - p)
+        endif
+     ! confidence interval
+     case("confidence")
+        if (z .lt. 1.0_wp) then
+           p = 1.0_wp - 2.0_wp * p
+        else
+           p = 1.0_wp - 2.0_wp * (1.0_wp - p)
+        endif
+     ! invalid option
+     case default
+        p = -1.0_wp
+  end select
+
+end function f_dst_f_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
+
+! ==== Description
+!! Percent point function / quantile function \( Q(p) = F^{-1}(p) \) for the F distribution.
+!! Uses the bisection method to numerically invert the CDF.
+
+! ==== Declarations
+  real(wp), intent(in)           :: p                !! probability (0.0 < p < 1.0)
+  real(wp), intent(in)           :: d1               !! numerator degrees of freedom
+  real(wp), intent(in)           :: d2               !! denominator degrees of freedom
+  real(wp), intent(in), optional :: loc              !! location parameter
+  real(wp), intent(in), optional :: scale            !! scale parameter
+  real(wp)                       :: loc_w            !! effective location
+  real(wp)                       :: scale_w          !! effective scale
+  integer(i4), parameter         :: i_max = 200      !! max bisection iterations
+  real(wp)   , parameter         :: tol = 1.0e-12_wp !! tolerance for convergence
+  real(wp)                       :: a, b             !! search bounds
+  real(wp)                       :: x_mid, p_mid     !! midpoint and its CDF
+  integer(i4)                    :: i                !! iteration counter
+  real(wp)                       :: x                !! result: quantile at p
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume loc = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
+
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+! ---- compute PPF
+
+  ! set initial section
+  a = loc_w
+  b = loc_w + scale_w * 100.0_wp  ! heuristically large upper bound
+
+  ! iteratively refine with bisection method
+  do i = 1, i_max
+     x_mid = 0.5_wp * (a + b)
+     p_mid = f_dst_f_cdf(x_mid, d1, d2&
+          &, loc=loc_w, scale=scale_w, tail="left") - p
+     if (abs(p_mid) .lt. tol) then
+        x = x_mid
+        return
+     else if (p_mid .lt. 0.0_wp) then
+        a = x_mid
+     else
+        b = x_mid
+     end if
+  end do
+
+  ! if p not within valid range or x not found in iterations, set x to 0
+  if (p .le. 0.0_wp .or. p .ge. 1.0_wp .or. i .eq. i_max) x = 0.0_wp
+
+end function f_dst_f_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for generalised pareto distribution.
-!! $$ f(x) = \frac{1}{\sigma} \left( 1 + \frac{\xi (x - \mu)}{\sigma} \right)^{-\frac{1}{\xi} - 1}, \quad x \geq \mu, \ \sigma > 0, \ \xi \in \mathbb{R} $$
+!! $$ f(x) = \frac{1}{\sigma} \cdot \left ( 1 + \frac{\xi \cdot (x - \mu)}{\sigma} \right)^{-\frac{1}{\xi} - 1}, \quad x \geq \mu, \ \sigma > 0, \ \xi \in \mathbb{R} $$
 !! where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigma), \(\mu\) (mu) is the location (not mean).
 
 ! ==== Declarations
@@ -1187,8 +1389,8 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
 
 ! ==== Description
 !! Computes the regularised incomplete beta function. beta_inc and beta_cf
-!!  algorithms are based on several public domain Fortran and C code,
-!!  Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
+!! algorithms are based on several public domain Fortran and C code,
+!! Lentz's algorithm (1976), and modified to use 2008+ intrinsics.
 
 ! ==== Declarations
   real(wp), intent(in) :: x      !! upper limit of integral

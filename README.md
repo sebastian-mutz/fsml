@@ -127,6 +127,7 @@ Each distribution comes with procedures for the following functions: Probability
 | Exponential            | ✓       |
 | Generalised Pareto     | ✓       |
 | Chi-squared            | ✓       |
+| F                      | ✓       |
 
 #### Hypothesis Testing
 

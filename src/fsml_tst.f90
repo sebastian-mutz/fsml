@@ -405,7 +405,6 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
 
   ! compute differences and absolute values
   d  = x - mu0
-^
 
   ! filter out zero differences
   m = count(abs(d) .gt. 0.0_wp)
