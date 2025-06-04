@@ -59,14 +59,8 @@ program fortran_statistics
   ! left-tailed p-value for normal distribution with specified mean and standard deviation
   print*, fsml_norm_cdf(2.0_dp, mu=0.3_dp, sigma=1.3_dp, tail="left")
 
-  ! left-tailed p-value for t distribution with specified degrees of freedom
-  print*, fsml_t_ppf(0.9_dp, df=20, mu=0.2_dp, sigma=1.2_dp)
-
   ! genrealised pareto distribution cdf
   print*, fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail="left")
-
-  ! gamma distribution pdf
-  print*, fsml_gamma_pdf(0.2_dp, alpha=1.2_dp, beta=0.6_dp, loc=0.0_dp)
 
   ! chi square distribution ppf
   print*, fsml_chi2_ppf(0.2_dp, df=10, loc=2.0_dp, scale=1.2_dp)
