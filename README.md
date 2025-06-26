@@ -13,6 +13,7 @@ FSML is in a pre-alpha state. Existing procedures and API may change significant
 @endwarning-->
 
 <br>
+
 ## <span style="color:#734f96">Description</span>
 
 ![logo](assets/logo/FSML_small.png)
@@ -31,9 +32,11 @@ FSML is a scientific toolkit consisting of common statistical and machine learni
 FSML uses double precision (real64) by default, but can be switched project-wide by changing working precision (wp) in the fsml_typ module. The data type in your FSML application should match this.
 
 <br>
+
 ## <span style="color:#734f96">Examples</span>
 
 <br>
+
 #### Reading and Basic Statistics
 
 The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_readcsv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_corr* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
@@ -63,6 +66,7 @@ program fsml_statistics
 end program fsml_statistics
 ```
 <br>
+
 #### Statistical Distribution Functions
 
 The example below demonstrates the use of pdf (probability density function), cdf (cumulative distribution function), and ppf (percent point function/quantile function) procedures for different statistical distributions.
@@ -88,6 +92,7 @@ program fsml_distributions
 end program fsml_distributions
 ```
 <br>
+
 #### Statistical Tests
 
 In the example below, we create 2 data vectors and demonstrate how to conduct a range of statistical tests on them. We then let the programme output the test results in a clean format. The commented values are the expected output.
@@ -149,6 +154,7 @@ end program fsml_tests
 ```
 
 <br>
+
 ## <span style="color:#734f96">Development</span>
 
 FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written for my research in the past 15 years, and to bundle and publish it as a well organised and well documented library.
@@ -159,11 +165,13 @@ The published research below uses some of the to-be-reworked code and demonstrat
 - [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier)
 
 <br>
+
 ### <span style="color:#734f96">Alpha</span>
 
 I will consider the library to be in "alpha" once FSML covers the functionality needed to reproduce ~80% of all the Fortran-based data analysis I've conducted (and published) in the past ~15 years.
 
 <br>
+
 ### <span style="color:#734f96">Beta</span>
 
 This stage is reached once FSML:
@@ -173,9 +181,11 @@ This stage is reached once FSML:
 - fully works with GFortran and LFortran compilers.
 
 <br>
+
 ### <span style="color:#734f96">Progress</span>
 
 <br>
+
 #### Basic Statistics
 
 Basic Statistics (descriptive measures for understanding data).
@@ -190,6 +200,7 @@ Basic Statistics (descriptive measures for understanding data).
 | Correlation (Pearson)  | ✓       |
 
 <br>
+
 #### Distributions and Functions
 
 Each distribution comes with procedures for the following functions: Probability Density Function (PDF), Cumulative Distribution Function (CDF), and Percent Point Function (PPF).
@@ -205,6 +216,7 @@ Each distribution comes with procedures for the following functions: Probability
 | F                      | ✓       |
 
 <br>
+
 #### Hypothesis Testing
 
 Hypothesis Testing (statistical tests for inference and comparing groups).
@@ -222,6 +234,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Kruskall Wallis H                  | -       |
 
 <br>
+
 #### Linear Parametric Models (LPM)
 
  Models that assume a linear relationship between the features/independent variables and target variable, and estimate parameters (coefficients).
@@ -236,6 +249,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Bayesian classification       | -       |
 
 <br>
+
 #### Non-Linear Models (NLM)
 
 Models for clustering and/or capturing non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
@@ -248,6 +262,7 @@ Models for clustering and/or capturing non-linear relationships, either explicit
 | (Multilayer perceptron)     | -       |
 
 <br>
+
 #### Machine Learning Framework Extensions
 
 Additional procedures are provided to make the application of the methods above in a machine learning framework easier.
@@ -259,6 +274,7 @@ Additional procedures are provided to make the application of the methods above 
 | Model performance metrics   | -       |
 
 <br>
+
 #### Additional Functionality
 
 | Additional Functionality    | Covered |
@@ -268,6 +284,7 @@ Additional procedures are provided to make the application of the methods above 
 | Simple fortran dataframe    | ✓       |
 
 <br>
+
 ## <span style="color:#734f96">Installation</span>
 
 FSML can be installed/compiled with the [fortran package manager (fpm)](https://github.com/fortran-lang/fpm).
