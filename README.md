@@ -5,7 +5,7 @@
 
 
 > [!IMPORTANT]
-> FSML is in a pre-alpha state and existing procedures and APIs may change.
+> FSML is in a pre-alpha state. Existing procedures and API may change significantly.
 >
 
 <!--@warning
