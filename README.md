@@ -161,8 +161,8 @@ FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran co
 
 The published research below uses some of the to-be-reworked code and demonstrates some applications of the above-mentioned methods:
 
-- [Mutz and Ehlers (2019)](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis)
-- [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier)
+- [Mutz and Ehlers (2019)](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis).
+- [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier).
 
 <br>
 
@@ -176,7 +176,7 @@ I will consider the library to be in "alpha" once FSML covers the functionality 
 
 This stage is reached once FSML:
 
-- has undergone substantial testing (incl. comparisons to other libs)
+- has undergone substantial testing (incl. comparisons to other libs).
 - has proper documentation.
 - fully works with GFortran and LFortran compilers.
 
