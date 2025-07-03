@@ -39,7 +39,7 @@ FSML uses double precision (real64) by default, but can be switched project-wide
 
 #### Reading and Basic Statistics
 
-The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_readcsv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_corr* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
+The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_read_csv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_corr* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
 
 ```fortran
 program fsml_statistics
