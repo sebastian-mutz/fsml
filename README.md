@@ -198,6 +198,7 @@ Basic Statistics (descriptive measures for understanding data).
 | Covariance             | ✓       |
 | Linear trend           | ✓       |
 | Correlation (Pearson)  | ✓       |
+| Mahalanobis distance   | -       |
 
 <br>
 
