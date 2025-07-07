@@ -34,7 +34,8 @@ module fsml_dst
 
 contains
 
-! TODO: handle invalid arguments (e.g., sigma = negative)
+! TODO: handle invalid arguments (e.g., sigma = negative) by implementing impure
+!       wrapper functions. move optional arg handling to wrapper functions too?
 ! TODO: specify optional arguments passed in ppf procedures to cdf procedures
 !       to not rely on guessing by order; also check where loc/scale are passed
 

@@ -59,6 +59,6 @@ program main
   ! chi square distribution ppf
   print*, fsml_chi2_ppf(0.2_wp, df=10.0_wp, loc=2.0_wp, scale=1.2_wp)
 
-
+  print*, fsml_norm_pdf(2.0_wp, mu=0.3_wp, sigma=1.3_wp)
 
 end program main
