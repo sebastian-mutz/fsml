@@ -26,7 +26,7 @@ module fsml_ini
   ! declare public
   public :: hp, qp, dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
-  public :: txt_info, txt_error, txt_bold, txt_reset, ansi_code, operator(//)
+!   public :: txt_info, txt_error, txt_bold, txt_reset, ansi_code, operator(//)
 
 ! ==== Declarations
 
@@ -46,9 +46,9 @@ module fsml_ini
   integer, parameter :: std_rw = 21
 
   ! text colours
-  type(ansi_code), parameter :: txt_info  = fg_color_blue
-  type(ansi_code), parameter :: txt_error = fg_color_magenta
-  type(ansi_code), parameter :: txt_bold  = style_bold
-  type(ansi_code), parameter :: txt_reset = style_reset
+!   type(ansi_code), parameter :: txt_info  = fg_color_blue
+!   type(ansi_code), parameter :: txt_error = fg_color_magenta
+!   type(ansi_code), parameter :: txt_bold  = style_bold
+!   type(ansi_code), parameter :: txt_reset = style_reset
 
 end module fsml_ini

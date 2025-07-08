@@ -28,7 +28,7 @@ module fsml
   private
 
   ! public statistics procedures
-  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_trend, fsml_corr
+  public :: fsml_mean, fsml_var, fsml_std, fsml_cov, fsml_trend, fsml_pcc
   ! public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
@@ -57,32 +57,66 @@ module fsml
 
 ! arithmetic mean
 interface fsml_mean
+  !! Computes arithmetic mean.
+  !! $$ \bar{x} = \frac{1}{n} \cdot \sum_{i=1}^{n} x_i $$
+  !! where \( n \) is the size of (or number of observations in) vector `x`,
+  !! \( x_i \) are individual elements in `x`, and
+  !! \( \bar{x} \) is the arithmetic mean of `x`.
   module procedure f_sts_mean
 end interface
 
 ! variance
 interface fsml_var
+  !! Computes variance.
+  !! $$ \operatorname{var}(x) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
+  !! where \( n \) is the size of (or number of observations in) vector `x`,
+  !! \( x_i \) are individual elements in `x`, and
+  !! \( \bar{x} \) is the arithmetic mean of `x`.
   module procedure f_sts_var
 end interface
 
 ! standard deviation
 interface fsml_std
+  !! Computes standard deviation.
+  !! $$ \sigma = \sqrt{\operatorname{var}(x)} $$
+  !! where \( \operatorname{var}(x) \) is the variance of vector `x`.
   module procedure f_sts_std
 end interface
 
 ! covariance
 interface fsml_cov
+  !! Computes covariance.
+  !! $$ \operatorname{cov}(x, y) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
+  !! where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
+  !! \( x_i \) and \( y_i \) are individual elements in `x` and `y`, and
+  !! \( \bar{x} \) and \( \bar{y} \) are the arithmetic means of `x` and `y`.
+  !!
+  !! Vectors `x` and `y` must be the same size.
   module procedure f_sts_cov
 end interface
 
 ! linear trend (regression coefficient)
 interface fsml_trend
+  !! Computes regression coefficient/trend.
+  !! $$ m = \frac{\operatorname{cov}(x, y)}{\operatorname{var}(x)} $$
+  !! where \( m \) is the slope of the regression line (linear trend),
+  !! \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
+  !! \( \operatorname{var}(x) \) is the variance of `x`.
+  !!
+  !! Vectors `x` and `y` must be the same size.
   module procedure f_sts_trend
 end interface
 
 ! Pearson correlation coefficient
-interface fsml_corr
-  module procedure f_sts_corr
+interface fsml_pcc
+  !! Computes Pearson correlation coefficient (PCC).
+  !! $$ \rho_{x,y} = \frac{\operatorname{cov}(x, y)}{\sigma_x \cdot \sigma_y} $$
+  !! where \( \rho_{x,y} \) is the Pearson correlation coefficient for vectors `x` and `y`,
+  !! \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
+  !! \( \sigma_{x} \) and \( \sigma_{y} \) are the standard deviations of `x` and `y`.
+  !!
+  !! Vectors `x` and `y` must be the same size.
+  module procedure f_sts_pcc
 end interface
 
 

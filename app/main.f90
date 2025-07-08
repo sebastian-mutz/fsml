@@ -39,7 +39,7 @@ program main
   print*, "variance: ", fsml_var(df%data(:,2))
 
   ! correlation of msl and t2m
-  print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
+  print*, "pearson correlation coefficent: ", fsml_pcc(df%data(:,1), df%data(:,2))
 
   ! exponential pdf (x=0.8, lambda=0.5)
   print*, fsml_exp_pdf(0.8_wp, lambda=0.5_wp)

@@ -29,7 +29,7 @@ FSML is a scientific toolkit consisting of common statistical and machine learni
  - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
 **Note:**
-FSML uses double precision (real64) by default, but can be switched project-wide by changing working precision (wp) in the fsml_typ module. The data type in your FSML application should match this.
+FSML uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the fsml_typ module. The data type in your FSML application should match this.
 
 <br>
 
@@ -61,7 +61,7 @@ program fsml_statistics
   print*, "variance: ", fsml_var(df%data(:,2))
 
   ! correlation of msl and t2m
-  print*, "correlation coefficent: ", fsml_corr(df%data(:,1), df%data(:,2))
+  print*, "pearson correlation coefficent: ", fsml_pcc(df%data(:,1), df%data(:,2))
 
 end program fsml_statistics
 ```
