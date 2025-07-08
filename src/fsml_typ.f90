@@ -23,7 +23,6 @@ module fsml_typ
 
   ! declare public
   public :: fsml_typ_df, fsml_typ_error
-  public :: fsml_error
 
 ! ==== Definitions
 
@@ -42,20 +41,8 @@ module fsml_typ
   ! error types and messages
   type :: fsml_typ_error
      !! Derived type for errors.
-     integer(i4)       :: id  !! error ID
-     character(len=64) :: msg !! error message
+     character(len=128) :: msg !! error message
+     real(wp)           :: sv  !! sentinel value
   end type fsml_typ_error
-
-! ==== Data
-
-  ! errors
-  type(fsml_typ_error) :: fsml_error(2)
-
-  ! errors
-  data fsml_error(1)%id/1/
-  data fsml_error(1)%msg/"argument not in valid value range"/
-  data fsml_error(2)%id/2/
-  data fsml_error(2)%msg/"unrecognised argument value"/
-
 
 end module fsml_typ

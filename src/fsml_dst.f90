@@ -18,6 +18,7 @@ module fsml_dst
   ! load modules
   use :: fsml_ini
   use :: fsml_con
+  use :: fsml_err
 
   ! basic options
   implicit none
@@ -25,6 +26,7 @@ module fsml_dst
 
   ! declare public procedures
   public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
+  public :: f_dst_norm_pdf_core, f_dst_norm_cdf_core, f_dst_norm_ppf_core
   public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
   public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf
   public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
@@ -41,11 +43,11 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
+impure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
-!! Probability density function for normal distribution.
-!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left( \frac{x - \mu}{\sigma} \right)^2 } $$
+!! Impure wrapper function for f_dst_norm_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -53,7 +55,6 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
   real(wp)                       :: mu_w    !! final value of mu
   real(wp)                       :: sigma_w !! final value of sigma
-  real(wp)                       :: z       !! z-score
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -68,23 +69,61 @@ elemental function f_dst_norm_pdf(x, mu, sigma) result(fx)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     fx = fsml_error(1)%sv
+     return
+  endif
+
 ! ---- compute PDF
 
-  ! compute z-score
-  z = (x - mu_w) / sigma_w
-
-  ! calculate probability/fx
-  fx = (1.0_wp / (sigma_w * sqrt(2.0_wp * c_pi))) * exp( -0.5_wp * (z * z) )
+  ! call pure function to calculate probability/fx
+  fx = f_dst_norm_pdf_core(x, mu_w, sigma_w)
 
 end function f_dst_norm_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
+elemental function f_dst_norm_pdf_core(x, mu, sigma) result(fx)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
+!! Probability density function for normal distribution.
+!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left( \frac{x - \mu}{\sigma} \right)^2 } $$
+!!
+!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+!! It will default to 1.0 if not passed.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: mu      !! distribution location (mean)
+  real(wp), intent(in) :: sigma   !! distribution dispersion/scale (standard deviation)
+  real(wp)             :: z       !! z-score
+  real(wp)             :: fx
+
+! ==== Instructions
+
+! ---- compute PDF
+
+  ! compute z-score
+  z = (x - mu) / sigma
+
+  ! calculate probability/fx
+  fx = (1.0_wp / (sigma * sqrt(2.0_wp * c_pi))) * exp( -0.5_wp * (z * z) )
+
+end function f_dst_norm_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for f_dst_norm_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -94,7 +133,6 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
   real(wp)                               :: mu_w    !! final value of mu
   real(wp)                               :: sigma_w !! final value of sigma
   character(len=16)                      :: tail_w  !! final tail option
-  real(wp)                               :: z       !! z-score
   real(wp)                               :: p       !! returned probability integral
 
 ! ==== Instructions
@@ -113,17 +151,65 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(3)%msg) // txt_reset, fsml_error(3)%sv
+     p = fsml_error(3)%sv
+     return
+  endif
+
+! ---- compute CDF
+
+  ! call pure function to calculate probability
+  p = f_dst_norm_cdf_core(x, mu_w, sigma_w, tail_w)
+
+end function f_dst_norm_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_norm_cdf_core(x, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
+!!
+!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+!! It will default to 1.0 if not passed.
+!! The tail option (`tail`) is an optional argument. If passed, it must be one of the following:
+!! *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to "left".
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x       !! sample position
+  real(wp)        , intent(in) :: mu      !! distribution location (mean)
+  real(wp)        , intent(in) :: sigma   !! distribution dispersion/scale (standard deviation)
+  character(len=*), intent(in) :: tail    !! tail options
+  real(wp)                     :: z       !! z-score
+  real(wp)                     :: p       !! returned probability integral
+
+! ==== Instructions
+
 ! ---- compute CDF
 
   ! compute z-score
-  z = (x - mu_w) / (sigma_w * sqrt(2.0_wp))
+  z = (x - mu) / (sigma * sqrt(2.0_wp))
 
   ! compute integral (left tailed)
   p = 0.5_wp * (1.0_wp + erf(z))
 
   ! tail options
   ! NOTE: alternatively, compare z to 0.0 instead of x to mu
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -132,35 +218,30 @@ elemental function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (x .gt. mu_w) then
+        if (x .gt. mu) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (x .le. mu_w) then
+        elseif (x .le. mu) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (x .gt. mu_w) then
+        if (x .gt. mu) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (x .le. mu_w) then
+        elseif (x .le. mu) then
            p = 1.0_wp - 2.0_wp * p
         endif
-     ! invalid option
-     case default
-        p = -1.0_wp
    end select
 
-end function f_dst_norm_cdf
+end function f_dst_norm_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
+impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
-!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
-!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+!! Impure wrapper function for f_dst_norm_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
@@ -168,11 +249,6 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: mu_w             !! final value of mu
   real(wp)                          :: sigma_w          !! final value of sigma
-  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
-  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                          :: a, b             !! section bounds for bisection algorithm
-  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)                       :: i                !! for iteration
   real(wp)                          :: x                !! sample position
 
 ! ==== Instructions
@@ -187,6 +263,61 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(2)%msg) // txt_reset, fsml_error(2)%sv
+     x = fsml_error(2)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! calculate x by calling pure function
+  x = f_dst_norm_ppf_core(p, mu_w, sigma_w)
+
+end function f_dst_norm_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
+!!
+!! The probability (`p`)must be between 0.0 and 1.0.
+!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+!! It will default to 1.0 if not passed.
+!!
+!! The procedure uses bisection method.
+!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+
+
+
+! ==== Declarations
+  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: mu               !! distribution location (mean)
+  real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
+  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
+  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                :: a, b             !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                !! for iteration
+  real(wp)                :: x                !! sample position
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section
@@ -197,11 +328,11 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_norm_cdf(x_mid, tail="left") - p
+     p_mid = f_dst_norm_cdf_core(x_mid, mu=0.0_wp, sigma=1.0_wp, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value and adjust for mu and sigma
-        x = mu_w + sigma_w * x_mid
+        x = mu + sigma * x_mid
         return
      elseif (p_mid .lt. 0.0_wp) then
         a = x_mid
@@ -213,7 +344,7 @@ elemental function f_dst_norm_ppf(p, mu, sigma) result(x)
   ! if p not within valid range or x not found in iterations, set x to 0
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
 
-end function f_dst_norm_ppf
+end function f_dst_norm_ppf_core
 
 
 ! ==================================================================== !
@@ -360,7 +491,7 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: mu_w             !! final value of mu
   real(wp)                          :: sigma_w          !! final value of sigma
-  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
+  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
   real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
@@ -546,7 +677,7 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   real(wp)                          :: alpha_w          !! final value for alpha
   real(wp)                          :: beta_w           !! final value for beta
   real(wp)                          :: loc_w            !! final value for loc
-  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
+  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
   real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
@@ -717,7 +848,7 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
   real(wp)   , intent(in), optional :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
   real(wp)                          :: loc_w            !! final value for loc
   real(wp)                          :: lambda_w         !! final value for lambda
-  integer(i4), parameter            :: i_max = 200      !! max. iteration numbers
+  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
   real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
   real(wp)                          :: a, b             !! section bounds for bisection algorithm
   real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
@@ -896,7 +1027,7 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   real(wp), intent(in), optional :: scale            !! scale parameter
   real(wp)                       :: loc_w            !! final value for loc
   real(wp)                       :: scale_w          !! final value for scale
-  integer(i4), parameter         :: i_max = 200      !! maximum iterations
+  integer(i4), parameter         :: i_max = 200      !! max. number of iterations
   real(wp), parameter            :: tol = 1.0e-12_wp !! tolerance for convergence
   real(wp)                       :: a, b             !! interval bounds
   real(wp)                       :: x_mid, p_mid     !! midpoint and corresponding CDF value
@@ -1096,7 +1227,7 @@ elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   real(wp), intent(in), optional :: scale            !! scale parameter
   real(wp)                       :: loc_w            !! effective location
   real(wp)                       :: scale_w          !! effective scale
-  integer(i4), parameter         :: i_max = 200      !! max bisection iterations
+  integer(i4), parameter         :: i_max = 200      !! max. number of iterations
   real(wp)   , parameter         :: tol = 1.0e-12_wp !! tolerance for convergence
   real(wp)                       :: a, b             !! search bounds
   real(wp)                       :: x_mid, p_mid     !! midpoint and its CDF
@@ -1275,7 +1406,7 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Procedure uses bisection method. p must be between 0.0 and 1.0.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: p       !! probability between 0.0 - 1.0
@@ -1327,7 +1458,7 @@ elemental function f_dst_gamma_inc(a, x) result(p)
   real(wp)               :: ap, del, b, c, d, h
   real(wp)   , parameter :: eps = 1.0e-12_wp     !! convergence threshold
   real(wp)   , parameter :: fpmin = 1.0e-30_wp   !! small number to prevent division by zero
-  integer(i4), parameter :: i_max = 200          !! max. iteration numbers
+  integer(i4), parameter :: i_max = 200          !! max. number of iterations
   integer(i4)            :: i
 
 ! ==== Instructions
@@ -1448,7 +1579,7 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
      real(wp)               :: aa, del, qab, qam, qap
      real(wp)   , parameter :: eps   = 1.0e-14_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
-     integer(i4), parameter :: i_max = 200        !! max. iteration numbers
+     integer(i4), parameter :: i_max = 200        !! max. number of iterations
      integer(i4)            :: i
 
      ! ==== Instructions

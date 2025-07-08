@@ -59,6 +59,13 @@ program main
   ! chi square distribution ppf
   print*, fsml_chi2_ppf(0.2_wp, df=10.0_wp, loc=2.0_wp, scale=1.2_wp)
 
-  print*, fsml_norm_pdf(2.0_wp, mu=0.3_wp, sigma=1.3_wp)
+  ! invalid sigma; returns sentinel and prints error message
+  print*, fsml_norm_pdf(2.0_wp, mu=0.0_wp, sigma=0.0_wp)
+
+  ! invalid tail option; returns sentinel and prints error message
+  print*, fsml_norm_cdf(2.0_wp, mu=0.0_wp, sigma=1.0_wp, tail="two-sided")
+
+  ! invalid probability option; returns sentinel and prints error message
+  print*, fsml_norm_ppf(2.0_wp, mu=0.0_wp, sigma=1.0_wp)
 
 end program main

@@ -458,13 +458,13 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   select case(h1_w)
      ! less than
      case("lt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="left")
      ! greater than
      case("gt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="right")
      ! two-sided
      case("two")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="two")
      ! invalid option
      case default
         p = -1.0_wp
@@ -628,13 +628,13 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   select case(h1_w)
      ! less than
      case("lt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "left")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="left")
      ! greater than
      case("gt")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "right")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="right")
      ! two-sided
      case("two")
-        p = f_dst_norm_cdf(z, 0.0_wp, 1.0_wp, "two")
+        p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="two")
      ! invalid option
      case default
         p = -1.0_wp
