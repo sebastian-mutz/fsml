@@ -87,13 +87,13 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   select case(h1_w)
      ! less than
      case("lt")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "left")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="left")
      ! greater than
      case("gt")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "right")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="right")
      ! two-sided
      case("two")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "two")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="two")
      ! invalid option
      case default
         p = -1.0_wp
@@ -266,13 +266,13 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   select case(h1_w)
      ! less than
      case("lt")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "left")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="left")
      ! greater than
      case("gt")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "right")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="right")
      ! two-sided
      case("two")
-        p = f_dst_t_cdf (t, df, 0.0_wp, 1.0_wp, "two")
+        p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="two")
      ! invalid option
      case default
         p = -1.0_wp

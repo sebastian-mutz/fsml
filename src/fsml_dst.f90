@@ -25,21 +25,32 @@ module fsml_dst
   private
 
   ! declare public procedures
-  public :: f_dst_norm_pdf, f_dst_norm_cdf, f_dst_norm_ppf
-  public :: f_dst_norm_pdf_core, f_dst_norm_cdf_core, f_dst_norm_ppf_core
-  public :: f_dst_t_pdf, f_dst_t_cdf, f_dst_t_ppf
-  public :: f_dst_gamma_pdf, f_dst_gamma_cdf, f_dst_gamma_ppf
-  public :: f_dst_exp_pdf, f_dst_exp_cdf, f_dst_exp_ppf
-  public :: f_dst_chi2_pdf, f_dst_chi2_cdf, f_dst_chi2_ppf
-  public :: f_dst_f_pdf, f_dst_f_cdf, f_dst_f_ppf
-  public :: f_dst_gpd_pdf, f_dst_gpd_cdf, f_dst_gpd_ppf
+  public :: f_dst_norm_pdf, f_dst_norm_pdf_core
+  public :: f_dst_norm_cdf, f_dst_norm_cdf_core
+  public :: f_dst_norm_ppf, f_dst_norm_ppf_core
+  public :: f_dst_t_pdf, f_dst_t_pdf_core
+  public :: f_dst_t_cdf, f_dst_t_cdf_core
+  public :: f_dst_t_ppf, f_dst_t_ppf_core
+  public :: f_dst_gamma_pdf
+  public :: f_dst_gamma_cdf
+  public :: f_dst_gamma_ppf
+  public :: f_dst_exp_pdf
+  public :: f_dst_exp_cdf
+  public :: f_dst_exp_ppf
+  public :: f_dst_chi2_pdf
+  public :: f_dst_chi2_cdf
+  public :: f_dst_chi2_ppf
+  public :: f_dst_f_pdf
+  public :: f_dst_f_cdf
+  public :: f_dst_f_ppf
+  public :: f_dst_gpd_pdf
+  public :: f_dst_gpd_cdf
+  public :: f_dst_gpd_ppf
 
 contains
 
 ! TODO: handle invalid arguments (e.g., sigma = negative) by implementing impure
 !       wrapper functions. move optional arg handling to wrapper functions too?
-! TODO: specify optional arguments passed in ppf procedures to cdf procedures
-!       to not rely on guessing by order; also check where loc/scale are passed
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
@@ -91,11 +102,6 @@ elemental function f_dst_norm_pdf_core(x, mu, sigma) result(fx)
 
 ! ==== Description
 !! Probability density function for normal distribution.
-!! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left( \frac{x - \mu}{\sigma} \right)^2 } $$
-!!
-!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-!! It will default to 1.0 if not passed.
 
 ! ==== Declarations
   real(wp), intent(in) :: x       !! sample position
@@ -181,13 +187,7 @@ end function f_dst_norm_cdf
 elemental function f_dst_norm_cdf_core(x, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
-!!
-!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-!! It will default to 1.0 if not passed.
-!! The tail option (`tail`) is an optional argument. If passed, it must be one of the following:
-!! *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to "left".
+!! Cumulative distribution function for normal distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in) :: x       !! sample position
@@ -240,7 +240,7 @@ end function f_dst_norm_cdf_core
 impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_norm_cdf_core.
+!! Impure wrapper function for f_dst_norm_ppf_core.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -292,18 +292,7 @@ end function f_dst_norm_ppf
 elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
-!!
-!! The probability (`p`)must be between 0.0 and 1.0.
-!! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-!! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-!! It will default to 1.0 if not passed.
-!!
-!! The procedure uses bisection method.
-!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
-!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
-
-
+!! Percent point function/quantile function for normal distribution.
 
 ! ==== Declarations
   real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
@@ -349,13 +338,11 @@ end function f_dst_norm_ppf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
+impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Description
-!! Probability density function for student t distribution.
-!! Uses intrinsic gamma function (Fortran 2008 and later).
-!! $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \cdot \pi}\, \cdot \Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
-!! where  \(v\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
+!! Impure wrapper function for f_dst_t_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -378,24 +365,64 @@ elemental function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 1.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(4)%msg) // txt_reset, fsml_error(4)%sv
+     fx = fsml_error(4)%sv
+     return
+  endif
+
 ! ---- compute PDF
 
-  ! calculate probability/fx
-  fx = gamma((df + 1.0_wp) / 2.0_wp) / &
-     & (sigma_w * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
-     & (1.0_wp + ( ( (x - mu_w) / sigma_w )**2 ) / df)** &
-     & (-(df + 1.0_wp) / 2.0_wp)
+  ! calculate probability/fx by calling pure function
+  fx = f_dst_t_pdf_core(x, df, mu_w, sigma_w)
 
 end function f_dst_t_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
+elemental function f_dst_t_pdf_core(x, df, mu, sigma) result(fx)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
-!! Degrees of freedom must be positive.
+!! Probability density function for student t distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: df      !! degrees of freedom
+  real(wp), intent(in) :: mu      !! distribution location (~mean)
+  real(wp), intent(in) :: sigma   !! distribution dispersion/scale (~standard deviation)
+  real(wp)             :: fx
+
+! ==== Instructions
+
+! ---- compute PDF
+
+  ! calculate probability/fx
+  fx = gamma((df + 1.0_wp) / 2.0_wp) / &
+     & (sigma * sqrt(df * c_pi) * gamma(df / 2.0_wp)) * &
+     & (1.0_wp + ( ( (x - mu) / sigma )**2 ) / df)** &
+     & (-(df + 1.0_wp) / 2.0_wp)
+
+end function f_dst_t_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for f_dst_t_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x           !! sample position
@@ -406,8 +433,6 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   real(wp)                               :: mu_w        !! final value of mu
   real(wp)                               :: sigma_w     !! final value of sigma
   character(len=16)                      :: tail_w      !! final tail option
-  real(wp)                               :: z           !! z-score
-  real(wp)                               :: xbeta, a, b !! parameters for beta function
   real(wp)                               :: p           !! returned probability integral
 
 ! ==== Instructions
@@ -426,10 +451,62 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(3)%msg) // txt_reset, fsml_error(3)%sv
+     p = fsml_error(3)%sv
+     return
+  endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 1.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(4)%msg) // txt_reset, fsml_error(4)%sv
+     p = fsml_error(4)%sv
+     return
+  endif
+
+! ---- compute CDF
+
+  ! compute p by calling pure function
+  p = f_dst_t_cdf_core(x, df, mu_w, sigma_w, tail_w)
+
+end function f_dst_t_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_t_cdf_core(x, df, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for student t distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x           !! sample position
+  real(wp)        , intent(in) :: df          !! degrees of freedom
+  real(wp)        , intent(in) :: mu          !! distribution location (mean)
+  real(wp)        , intent(in) :: sigma       !! distribution dispersion/scale (standard deviation)
+  character(len=*), intent(in) :: tail        !! tail options
+  real(wp)                     :: z           !! z-score
+  real(wp)                     :: xbeta, a, b !! parameters for beta function
+  real(wp)                     :: p           !! returned probability integral
+
+! ==== Instructions
+
 ! ---- compute CDF
 
   ! compute z-score
-  z = (x - mu_w) / sigma_w
+  z = (x - mu) / sigma
 
   ! shape parameters for beta function
   a = 0.5_wp * df
@@ -445,7 +522,7 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
   ! tail options
   ! NOTE: alternatively, compare z to 0.0 instead of x to mu
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -454,35 +531,30 @@ elemental function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (x .gt. mu_w) then
+        if (x .gt. mu) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (x .le. mu_w) then
+        elseif (x .le. mu) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (x .gt. mu_w) then
+        if (x .gt. mu) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (x .le. mu_w) then
+        elseif (x .le. mu) then
            p = 1.0_wp - 2.0_wp * p
         endif
-     ! invalid option
-     case default
-        p = -1.0_wp
    end select
 
-end function f_dst_t_cdf
+end function f_dst_t_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
+impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for t distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
-!! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
-!! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+!! Impure wrapper function for f_dst_t_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
@@ -491,11 +563,6 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
   real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
   real(wp)                          :: mu_w             !! final value of mu
   real(wp)                          :: sigma_w          !! final value of sigma
-  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                          :: a, b             !! section bounds for bisection algorithm
-  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)                       :: i                !! for iteration
   real(wp)                          :: x                !! sample position
 
 ! ==== Instructions
@@ -510,6 +577,59 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(1)%msg) // txt_reset, fsml_error(1)%sv
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 1.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(4)%msg) // txt_reset, fsml_error(4)%sv
+     x = fsml_error(4)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     write(std_e, '(A, F8.1)') txt_error // trim(fsml_error(2)%msg) // txt_reset, fsml_error(2)%sv
+     x = fsml_error(2)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! calculate x by calling pure function
+  x = f_dst_t_ppf_core(p, df, mu_w, sigma_w)
+
+end function f_dst_t_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for t distribution.
+
+! ==== Declarations
+  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: df               !! degrees of freedom
+  real(wp)   , intent(in) :: mu               !! distribution location (mean)
+  real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
+  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
+  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                :: a, b             !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                !! for iteration
+  real(wp)                :: x                !! sample position
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section bounds
@@ -520,11 +640,11 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_t_cdf(x_mid, df, tail="left") - p
+     p_mid = f_dst_t_cdf_core(x_mid, df, mu=0.0_wp, sigma=1.0_wp, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value and adjust for mu and sigma
-        x = mu_w + sigma_w * x_mid
+        x = mu + sigma * x_mid
         return
      elseif (p_mid .lt. 0.0_wp) then
         a = x_mid
@@ -533,10 +653,7 @@ elemental function f_dst_t_ppf(p, df, mu, sigma) result(x)
      endif
   enddo
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
-
-end function f_dst_t_ppf
+end function f_dst_t_ppf_core
 
 
 ! ==================================================================== !

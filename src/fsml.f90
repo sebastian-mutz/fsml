@@ -92,31 +92,81 @@ end interface
 
 ! normal distribution pdf
 interface fsml_norm_pdf
+  !! Probability density function for normal distribution.
+  !! $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left( \frac{x - \mu}{\sigma} \right)^2 } $$
+  !!
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
   module procedure f_dst_norm_pdf
 end interface
 
 ! normal distribution cdf
 interface fsml_norm_cdf
+  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal distribution.
+  !!
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
+  !! The tail option (`tail`) is an optional argument. If passed, it must be one of the following:
+  !! *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to "left".
   module procedure f_dst_norm_cdf
 end interface
 
 ! normal distribution ppf
 interface fsml_norm_ppf
+  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for normal distribution.
+  !!
+  !! The probability (`p`)must be between 0.0 and 1.0.
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
+  !!
+  !! The procedure uses bisection method.
+  !! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+  !! will return large negative or positive numbers (highly dependent on the tolerance threshold).
   module procedure f_dst_norm_ppf
 end interface
 
 ! t distribution pdf
 interface fsml_t_pdf
+  !! Probability density function for student t distribution.
+  !! Uses intrinsic gamma function (Fortran 2008 and later).
+  !! $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \cdot \pi}\, \cdot \Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
+  !! where  \(v\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
+  !!
+  !! The value for degrees of freedom (`df`) must be 1.0 or higher.
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
   module procedure f_dst_t_pdf
 end interface
 
 ! t distribution cdf
 interface fsml_t_cdf
+  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
+  !!
+  !! The value for degrees of freedom (`df`) must be 1.0 or higher.
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
+  !! The tail option (`tail`) is an optional argument. If passed, it must be one of the following:
+  !! *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to "left".
   module procedure f_dst_t_cdf
 end interface
 
 ! t distribution ppf
 interface fsml_t_ppf
+  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for t distribution.
+  !!
+  !! Procedure uses bisection method.
+  !! Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
+  !! will return large negative or positive numbers (highly dependent on the tolerance threshold).
+  !!
+  !! The value for degrees of freedom (`df`) must be 1.0 or higher.
+  !! The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
+  !! The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
+  !! It will default to 1.0 if not passed.
   module procedure f_dst_t_ppf
 end interface
 
