@@ -122,7 +122,7 @@ function f_utl_r2c(r) result(c)
 
 ! ==== Instructions
   write(c, '(F7.2)') r
-  c=adjustl(c)
+  c = adjustl(c)
 
 end function f_utl_r2c
 
@@ -140,7 +140,7 @@ function f_utl_i2c(i) result(c)
 
 ! ==== Instructions
   write(c, '(I3)') i
-  c=adjustl(c)
+  c = adjustl(c)
 
 end function f_utl_i2c
 
