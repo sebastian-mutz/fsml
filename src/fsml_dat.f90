@@ -17,6 +17,7 @@ module fsml_dat
   ! load modules
   use :: fsml_ini
   use :: fsml_typ
+  use :: fsml_utl
 
   ! basic options
   implicit none
@@ -161,7 +162,7 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
         df%row_nm(i-p) = cells(1)
         ! pass cell values to data matrix
         do j = 2, ncol
-           df%data(i-p,j-1) = s2r(cells(j))
+           df%data(i-p,j-1) = f_utl_c2r(cells(j))
         enddo
      enddo
   else
@@ -172,7 +173,7 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
         call split_line(trim(line), w_delimiter, ncol, cells)
         ! pass cell values to data matrix
         do j = 1, ncol
-           df%data(i-p,j) = s2r(cells(j))
+           df%data(i-p,j) = f_utl_c2r(cells(j))
         enddo
      enddo
   endif
@@ -224,21 +225,6 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
      enddo
 
   end subroutine split_line
-
-  ! --------------------------------------------------------------- !
-  elemental function s2r(s) result(r)
-
-     ! ==== Description
-     !! Converts string to real.
-
-     ! ==== Declarations
-     character(len=*), intent(in) :: s
-     real(wp)                     :: r
-
-     ! ==== Instructions
-     read(s, *) r
-
-  end function s2r
 
 end subroutine s_dat_read_csv
 

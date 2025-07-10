@@ -21,8 +21,10 @@ module fsml_utl
   implicit none
   private
 
-  ! declare public procedures
-  public :: s_utl_rank, f_utl_r2c, f_utl_i2c
+  ! public array operations
+  public :: s_utl_rank
+  ! public procedures for data type conversion
+  public :: f_utl_r2c, f_utl_i2c, f_utl_c2r
 
 contains
 
@@ -143,5 +145,24 @@ function f_utl_i2c(i) result(c)
   c = adjustl(c)
 
 end function f_utl_i2c
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function f_utl_c2r(c) result(r)
+
+! ==== Description
+!! Converts char to real.
+
+! ==== Declarations
+  character(len=*), intent(in) :: c
+  real(wp)                     :: r
+
+! ==== Instructions
+  read(c, *) r
+
+end function f_utl_c2r
+
+
 
 end module fsml_utl

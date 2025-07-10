@@ -169,8 +169,8 @@ impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(3))
-     p = fsml_error(3)%sv
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
      return
   endif
 
@@ -274,8 +274,8 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(2))
-     x = fsml_error(2)%sv
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
      return
   endif
 
@@ -376,8 +376,8 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   ! check if degrees of freedom value is valid
   if (df .le. 1.0_wp) then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(4))
-     fx = fsml_error(4)%sv
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
      return
   endif
 
@@ -463,16 +463,16 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(3))
-     p = fsml_error(3)%sv
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 1.0_wp) then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(4))
-     p = fsml_error(4)%sv
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
      return
   endif
 
@@ -588,16 +588,16 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   ! check if degrees of freedom value is valid
   if (df .le. 1.0_wp) then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(4))
-     x = fsml_error(4)%sv
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(2))
-     x = fsml_error(2)%sv
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
      return
   endif
 
