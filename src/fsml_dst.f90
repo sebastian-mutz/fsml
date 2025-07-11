@@ -54,7 +54,7 @@ contains
 impure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_norm_pdf_core.
+!! Impure wrapper function for `f_dst_norm_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -125,7 +125,7 @@ end function f_dst_norm_pdf_core
 impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_norm_cdf_core.
+!! Impure wrapper function for `f_dst_norm_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -237,7 +237,7 @@ end function f_dst_norm_cdf_core
 impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_norm_ppf_core.
+!! Impure wrapper function for `f_dst_norm_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -341,7 +341,7 @@ end function f_dst_norm_ppf_core
 impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_t_pdf_core.
+!! Impure wrapper function for `f_dst_t_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -421,7 +421,7 @@ end function f_dst_t_pdf_core
 impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_t_cdf_core.
+!! Impure wrapper function for `f_dst_t_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -553,7 +553,7 @@ end function f_dst_t_cdf_core
 impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_t_ppf_core.
+!! Impure wrapper function for `f_dst_t_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -667,7 +667,7 @@ end function f_dst_t_ppf_core
 impure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gamma_pdf_core.
+!! Impure wrapper function for `f_dst_gamma_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -757,7 +757,7 @@ end function f_dst_gamma_pdf_core
 impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gamma_cdf_core.
+!! Impure wrapper function for `f_dst_gamma_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -879,7 +879,7 @@ end function f_dst_gamma_cdf_core
 impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gamma_ppf_core.
+!! Impure wrapper function for `f_dst_gamma_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -999,7 +999,7 @@ end function f_dst_gamma_ppf_core
 impure function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_exp_pdf_core.
+!! Impure wrapper function for `f_dst_exp_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1072,7 +1072,7 @@ end function f_dst_exp_pdf_core
 impure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_exp_cdf_core.
+!! Impure wrapper function for `f_dst_exp_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1171,7 +1171,7 @@ end function f_dst_exp_cdf_core
 impure function f_dst_exp_ppf(p, lambda, loc) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_exp_ppf_core.
+!! Impure wrapper function for `f_dst_exp_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1275,7 +1275,7 @@ end function f_dst_exp_ppf_core
 impure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_chi2_pdf_core.
+!! Impure wrapper function for `f_dst_chi2_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1358,7 +1358,7 @@ end function f_dst_chi2_pdf_core
 impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_chi2_cdf_core.
+!! Impure wrapper function for `f_dst_chi2_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
   ! ==== Declarations
@@ -1481,7 +1481,7 @@ end function f_dst_chi2_cdf_core
 impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_chi2_ppf_core.
+!! Impure wrapper function for `f_dst_chi2_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1593,7 +1593,7 @@ end function f_dst_chi2_ppf_core
 impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_f_pdf_core.
+!! Impure wrapper function for `f_dst_f_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1694,7 +1694,7 @@ end function f_dst_f_pdf_core
 impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_f_cdf_core.
+!! Impure wrapper function for `f_dst_f_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1834,7 +1834,7 @@ end function f_dst_f_cdf_core
 impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_f_ppf_core.
+!! Impure wrapper function for `f_dst_f_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -1956,7 +1956,7 @@ end function f_dst_f_ppf_core
 impure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gpd_pdf_core.
+!! Impure wrapper function for `f_dst_gpd_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -2042,7 +2042,7 @@ end function f_dst_gpd_pdf_core
 impure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gpd_cdf_core.
+!! Impure wrapper function for `f_dst_gpd_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -2155,7 +2155,7 @@ end function f_dst_gpd_cdf_core
 impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ==== Description
-!! Impure wrapper function for f_dst_gpd_ppf_core.
+!! Impure wrapper function for `f_dst_gpd_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations

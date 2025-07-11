@@ -25,11 +25,11 @@ FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consistin
 
  - Common statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
- - Core procedures are kept pure (to simplify testing and parallelisation), while impure wrappers handle optional arguments and errors for safe use.
+ - Core procedures are kept pure (to simplify parallelisation and testing), while impure wrappers handle optional arguments and errors for safe conventional use.
  - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
 **Note:**
-FSML uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the fsml_typ module. The data type in your FSML application should match this.
+FSML uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the `fsml_ini` module. The data type in your FSML application should match this.
 
 <br>
 

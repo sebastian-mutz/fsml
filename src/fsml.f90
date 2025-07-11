@@ -221,7 +221,7 @@ end interface
 ! gamma distribution ppf
 interface fsml_gamma_ppf
   !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
-  !! Procedure uses bisection method. p should be between 0.0 and 1.0.
+  !! Procedure uses bisection method. `p` should be between 0.0 and 1.0.
   module procedure f_dst_gamma_ppf
 end interface
 
@@ -242,7 +242,7 @@ end interface
 ! exponential distribution ppf
 interface fsml_exp_ppf
   !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for exponential distribution.
-  !! Procedure uses bisection method. p should be between 0.0 and 1.0.
+  !! Procedure uses bisection method. `p` should be between 0.0 and 1.0.
   module procedure f_dst_exp_ppf
 end interface
 
@@ -251,7 +251,7 @@ interface fsml_chi2_pdf
   !! Probability density function for the chi-squared distribution.
   !! Uses intrinsic exp and gamma function.
   !! $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{ - \frac{x}{2} }}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
-  !! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
+  !! where \(k\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
   module procedure f_dst_chi2_pdf
 end interface
 
@@ -309,7 +309,7 @@ end interface
 ! generalised pareto distribution ppf
 interface fsml_gpd_ppf
   !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
-  !! Procedure uses bisection method. p must be between 0.0 and 1.0.
+  !! Procedure uses bisection method. `p` must be between 0.0 and 1.0.
   module procedure f_dst_gpd_ppf
 end interface
 
