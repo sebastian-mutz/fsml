@@ -31,26 +31,23 @@ module fsml_dst
   public :: f_dst_t_pdf, f_dst_t_pdf_core
   public :: f_dst_t_cdf, f_dst_t_cdf_core
   public :: f_dst_t_ppf, f_dst_t_ppf_core
-  public :: f_dst_gamma_pdf
-  public :: f_dst_gamma_cdf
-  public :: f_dst_gamma_ppf
-  public :: f_dst_exp_pdf
-  public :: f_dst_exp_cdf
-  public :: f_dst_exp_ppf
-  public :: f_dst_chi2_pdf
-  public :: f_dst_chi2_cdf
-  public :: f_dst_chi2_ppf
-  public :: f_dst_f_pdf
-  public :: f_dst_f_cdf
-  public :: f_dst_f_ppf
-  public :: f_dst_gpd_pdf
-  public :: f_dst_gpd_cdf
-  public :: f_dst_gpd_ppf
+  public :: f_dst_gamma_pdf, f_dst_gamma_pdf_core
+  public :: f_dst_gamma_cdf, f_dst_gamma_cdf_core
+  public :: f_dst_gamma_ppf, f_dst_gamma_ppf_core
+  public :: f_dst_exp_pdf, f_dst_exp_pdf_core
+  public :: f_dst_exp_cdf, f_dst_exp_cdf_core
+  public :: f_dst_exp_ppf, f_dst_exp_ppf_core
+  public :: f_dst_chi2_pdf, f_dst_chi2_pdf_core
+  public :: f_dst_chi2_cdf, f_dst_chi2_cdf_core
+  public :: f_dst_chi2_ppf, f_dst_chi2_ppf_core
+  public :: f_dst_f_pdf, f_dst_f_pdf_core
+  public :: f_dst_f_cdf, f_dst_f_cdf_core
+  public :: f_dst_f_ppf, f_dst_f_ppf_core
+  public :: f_dst_gpd_pdf, f_dst_gpd_pdf_core
+  public :: f_dst_gpd_cdf, f_dst_gpd_cdf_core
+  public :: f_dst_gpd_ppf, f_dst_gpd_ppf_core
 
 contains
-
-! TODO: handle invalid arguments (e.g., sigma = negative) by implementing impure
-!       wrapper functions. move optional arg handling to wrapper functions too?
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
@@ -176,7 +173,7 @@ impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
 ! ---- compute CDF
 
-  ! call pure function to calculate probability
+  ! call pure function to calculate probability integral
   p = f_dst_norm_cdf_core(x, mu_w, sigma_w, tail_w)
 
 end function f_dst_norm_cdf
@@ -281,7 +278,7 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
 ! ---- compute PPF
 
-  ! calculate x by calling pure function
+  ! call pure function to calculate x
   x = f_dst_norm_ppf_core(p, mu_w, sigma_w)
 
 end function f_dst_norm_ppf
@@ -374,7 +371,7 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   endif
 
   ! check if degrees of freedom value is valid
-  if (df .le. 1.0_wp) then
+  if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
      fx = fsml_error(1)%sv
@@ -383,7 +380,7 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
 ! ---- compute PDF
 
-  ! calculate probability/fx by calling pure function
+  ! call pure function to calculate probability/fx
   fx = f_dst_t_pdf_core(x, df, mu_w, sigma_w)
 
 end function f_dst_t_pdf
@@ -469,7 +466,7 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   endif
 
   ! check if degrees of freedom value is valid
-  if (df .le. 1.0_wp) then
+  if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
      p = fsml_error(1)%sv
@@ -478,7 +475,7 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
 ! ---- compute CDF
 
-  ! compute p by calling pure function
+  ! call pure function to calculate probability integral
   p = f_dst_t_cdf_core(x, df, mu_w, sigma_w, tail_w)
 
 end function f_dst_t_cdf
@@ -515,9 +512,9 @@ elemental function f_dst_t_cdf_core(x, df, mu, sigma, tail) result(p)
 
   ! compute integral (left tailed)
   if (z .ge. 0.0_wp) then
-    p = 1.0_wp - 0.5_wp * f_dst_beta_inc(xbeta, a, b)
+    p = 1.0_wp - 0.5_wp * f_dst_betai_core(xbeta, a, b)
   else
-    p = 0.5_wp * f_dst_beta_inc(xbeta, a, b)
+    p = 0.5_wp * f_dst_betai_core(xbeta, a, b)
   endif
 
   ! tail options
@@ -557,13 +554,13 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
-  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in)           :: df               !! degrees of freedom
-  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
-  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
-  real(wp)                          :: mu_w             !! final value of mu
-  real(wp)                          :: sigma_w          !! final value of sigma
-  real(wp)                          :: x                !! sample position
+  real(wp)   , intent(in)           :: p       !! probability between 0.0 - 1.0
+  real(wp)   , intent(in)           :: df      !! degrees of freedom
+  real(wp)   , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
+  real(wp)                          :: mu_w    !! final value of mu
+  real(wp)                          :: sigma_w !! final value of sigma
+  real(wp)                          :: x       !! sample position
 
 ! ==== Instructions
 
@@ -586,7 +583,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   endif
 
   ! check if degrees of freedom value is valid
-  if (df .le. 1.0_wp) then
+  if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
      x = fsml_error(1)%sv
@@ -603,7 +600,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
 ! ---- compute PPF
 
-  ! calculate x by calling pure function
+  ! call pure function to calculate x
   x = f_dst_t_ppf_core(p, df, mu_w, sigma_w)
 
 end function f_dst_t_ppf
@@ -658,12 +655,11 @@ end function f_dst_t_ppf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
+impure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
-!! Probability density function for gamma distribution.
-!! Uses intrinsic exp function.
-!! $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} \cdot x^{\alpha - 1} \cdot e^{-\lambda \cdot x}, \quad x > 0, \ \alpha > 0, \ \lambda > 0 $$
+!! Impure wrapper function for f_dst_gamma_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -692,26 +688,68 @@ elemental function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
   loc_w = 0.0_wp
   if (present(loc)) loc_w = loc
 
+  ! check if alpha value is valid
+  if (alpha_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if beta value is valid
+  if (beta_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
 ! ---- compute PDF
 
-  ! calculate probability/fx
-  if (x .le. 0.0_wp .or. alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
-     fx = 0.0_wp
-  else
-     z = (x - loc_w) / beta_w
-     fx = ( x ** (alpha_w - 1.0_wp) ) * exp( -z) / &
-        & ( beta_w ** alpha_w * gamma(alpha_w))
-  endif
+  ! call pure function to calculate probability/fx
+  fx = f_dst_gamma_pdf_core(x, alpha_w, beta_w, loc_w)
 
 end function f_dst_gamma_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
+elemental function f_dst_gamma_pdf_core(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distribution.
+!! Probability density function for gamma distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: alpha   !! shape  parameter
+  real(wp), intent(in) :: beta    !! scale parameter
+  real(wp), intent(in) :: loc     !! location parameter
+  real(wp)             :: z       !! shifted and scaled variable
+  real(wp)             :: fx
+
+! ==== Instructions
+
+! ---- compute PDF
+
+  ! calculate probability/fx
+  if (x .le. 0.0_wp .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     z = (x - loc) / beta
+     fx = ( x ** (alpha - 1.0_wp) ) * exp( -z) / &
+        & ( beta ** alpha * gamma(alpha))
+  endif
+
+end function f_dst_gamma_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for f_dst_gamma_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -746,18 +784,70 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
+  ! check if alpha value is valid
+  if (alpha_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if beta value is valid
+  if (beta_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
+     return
+  endif
+
+! ---- compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_gamma_cdf_core(x, alpha_w, beta_w, loc_w, tail_w)
+
+
+end function f_dst_gamma_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_gamma_cdf_core(x, alpha, beta, loc, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for gamma distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x       !! sample position
+  real(wp)        , intent(in) :: alpha   !! shape  parameter
+  real(wp)        , intent(in) :: beta    !! scale parameter
+  real(wp)        , intent(in) :: loc     !! location parameter
+  character(len=*), intent(in) :: tail    !! tail options
+  real(wp)                     :: z       !! standardised variable
+  real(wp)                     :: p       !! returned probability integral
+
+! ==== Instructions
+
 ! ---- compute CDF
 
   ! compute integral (left tailed)
-  if (x .le. loc_w .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
+  if (x .le. loc .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
      p = 0.0_wp
   else
-     z = (x - loc_w) / beta_w
-     p = f_dst_gamma_inc(alpha, z)
+     z = (x - loc) / beta
+     p = f_dst_gammai_core(alpha, z)
   endif
 
   ! tail options
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -770,21 +860,18 @@ elemental function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
      ! confidence interval
      case("confidence")
         p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-     ! invalid option
-     case default
-        p = -1.0_wp
    end select
 
-end function f_dst_gamma_cdf
+end function f_dst_gamma_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
+impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Impure wrapper function for f_dst_gamma_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
@@ -794,11 +881,6 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   real(wp)                          :: alpha_w          !! final value for alpha
   real(wp)                          :: beta_w           !! final value for beta
   real(wp)                          :: loc_w            !! final value for loc
-  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                          :: a, b             !! section bounds for bisection algorithm
-  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)                       :: i                !! for iteration
   real(wp)                          :: x                !! sample position
 
 ! ==== Instructions
@@ -817,18 +899,71 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   loc_w = 0.0_wp
   if (present(loc)) loc_w = loc
 
+  ! check if alpha value is valid
+  if (alpha_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if beta value is valid
+  if (beta_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! call pure function to calculate x
+  x = f_dst_gamma_ppf_core(p, alpha_w, beta_w, loc_w)
+
+end function f_dst_gamma_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for gamma distribution.
+
+! ==== Declarations
+  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: alpha            !! shape  parameter
+  real(wp)   , intent(in) :: beta             !! scale parameter
+  real(wp)   , intent(in) :: loc              !! location parameter
+  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
+  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                :: a, b             !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                !! for iteration
+  real(wp)                :: x                !! sample position
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section
-  a = loc_w
-  b = loc_w + alpha_w * beta_w * 10.0_wp
+  a = loc
+  b = loc + alpha * beta * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_gamma_cdf(x_mid, alpha=alpha_w, beta=beta_w&
-          &, loc=loc_w, tail="left") - p
+     p_mid = f_dst_gamma_cdf_core(x_mid, alpha=alpha&
+          &, beta=beta, loc=loc, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
@@ -841,20 +976,16 @@ elemental function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
      endif
   enddo
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
-
-end function f_dst_gamma_ppf
+end function f_dst_gamma_ppf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
+impure function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
 ! ==== Description
-!! Probability density function for exponential distribution.
-!! Uses intrinsic exp function.
-!! $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
+!! Impure wrapper function for f_dst_exp_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x        !! sample position
@@ -876,26 +1007,58 @@ elemental function f_dst_exp_pdf(x, lambda, loc) result(fx)
   lambda_w = 1.0_wp
   if (present(lambda)) lambda_w = lambda
 
+  ! check if lambda value is valid
+  if (lambda_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
 ! ---- compute PDF
 
-  ! calculate probability/fx
-  if (x .lt. loc_w) then
-     fx = 0.0_wp
-  elseif (lambda_w .lt. 0.0_wp) then
-     fx = 0.0_wp
-  else
-     fx = lambda_w * exp( -lambda_w * (x - loc_w) )
-  endif
+  ! call pure function to calculate probability/fx
+  fx = f_dst_exp_pdf_core(x, lambda_w, loc_w)
 
 end function f_dst_exp_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
+elemental function f_dst_exp_pdf_core(x, lambda, loc) result(fx)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential distribution.
+!! Probability density function for exponential distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x        !! sample position
+  real(wp), intent(in) :: loc      !! location parameter
+  real(wp), intent(in) :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mu/mean
+  real(wp)             :: fx
+
+! ==== Instructions
+
+! ---- compute PDF
+
+  ! calculate probability/fx
+  if (x .lt. loc) then
+     fx = 0.0_wp
+  elseif (lambda .lt. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     fx = lambda * exp( -lambda * (x - loc) )
+  endif
+
+end function f_dst_exp_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for f_dst_exp_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x        !! sample position
@@ -923,54 +1086,86 @@ elemental function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
-! ---- compute CDF
-
-  ! compute integral (left tailed)
-  if (x .lt. loc_w) then
-     p = 0.0_wp
-  elseif (lambda_w .lt. 0.0_wp) then
-     p = 0.0_wp
-  else
-     p = 1.0_wp - exp( -lambda * (x - loc_w) )
+  ! check if lambda value is valid
+  if (lambda_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
   endif
 
-  ! tail options
-  select case(tail_w)
-    ! left-tailed; P(z<x)
-     case("left")
-        p = p
-     ! right-tailed; P(z>x)
-     case("right")
-        p = 1.0_wp - p
-     ! invalid option
-     case default
-        p = -1.0_wp
-   end select
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
+     return
+  endif
 
+! ---- compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_exp_cdf_core(x, lambda_w, loc_w, tail_w)
 
 end function f_dst_exp_cdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
+elemental function f_dst_exp_cdf_core(x, lambda, loc, tail) result(p)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for exponential distribution.
-!! Procedure uses bisection method. p should be between 0.0 and 1.0.
+!! Cumulative distribution function for exponential distribution.
 
 ! ==== Declarations
-  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in), optional :: loc              !! location parameter
-  real(wp)   , intent(in), optional :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
-  real(wp)                          :: loc_w            !! final value for loc
-  real(wp)                          :: lambda_w         !! final value for lambda
-  integer(i4), parameter            :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter            :: tol = 1.0e-12_wp !! p deviation tolerance
-  real(wp)                          :: a, b             !! section bounds for bisection algorithm
-  real(wp)                          :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)                       :: i                !! for iteration
-  real(wp)                          :: x                !! sample position
+  real(wp)        , intent(in) :: x        !! sample position
+  real(wp)        , intent(in) :: loc      !! location parameter
+  real(wp)        , intent(in) :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mu/mean
+  character(len=*), intent(in) :: tail     !! tail options
+  real(wp)                     :: p        !! returned probability integral
+
+! ==== Instructions
+
+! ---- compute CDF
+
+  ! compute integral (left tailed)
+  if (x .lt. loc) then
+     p = 0.0_wp
+  elseif (lambda .lt. 0.0_wp) then
+     p = 0.0_wp
+  else
+     p = 1.0_wp - exp( - lambda * (x - loc) )
+  endif
+
+  ! tail options
+  select case(tail)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+   end select
+
+end function f_dst_exp_cdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_exp_ppf(p, lambda, loc) result(x)
+
+! ==== Description
+!! Impure wrapper function for f_dst_exp_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp)   , intent(in)           :: p        !! probability between 0.0 - 1.0
+  real(wp)   , intent(in), optional :: loc      !! location parameter
+  real(wp)   , intent(in), optional :: lambda   !! lambda parameter, beta(scale) = 1/lambda = mu/mean
+  real(wp)                          :: loc_w    !! final value for loc
+  real(wp)                          :: lambda_w !! final value for lambda
+  real(wp)                          :: x        !! sample position
 
 ! ==== Instructions
 
@@ -984,17 +1179,61 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
   lambda_w = 1.0_wp
   if (present(lambda)) lambda_w = lambda
 
+  ! check if lambda value is valid
+  if (lambda_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if value invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! call pure function to calculate x
+  x = f_dst_exp_ppf_core(p, lambda_w, loc_w)
+
+end function f_dst_exp_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for exponential distribution.
+
+! ==== Declarations
+  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: loc              !! location parameter
+  real(wp)   , intent(in) :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
+  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
+  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  real(wp)                :: a, b             !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                !! for iteration
+  real(wp)                :: x                !! sample position
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section (min possible approaches 0)
-  a = loc_w
-  b = loc_w - log(1.0_wp - p) / lambda_w * 10.0_wp
+  a = loc
+  b = loc - log(1.0_wp - p) / lambda * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
      ! difference between passed p and new mid point p
-     p_mid = f_dst_exp_cdf(x_mid, lambda=lambda_w, loc=loc_w, tail="left") - p
+     p_mid = f_dst_exp_cdf_core(x_mid, lambda=lambda, loc=loc, tail="left") - p
      ! check if difference is acceptable, update section if not
      if (abs(p_mid) .lt. tol) then
         ! pass final x value
@@ -1007,21 +1246,16 @@ elemental function f_dst_exp_ppf(p, lambda, loc) result(x)
      endif
   enddo
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
-
-end function f_dst_exp_ppf
+end function f_dst_exp_ppf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
+impure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
 ! ==== Description
-!! Probability density function for the chi-squared distribution.
-!! Uses intrinsic exp and gamma function.
-!! $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{ - \frac{x}{2} }}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
-!! where \(k\) = degrees of freedom (df) and \(\Gamma\) is the gamma function.
+!! Impure wrapper function for f_dst_chi2_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -1031,7 +1265,6 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
   real(wp)                       :: loc_w   !! final value for loc
   real(wp)                       :: scale_w !! final value for scale
   real(wp)                       :: fx      !! resulting PDF value
-  real(wp)                       :: z       !! standardised variable
 
 ! ==== Instructions
 
@@ -1045,25 +1278,67 @@ elemental function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
   scale_w = 1.0_wp
   if (present(scale)) scale_w = scale
 
-! ----compute PDF
-  z = (x - loc_w) / scale_w
-  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale_w .le. 0.0_wp) then
-     fx = 0.0_wp
-  else
-     fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * &
-        & gamma(df / 2.0_wp) * scale_w)) * &
-        & z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp)
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
   endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+! ----compute PDF
+
+  ! call pure function to calculate probability/fx
+  fx = f_dst_chi2_pdf_core(x, df, loc_w, scale_w)
 
 end function f_dst_chi2_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
+elemental function f_dst_chi2_pdf_core(x, df, loc, scale) result(fx)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squared distribution.
+!! Probability density function for the chi-squared distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: df      !! degrees of freedom
+  real(wp), intent(in) :: loc     !! location parameter
+  real(wp), intent(in) :: scale   !! scale parameter
+  real(wp)             :: z       !! standardised variable
+  real(wp)             :: fx      !! resulting PDF value
+
+! ==== Instructions
+
+! ----compute PDF
+  z = (x - loc) / scale
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale .le. 0.0_wp) then
+     fx = 0.0_wp
+  else
+     fx = (1.0_wp / (2.0_wp ** (df / 2.0_wp) * &
+        & gamma(df / 2.0_wp) * scale)) * &
+        & z ** (df / 2.0_wp - 1.0_wp) * exp(-z / 2.0_wp)
+  endif
+
+end function f_dst_chi2_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for f_dst_chi2_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
   ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -1075,7 +1350,6 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
   real(wp)                               :: scale_w !! final value for scale
   character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: p       !! resulting CDF value
-  real(wp)                               :: z       !! standardised variable
 
 ! ==== Instructions
 
@@ -1089,18 +1363,73 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
   scale_w = 1.0_wp
   if (present(scale)) scale_w = scale
 
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
+
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
+     return
+  endif
+
+! ----compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_chi2_cdf_core(x, df, loc_w, scale_w, tail_w)
+
+end function f_dst_chi2_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_chi2_cdf_core(x, df, loc, scale, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for the chi-squared distribution.
+
+  ! ==== Declarations
+  real(wp)        , intent(in) :: x       !! sample position
+  real(wp)        , intent(in) :: df      !! degrees of freedom
+  real(wp)        , intent(in) :: loc     !! location parameter
+  real(wp)        , intent(in) :: scale   !! scale parameter
+  character(len=*), intent(in) :: tail    !! tail options
+  real(wp)                     :: z       !! standardised variable
+  real(wp)                     :: p       !! resulting CDF value
+
+! ==== Instructions
+
 ! ----compute CDF
 
   ! compute integral (left tailed)
-  z = (x - loc_w) / scale_w
-  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale_w .le. 0.0_wp) then
+  z = (x - loc) / scale
+  if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale .le. 0.0_wp) then
      p = 0.0_wp
   else
-     p = f_dst_gamma_inc(df / 2.0_wp, z / 2.0_wp)
+     p = f_dst_gammai_core(df / 2.0_wp, z / 2.0_wp)
   endif
 
   ! tail options
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -1109,46 +1438,38 @@ elemental function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
         p = 1.0_wp - p
      ! two-tailed
      case("two")
-        if (x .gt. loc_w) then
+        if (x .gt. loc) then
            p = 2.0_wp * (1.0_wp - p)
-        elseif (x .le. loc_w) then
+        elseif (x .le. loc) then
            p = 2.0_wp * p
         endif
      ! confidence interval
      case("confidence")
-        if (x .gt. loc_w) then
+        if (x .gt. loc) then
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
-        elseif (x .le. loc_w) then
+        elseif (x .le. loc) then
            p = 1.0_wp - 2.0_wp * p
         endif
-     ! invalid option
-     case default
-        p = -1.0_wp
    end select
 
-end function f_dst_chi2_cdf
+end function f_dst_chi2_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
+impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for the chi-squared distribution.
-!! Uses the bisection method for numerical inversion of the CDF.
+!! Impure wrapper function for f_dst_chi2_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: p                !! probability between 0.0 and 1.0
-  real(wp), intent(in)        :: df               !! degrees of freedom
+  real(wp), intent(in)           :: df               !! degrees of freedom
   real(wp), intent(in), optional :: loc              !! location parameter
   real(wp), intent(in), optional :: scale            !! scale parameter
   real(wp)                       :: loc_w            !! final value for loc
   real(wp)                       :: scale_w          !! final value for scale
-  integer(i4), parameter         :: i_max = 200      !! max. number of iterations
-  real(wp), parameter            :: tol = 1.0e-12_wp !! tolerance for convergence
-  real(wp)                       :: a, b             !! interval bounds
-  real(wp)                       :: x_mid, p_mid     !! midpoint and corresponding CDF value
-  integer(i4)                    :: i                !! iteration counter
   real(wp)                       :: x                !! sample position
 
 ! ==== Instructions
@@ -1163,16 +1484,70 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   scale_w = 1.0_wp
   if (present(scale)) scale_w = scale
 
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if degrees of freedom value is valid
+  if (df .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! call pure function to calculate x
+  x = f_dst_chi2_ppf_core(p, df, loc_w, scale_w)
+
+end function f_dst_chi2_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
+
+! ==== Description
+!! Percent point function/quantile functionfor the chi-squared distribution.
+
+! ==== Declarations
+  real(wp), intent(in)   :: p                !! probability between 0.0 and 1.0
+  real(wp), intent(in)   :: df               !! degrees of freedom
+  real(wp), intent(in)   :: loc              !! location parameter
+  real(wp), intent(in)   :: scale            !! scale parameter
+  integer(i4), parameter :: i_max = 200      !! max. number of iterations
+  real(wp), parameter    :: tol = 1.0e-12_wp !! tolerance for convergence
+  real(wp)               :: a, b             !! interval bounds
+  real(wp)               :: x_mid, p_mid     !! midpoint and corresponding CDF value
+  integer(i4)            :: i                !! iteration counter
+  real(wp)               :: x                !! sample position
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section (min possible approaches 0)
-  a = loc_w
-  b = loc_w + df * 10.0_wp
+  a = loc
+  b = loc + df * 10.0_wp
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
-     p_mid = f_dst_chi2_cdf(x_mid, df, loc=loc_w, scale=scale_w, tail="left") - p
+     p_mid = f_dst_chi2_cdf_core(x_mid, df, loc=loc&
+          &, scale=scale, tail="left") - p
      if (abs(p_mid) .lt. tol) then
         x = x_mid
         return
@@ -1183,23 +1558,16 @@ elemental function f_dst_chi2_ppf(p, df, loc, scale) result(x)
      end if
   end do
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
-
-end function f_dst_chi2_ppf
+end function f_dst_chi2_ppf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
+impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
 
 ! ==== Description
-!! Probability density function for the F distribution.
-!! $$ f(x) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)} \cdot \left( \frac{d_1}{d_2} \right)^{ \frac{d_1}{2} } \cdot \frac{x^{ \frac{d_1}{2} - 1}}{\left(1 + \frac{d_1}{d_2} x \right)^{ \frac{d_1 + d_2}{2} }}, \quad x > 0 $$
-!! where \(d_1\) = numerator degrees of freedom, \(d_2\) = denominator degrees of freedom and \( B \) is the complete beta function.
-!! (Uses intrinsic gamma function for beta.)
-!!
-!! The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), where \( U_1 \) and \( U_2 \) are are random variables with chi-square distributions with \( d_1 \) and \( d_2 \) degrees of freedom, respectively.
+!! Impure wrapper function for f_dst_f_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -1209,8 +1577,6 @@ elemental function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
   real(wp), intent(in), optional :: scale   !! scale parameter
   real(wp)                       :: loc_w   !! final location
   real(wp)                       :: scale_w !! final scale
-  real(wp)                       :: B       !! beta(0.5*d1, 0.5*d2)
-  real(wp)                       :: z       !! standardised variable
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -1225,10 +1591,61 @@ elemental function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
   scale_w = 1.0_wp
   if (present(scale)) scale_w = scale
 
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if numerator degrees of freedom value is valid
+  if (d1 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if denominator degrees of freedom value is valid
+  if (d2 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+! ----compute PDF
+
+  ! call pure function to calculate probability/fx
+  fx = f_dst_f_pdf_core(x, d1, d2, loc_w, scale_w)
+
+end function f_dst_f_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_f_pdf_core(x, d1, d2, loc, scale) result(fx)
+
+! ==== Description
+!! Probability density function for the F distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: d1      !! numerator degrees of freedom
+  real(wp), intent(in) :: d2      !! denominator degrees of freedom
+  real(wp), intent(in) :: loc     !! location parameter
+  real(wp), intent(in) :: scale   !! scale parameter
+  real(wp)             :: B       !! beta(0.5*d1, 0.5*d2)
+  real(wp)             :: z       !! standardised variable
+  real(wp)             :: fx
+
+! ==== Instructions
+
 ! ----compute PDF
 
   ! get z score (standardise)
-  z = (x - loc_w) / scale_w
+  z = (x - loc) / scale
 
   ! calculate beta(0.5*d1, 0.5*d2) from gamma functions
   B = gamma(0.5_wp * d1) * gamma(0.5_wp * d2) / &
@@ -1239,18 +1656,19 @@ elemental function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
      fx = 0.0_wp
   else
      fx = sqrt(( (d1 * z) ** d1 * d2 ** d2 ) / &
-       & ( (d1 * z + d2)**(d1 + d2) )) / z / (scale_w * B)
+       & ( (d1 * z + d2)**(d1 + d2) )) / z / (scale * B)
   endif
 
-end function f_dst_f_pdf
+end function f_dst_f_pdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
+impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
 
 ! ==== Description
-!! Cumulative density function \(F(x) = \mathbb{P}(X \leq x)\) for the F distribution.
+!! Impure wrapper function for f_dst_f_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -1262,14 +1680,11 @@ elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
   real(wp)                               :: loc_w   !! final location
   real(wp)                               :: scale_w !! final scale
   character(len=16)                      :: tail_w  !! tail option final
-  real(wp)                               :: z       !! standardised variable
-  real(wp)                               :: xbeta   !! beta variable
   real(wp)                               :: p       !! output probability
 
 ! ==== Instructions
 
 ! ---- handle input
-
 
   ! assume loc = 0, overwrite if specified
   loc_w = 0.0_wp
@@ -1283,10 +1698,72 @@ elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if numerator degrees of freedom value is valid
+  if (d1 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if denominator degrees of freedom value is valid
+  if (d2 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
+     return
+  endif
+
+! ----compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_f_cdf_core(x, d1, d2, loc_w, scale_w, tail_w)
+
+
+end function f_dst_f_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_f_cdf_core(x, d1, d2, loc, scale, tail) result(p)
+
+! ==== Description
+!! Cumulative density function for the F distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x       !! sample position
+  real(wp)        , intent(in) :: d1      !! numerator degrees of freedom
+  real(wp)        , intent(in) :: d2      !! denominator degrees of freedom
+  real(wp)        , intent(in) :: loc     !! location parameter
+  real(wp)        , intent(in) :: scale   !! scale parameter
+  character(len=*), intent(in) :: tail    !! tail option
+  real(wp)                     :: z       !! standardised variable
+  real(wp)                     :: xbeta   !! beta variable
+  real(wp)                     :: p       !! output probability
+
+! ==== Instructions
+
 ! ----compute CDF
 
   ! get z score (standardise)
-  z = (x - loc_w) / scale_w
+  z = (x - loc) / scale
 
   ! z must be positive non-zero; return 0 if not
   if (z .le. 0.0_wp) then
@@ -1296,10 +1773,10 @@ elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
 
   ! transform to beta domain
   xbeta = (d1 * z) / (d1 * z + d2)
-  p = f_dst_beta_inc(xbeta, 0.5_wp * d1, 0.5_wp * d2)
+  p = f_dst_betai_core(xbeta, 0.5_wp * d1, 0.5_wp * d2)
 
   ! tail options
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
@@ -1320,21 +1797,18 @@ elemental function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
         else
            p = 1.0_wp - 2.0_wp * (1.0_wp - p)
         endif
-     ! invalid option
-     case default
-        p = -1.0_wp
   end select
 
-end function f_dst_f_cdf
+end function f_dst_f_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
+impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
 
 ! ==== Description
-!! Percent point function / quantile function \( Q(p) = F^{-1}(p) \) for the F distribution.
-!! Uses the bisection method to numerically invert the CDF.
+!! Impure wrapper function for f_dst_f_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: p                !! probability (0.0 < p < 1.0)
@@ -1344,11 +1818,6 @@ elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   real(wp), intent(in), optional :: scale            !! scale parameter
   real(wp)                       :: loc_w            !! effective location
   real(wp)                       :: scale_w          !! effective scale
-  integer(i4), parameter         :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter         :: tol = 1.0e-12_wp !! tolerance for convergence
-  real(wp)                       :: a, b             !! search bounds
-  real(wp)                       :: x_mid, p_mid     !! midpoint and its CDF
-  integer(i4)                    :: i                !! iteration counter
   real(wp)                       :: x                !! result: quantile at p
 
 ! ==== Instructions
@@ -1363,17 +1832,79 @@ elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   scale_w = 1.0_wp
   if (present(scale)) scale_w = scale
 
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if numerator degrees of freedom value is valid
+  if (d1 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if denominator degrees of freedom value is valid
+  if (d2 .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+! ---- compute PPF
+
+  ! call pure function to calculate x
+  x = f_dst_f_ppf_core(p, d1, d2, loc_w, scale_w)
+
+end function f_dst_f_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
+
+! ==== Description
+!! Percent point function / quantile function for the F distribution.
+
+! ==== Declarations
+  real(wp), intent(in)   :: p                !! probability (0.0 < p < 1.0)
+  real(wp), intent(in)   :: d1               !! numerator degrees of freedom
+  real(wp), intent(in)   :: d2               !! denominator degrees of freedom
+  real(wp), intent(in)   :: loc              !! location parameter
+  real(wp), intent(in)   :: scale            !! scale parameter
+  integer(i4), parameter :: i_max = 200      !! max. number of iterations
+  real(wp)   , parameter :: tol = 1.0e-12_wp !! tolerance for convergence
+  real(wp)               :: a, b             !! search bounds
+  real(wp)               :: x_mid, p_mid     !! midpoint and its CDF
+  integer(i4)            :: i                !! iteration counter
+  real(wp)               :: x                !! result: quantile at p
+
+! ==== Instructions
+
 ! ---- compute PPF
 
   ! set initial section
-  a = loc_w
-  b = loc_w + scale_w * 100.0_wp  ! heuristically large upper bound
+  a = loc
+  b = loc + scale * 100.0_wp  ! heuristically large upper bound
 
   ! iteratively refine with bisection method
   do i = 1, i_max
      x_mid = 0.5_wp * (a + b)
-     p_mid = f_dst_f_cdf(x_mid, d1, d2&
-          &, loc=loc_w, scale=scale_w, tail="left") - p
+     p_mid = f_dst_f_cdf_core(x_mid, d1, d2&
+          &, loc=loc, scale=scale, tail="left") - p
      if (abs(p_mid) .lt. tol) then
         x = x_mid
         return
@@ -1384,20 +1915,16 @@ elemental function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
      end if
   end do
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .le. 0.0_wp .or. p .ge. 1.0_wp .or. i .eq. i_max) x = 0.0_wp
-
-end function f_dst_f_ppf
+end function f_dst_f_ppf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
+impure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
 ! ==== Description
-!! Probability density function for generalised pareto distribution.
-!! $$ f(x) = \frac{1}{\sigma} \cdot \left ( 1 + \frac{\xi \cdot (x - \mu)}{\sigma} \right)^{-\frac{1}{\xi} - 1}, \quad x \geq \mu, \ \sigma > 0, \ \xi \in \mathbb{R} $$
-!! where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigma), \(\mu\) (mu) is the location (not mean).
+!! Impure wrapper function for f_dst_gpd_pdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
@@ -1406,7 +1933,6 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
   real(wp), intent(in), optional :: sigma   !! distribution dispersion/scale (must be positive)
   real(wp)                       :: mu_w    !! final value of mu
   real(wp)                       :: sigma_w !! final value of sigma
-  real(wp)                       :: z       !! z-score
   real(wp)                       :: fx
 
 ! ==== Instructions
@@ -1421,10 +1947,43 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     fx = fsml_error(1)%sv
+     return
+  endif
+
+! ---- compute PDF
+
+  ! call pure function to calculate probability/fx
+  fx = f_dst_gpd_pdf_core(x, xi, mu_w, sigma_w)
+
+end function f_dst_gpd_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_gpd_pdf_core(x, xi, mu, sigma) result(fx)
+
+! ==== Description
+!! Probability density function for generalised pareto distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x       !! sample position
+  real(wp), intent(in) :: xi      !! distribution shape parameter
+  real(wp), intent(in) :: mu      !! distribution location
+  real(wp), intent(in) :: sigma   !! distribution dispersion/scale (must be positive)
+  real(wp)             :: z       !! z-score
+  real(wp)             :: fx
+
+! ==== Instructions
+
 ! ---- compute PDF
 
   ! compute z-score
-  z = (x - mu_w) / sigma_w
+  z = (x - mu) / sigma
 
   ! calculate probability/fx
   if (xi .eq. 0.0_wp) then
@@ -1442,15 +2001,16 @@ elemental function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
      endif
   endif
 
-end function f_dst_gpd_pdf
+end function f_dst_gpd_pdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
+impure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
 ! ==== Description
-!! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised pareto distribution.
+!! Impure wrapper function for f_dst_gpd_cdf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
@@ -1461,7 +2021,6 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   real(wp)                               :: mu_w    !! final value of mu
   real(wp)                               :: sigma_w !! final value of sigma
   character(len=16)                      :: tail_w  !! final tail option
-  real(wp)                               :: z       !! z-score
   real(wp)                               :: p       !! returned probability integral
 
 ! ==== Instructions
@@ -1480,10 +2039,54 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   tail_w = "left"
   if (present(tail)) tail_w = tail
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     p = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     p = fsml_error(2)%sv
+     return
+  endif
+
+! ---- compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_gpd_cdf_core(x, xi, mu_w, sigma_w, tail_w)
+
+
+end function f_dst_gpd_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_gpd_cdf_core(x, xi, mu, sigma, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for generalised pareto distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x       !! sample position
+  real(wp)        , intent(in) :: xi      !! distribution shape parameter
+  real(wp)        , intent(in) :: mu      !! distribution location
+  real(wp)        , intent(in) :: sigma   !! distribution dispersion/scale (must be positive)
+  character(len=*), intent(in) :: tail    !! tail options
+  real(wp)                     :: z       !! z-score
+  real(wp)                     :: p       !! returned probability integral
+
+! ==== Instructions
+
 ! ---- compute CDF
 
   ! compute z-score
-  z = (x - mu_w) / sigma_w
+  z = (x - mu) / sigma
 
   ! compute integral (left tailed)
   if (xi .eq. 0.0_wp) then
@@ -1502,28 +2105,25 @@ elemental function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   endif
 
   ! tail options
-  select case(tail_w)
+  select case(tail)
     ! left-tailed; P(z<x)
      case("left")
         p = p
      ! right-tailed; P(z>x)
      case("right")
         p = 1.0_wp - p
-     ! invalid option
-     case default
-        p = -1.0_wp
    end select
 
-end function f_dst_gpd_cdf
+end function f_dst_gpd_cdf_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
+impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
 ! ==== Description
-!! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
-!! Procedure uses bisection method. p must be between 0.0 and 1.0.
+!! Impure wrapper function for f_dst_gpd_ppf_core.
+!! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: p       !! probability between 0.0 - 1.0
@@ -1546,23 +2146,64 @@ elemental function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
   sigma_w = 1.0_wp
   if (present(sigma)) sigma_w = sigma
 
+  ! check if sigma value is valid
+  if (sigma_w .le. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     x = fsml_error(1)%sv
+     return
+  endif
+
 ! ---- compute PPF
 
-  ! compute inverse cdf based on xi
-  if (abs(xi) .lt. 1.0e-12_wp) then
-     ! if xi is approximately zero, use exponential distribution
-     x = mu_w - sigma_w * log(1.0_wp - p)
-  else
-     ! if xi is not zero, use general formula
-     x = mu_w + (sigma_w / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
-  endif
+  ! call pure function to calculate x
+  x = f_dst_gpd_ppf_core(p, xi, mu_w, sigma_w)
+
 
 end function f_dst_gpd_ppf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gamma_inc(a, x) result(p)
+elemental function f_dst_gpd_ppf_core(p, xi, mu, sigma) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for generalised pareto distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: p       !! probability between 0.0 - 1.0
+  real(wp)        , intent(in) :: mu      !! distribution location
+  real(wp)        , intent(in) :: sigma   !! distribution dispersion/scale (must be positive)
+  real(wp)        , intent(in) :: xi      !! distribution shape parameter
+  real(wp)                     :: x       !! sample position
+
+! ==== Instructions
+
+! ---- compute PPF
+
+  ! compute inverse cdf based on xi
+  if (abs(xi) .lt. 1.0e-12_wp) then
+     ! if xi is approximately zero, use exponential distribution
+     x = mu - sigma * log(1.0_wp - p)
+  else
+     ! if xi is not zero, use general formula
+     x = mu + (sigma / xi) * ( (1.0_wp - p) ** (-xi) - 1.0_wp )
+  endif
+
+end function f_dst_gpd_ppf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_gammai_core(a, x) result(p)
 
 ! ==== Description
 !! Incomplete gamma function. Needed by gamma and chi-squared cdf.
@@ -1629,12 +2270,12 @@ elemental function f_dst_gamma_inc(a, x) result(p)
     p = 1.0_wp - exp(-x + a * log(x) - lngamma_a) * h
   endif
 
-end function f_dst_gamma_inc
+end function f_dst_gammai_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_beta_inc(x, a, b) result(betai)
+elemental function f_dst_betai_core(x, a, b) result(betai)
 
 ! ==== Description
 !! Computes the regularised incomplete beta function. beta_inc and beta_cf
@@ -1672,17 +2313,17 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
 
   ! switch x with 1-x for num. stability if x > (a+1)/(a+b+2)
   if (x .lt. (a + 1.0_wp) / (a + b + 2.0_wp)) then
-    cf = beta_cf(x, a, b)
+    cf = betai_cf_core(x, a, b)
     betai = bt * cf / a
   else
-    cf = beta_cf(1.0_wp - x, b, a)
+    cf = betai_cf_core(1.0_wp - x, b, a)
     betai = 1.0_wp - bt * cf / b
   endif
 
   contains
 
-  ! --------------------------------------------------------------- !
-  elemental function beta_cf(x, a, b) result(cf)
+  ! ------------------------------------------------------------------ !
+  elemental function betai_cf_core(x, a, b) result(cf)
 
      ! ==== Description
      !! computes the continued fraction expansion of incomplete beta function.
@@ -1737,8 +2378,8 @@ elemental function f_dst_beta_inc(x, a, b) result(betai)
         if (abs(del - 1.0_wp) .lt. eps) exit
      enddo
 
-  end function beta_cf
+  end function betai_cf_core
 
-end function f_dst_beta_inc
+end function f_dst_betai_core
 
 end module fsml_dst
