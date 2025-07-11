@@ -22,7 +22,7 @@ module fsml_typ
   private
 
   ! declare public
-  public :: fsml_typ_df, fsml_typ_error
+  public :: fsml_typ_df
 
 ! ==== Definitions
 
@@ -37,12 +37,5 @@ module fsml_typ
      character(len=64), allocatable :: row_nm(:) !! names/labels for rows
      character(len=64), allocatable :: col_nm(:) !! names/labels for columns
   end type fsml_typ_df
-
-  ! error types and messages
-  type :: fsml_typ_error
-     !! Derived type for errors.
-     character(len=128) :: msg !! error message
-     real(wp)           :: sv  !! sentinel value
-  end type fsml_typ_error
 
 end module fsml_typ

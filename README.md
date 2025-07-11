@@ -1,4 +1,4 @@
-# <span style="color:#734f96">FSML - Fortran Statistics and Machine Learning Library</span>
+# <span style="color:#734f96">Fortran Statistics and Machine Learning</span>
 
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
 ![30%](https://progress-bar.xyz/30?title=Alpha)
@@ -19,13 +19,13 @@ FSML is in a pre-alpha state. Existing procedures and API may change significant
 ![logo](assets/logo/FSML_small.png)
 <!--![logo](media/logo/FSML_small.png)-->
 
-FSML is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U ), linear parametric methods and models (e.g., principal component analysis, discriminant analysis, Bayesian classifier), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U ), linear parametric methods and models (e.g., principal component analysis, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
 **Key features:**
 
  - Common statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
- - Compromise between performance and readability (also suitable for demonstration, teaching, and tinkering).
+ - Core procedures are kept pure (to simplify testing and parallelisation), while impure wrappers handle optional arguments and errors for safe use.
  - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
 **Note:**
@@ -157,7 +157,7 @@ end program fsml_tests
 
 ## <span style="color:#734f96">Development</span>
 
-FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written for my research in the past 15 years, and to bundle and publish it as a well organised and well documented library.
+FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written in the past 15 years, and to bundle and publish it as a well organised and well documented library.
 
 The published research below uses some of the to-be-reworked code and demonstrates some applications of the above-mentioned methods:
 
@@ -168,7 +168,7 @@ The published research below uses some of the to-be-reworked code and demonstrat
 
 ### <span style="color:#734f96">Alpha</span>
 
-I will consider the library to be in "alpha" once FSML covers the functionality needed to reproduce ~80% of all the Fortran-based data analysis I've conducted (and published) in the past ~15 years.
+I will consider the library to be in "alpha" once FSML covers all of the functionality outlined below.
 
 <br>
 
@@ -281,7 +281,6 @@ Additional procedures are provided to make the application of the methods above 
 | Additional Functionality    | Covered |
 | --------------------------- | ------- |
 | Read from CSV file          | ✓       |
-| Read from netCDF file       | -       |
 | Simple fortran dataframe    | ✓       |
 
 <br>

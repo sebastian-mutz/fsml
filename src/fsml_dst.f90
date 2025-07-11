@@ -81,7 +81,7 @@ impure function f_dst_norm_pdf(x, mu, sigma) result(fx)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -158,7 +158,7 @@ impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -167,7 +167,7 @@ impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -264,7 +264,7 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -272,7 +272,7 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -280,6 +280,9 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
   ! call pure function to calculate x
   x = f_dst_norm_ppf_core(p, mu_w, sigma_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_norm_ppf
 
@@ -295,8 +298,8 @@ elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
   real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
   real(wp)   , intent(in) :: mu               !! distribution location (mean)
   real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
-  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  integer(i4), parameter  :: i_max = bisect_i !! max. number of iterations
+  real(wp)   , parameter  :: tol = bisect_tol !! p deviation tolerance
   real(wp)                :: a, b             !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
   integer(i4)             :: i                !! for iteration
@@ -327,8 +330,8 @@ elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
      endif
   enddo
 
-  ! if p not within valid range or x not found in iterations, set x to 0
-  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp .or. i .eq. i_max) x = 0.0_wp
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_norm_ppf_core
 
@@ -366,7 +369,7 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -374,7 +377,7 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -452,7 +455,7 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -461,7 +464,7 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -469,7 +472,7 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -578,7 +581,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -586,7 +589,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -594,7 +597,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -602,6 +605,9 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
   ! call pure function to calculate x
   x = f_dst_t_ppf_core(p, df, mu_w, sigma_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_t_ppf
 
@@ -618,8 +624,8 @@ elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
   real(wp)   , intent(in) :: df               !! degrees of freedom
   real(wp)   , intent(in) :: mu               !! distribution location (mean)
   real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
-  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  integer(i4), parameter  :: i_max = bisect_i !! max. number of iterations
+  real(wp)   , parameter  :: tol = bisect_tol !! p deviation tolerance
   real(wp)                :: a, b             !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
   integer(i4)             :: i                !! for iteration
@@ -649,6 +655,9 @@ elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
         b = x_mid
      endif
   enddo
+
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_t_ppf_core
 
@@ -692,7 +701,7 @@ impure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
   if (alpha_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -700,7 +709,7 @@ impure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
   if (beta_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -788,7 +797,7 @@ impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
   if (alpha_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -796,7 +805,7 @@ impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
   if (beta_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -805,7 +814,7 @@ impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -903,7 +912,7 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   if (alpha_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -911,7 +920,7 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   if (beta_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -919,7 +928,7 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -927,6 +936,9 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
   ! call pure function to calculate x
   x = f_dst_gamma_ppf_core(p, alpha_w, beta_w, loc_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_gamma_ppf
 
@@ -943,8 +955,8 @@ elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
   real(wp)   , intent(in) :: alpha            !! shape  parameter
   real(wp)   , intent(in) :: beta             !! scale parameter
   real(wp)   , intent(in) :: loc              !! location parameter
-  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  integer(i4), parameter  :: i_max = bisect_i !! max. number of iterations
+  real(wp)   , parameter  :: tol = bisect_tol !! p deviation tolerance
   real(wp)                :: a, b             !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
   integer(i4)             :: i                !! for iteration
@@ -975,6 +987,9 @@ elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
         b = x_mid
      endif
   enddo
+
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_gamma_ppf_core
 
@@ -1011,7 +1026,7 @@ impure function f_dst_exp_pdf(x, lambda, loc) result(fx)
   if (lambda_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1090,7 +1105,7 @@ impure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
   if (lambda_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1099,7 +1114,7 @@ impure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1183,7 +1198,7 @@ impure function f_dst_exp_ppf(p, lambda, loc) result(x)
   if (lambda_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if value invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1191,7 +1206,7 @@ impure function f_dst_exp_ppf(p, lambda, loc) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1199,6 +1214,9 @@ impure function f_dst_exp_ppf(p, lambda, loc) result(x)
 
   ! call pure function to calculate x
   x = f_dst_exp_ppf_core(p, lambda_w, loc_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_exp_ppf
 
@@ -1214,8 +1232,8 @@ elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
   real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
   real(wp)   , intent(in) :: loc              !! location parameter
   real(wp)   , intent(in) :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
-  integer(i4), parameter  :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter  :: tol = 1.0e-12_wp !! p deviation tolerance
+  integer(i4), parameter  :: i_max = bisect_i !! max. number of iterations
+  real(wp)   , parameter  :: tol = bisect_tol !! p deviation tolerance
   real(wp)                :: a, b             !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
   integer(i4)             :: i                !! for iteration
@@ -1245,6 +1263,9 @@ elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
         b = x_mid
      endif
   enddo
+
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_exp_ppf_core
 
@@ -1282,7 +1303,7 @@ impure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1290,7 +1311,7 @@ impure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1371,7 +1392,7 @@ impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1379,7 +1400,7 @@ impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1388,7 +1409,7 @@ impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1488,7 +1509,7 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1496,7 +1517,7 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   if (df .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1504,7 +1525,7 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1512,6 +1533,9 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
   ! call pure function to calculate x
   x = f_dst_chi2_ppf_core(p, df, loc_w, scale_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_chi2_ppf
 
@@ -1528,8 +1552,8 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
   real(wp), intent(in)   :: df               !! degrees of freedom
   real(wp), intent(in)   :: loc              !! location parameter
   real(wp), intent(in)   :: scale            !! scale parameter
-  integer(i4), parameter :: i_max = 200      !! max. number of iterations
-  real(wp), parameter    :: tol = 1.0e-12_wp !! tolerance for convergence
+  integer(i4), parameter :: i_max = bisect_i !! max. number of iterations
+  real(wp), parameter    :: tol = bisect_tol !! tolerance for convergence
   real(wp)               :: a, b             !! interval bounds
   real(wp)               :: x_mid, p_mid     !! midpoint and corresponding CDF value
   integer(i4)            :: i                !! iteration counter
@@ -1557,6 +1581,9 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
         b = x_mid
      end if
   end do
+
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_chi2_ppf_core
 
@@ -1595,7 +1622,7 @@ impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1603,7 +1630,7 @@ impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
   if (d1 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1611,7 +1638,7 @@ impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
   if (d2 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -1702,7 +1729,7 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1710,7 +1737,7 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
   if (d1 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1718,7 +1745,7 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
   if (d2 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1727,7 +1754,7 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -1836,7 +1863,7 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   if (scale_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1844,7 +1871,7 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   if (d1 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1852,7 +1879,7 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   if (d2 .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1860,7 +1887,7 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -1868,6 +1895,9 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
 
   ! call pure function to calculate x
   x = f_dst_f_ppf_core(p, d1, d2, loc_w, scale_w)
+
+  ! issue warning in case of suspicious result
+  if (x .eq. sentinel_r) call s_err_warn(fsml_warning(1))
 
 end function f_dst_f_ppf
 
@@ -1885,8 +1915,8 @@ elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
   real(wp), intent(in)   :: d2               !! denominator degrees of freedom
   real(wp), intent(in)   :: loc              !! location parameter
   real(wp), intent(in)   :: scale            !! scale parameter
-  integer(i4), parameter :: i_max = 200      !! max. number of iterations
-  real(wp)   , parameter :: tol = 1.0e-12_wp !! tolerance for convergence
+  integer(i4), parameter :: i_max = bisect_i !! max. number of iterations
+  real(wp)   , parameter :: tol = bisect_tol !! tolerance for convergence
   real(wp)               :: a, b             !! search bounds
   real(wp)               :: x_mid, p_mid     !! midpoint and its CDF
   integer(i4)            :: i                !! iteration counter
@@ -1914,6 +1944,9 @@ elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
         b = x_mid
      end if
   end do
+
+  ! if x not found in iterations, pass sentinel
+  if (i .ge. i_max) x = sentinel_r
 
 end function f_dst_f_ppf_core
 
@@ -1951,7 +1984,7 @@ impure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     fx = fsml_error(1)%sv
+     fx = sentinel_r
      return
   endif
 
@@ -2043,7 +2076,7 @@ impure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     p = fsml_error(1)%sv
+     p = sentinel_r
      return
   endif
 
@@ -2052,7 +2085,7 @@ impure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
-     p = fsml_error(2)%sv
+     p = sentinel_r
      return
   endif
 
@@ -2150,7 +2183,7 @@ impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
   if (sigma_w .le. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -2158,7 +2191,7 @@ impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(1))
-     x = fsml_error(1)%sv
+     x = sentinel_r
      return
   endif
 
@@ -2166,7 +2199,6 @@ impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
   ! call pure function to calculate x
   x = f_dst_gpd_ppf_core(p, xi, mu_w, sigma_w)
-
 
 end function f_dst_gpd_ppf
 
@@ -2216,7 +2248,7 @@ elemental function f_dst_gammai_core(a, x) result(p)
   real(wp)               :: ap, del, b, c, d, h
   real(wp)   , parameter :: eps = 1.0e-12_wp     !! convergence threshold
   real(wp)   , parameter :: fpmin = 1.0e-30_wp   !! small number to prevent division by zero
-  integer(i4), parameter :: i_max = 200          !! max. number of iterations
+  integer(i4), parameter :: i_max = bisect_i          !! max. number of iterations
   integer(i4)            :: i
 
 ! ==== Instructions
@@ -2337,7 +2369,7 @@ elemental function f_dst_betai_core(x, a, b) result(betai)
      real(wp)               :: aa, del, qab, qam, qap
      real(wp)   , parameter :: eps   = 1.0e-14_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
-     integer(i4), parameter :: i_max = 200        !! max. number of iterations
+     integer(i4), parameter :: i_max = bisect_i        !! max. number of iterations
      integer(i4)            :: i
 
      ! ==== Instructions

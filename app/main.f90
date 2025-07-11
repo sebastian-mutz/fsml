@@ -66,6 +66,6 @@ program main
   print*, fsml_norm_cdf(2.0_wp, mu=0.0_wp, sigma=1.0_wp, tail="two-sided")
 
   ! invalid probability option; returns sentinel and prints error message
-  print*, fsml_norm_ppf(2.0_wp, mu=0.0_wp, sigma=1.0_wp)
+  print*, fsml_norm_ppf(0.95_wp, mu=0.0_wp, sigma=1.0_wp)
 
 end program main

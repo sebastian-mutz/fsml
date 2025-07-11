@@ -17,7 +17,7 @@ module fsml_err
   ! load modules
   use :: fsml_ini
   use :: fsml_utl
-  use :: fsml_typ, only: fsml_typ_error
+  use :: fsml_con
 
   ! basic options
   implicit none
@@ -25,22 +25,21 @@ module fsml_err
 
   ! declare public
   public :: fsml_error, s_err_print
+  public :: fsml_warning, s_err_warn
 
 ! ==== Declarations
 
-  ! error types
-  type(fsml_typ_error) :: fsml_error(2)
-
-! ==== Data
-
-  ! errors
-  data fsml_error(1)%msg/ "[fsml error] Argument value out of valid&
-                        & range. Returning sentinel."/
-  data fsml_error(1)%sv/-999.0_wp/
-
-  data fsml_error(2)%msg/"[fsml error] Argument value not in list of&
-                        & valid options. Returning sentinel."/
-  data fsml_error(2)%sv/-999.0_wp/
+  ! error messages
+  character(len=128), parameter :: fsml_error(2) = [ &
+                                  & "[fsml error] Argument value out of valid&
+                                  & range. Returning sentinel.          ", &
+                                  & "[fsml error] Argument value not in list&
+                                  & of valid options. Returning sentinel." ]
+  ! warning messages
+  character(len=128), parameter :: fsml_warning(1) = [ &
+                                  & "[fsml warning] Suspicious value returned.&
+                                  & Convergence may not have been reached in&
+                                  & bisection iterations." ]
 
 contains
 
@@ -52,15 +51,33 @@ subroutine s_err_print(error)
 !! Prints error message in specific format.
 
 ! ==== Declarations
-  type(fsml_typ_error) :: error
-  character(len=128)   :: fstring
+  character(len=*), intent(in) :: error
+  character(len=128)           :: fstring
 
 ! ==== Instructions
-  fstring = trim(error%msg) // " (" // trim(f_utl_r2c(error%sv)) // ")"
-!  fstring = txt_error // trim(error%msg) // txt_info // &
-!          & " (" // trim(f_utl_r2c(error%sv)) // ")" // txt_reset
+  fstring = trim(error) // " (" // trim(f_utl_r2c(sentinel_r)) // ")"
+!  fstring = txt_error // trim(error) // txt_info // &
+!          & " (" // trim(f_utl_r2c(sentinel_r)) // ")" // txt_reset
   write(std_e, '(A)') fstring
 
-end subroutine
+end subroutine s_err_print
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_err_warn(warning)
+
+! ==== Description
+!! Prints warning message in specific format.
+
+! ==== Declarations
+  character(len=*), intent(in) :: warning
+  character(len=128)           :: fstring
+
+! ==== Instructions
+  fstring = warning
+!  fstring = txt_warn // trim(warning) // txt_reset
+  write(std_e, '(A)') fstring
+
+end subroutine s_err_warn
 
 end module fsml_err
