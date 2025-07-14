@@ -27,6 +27,7 @@ module fsml_tst
   ! declare public procedures
   public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
   public :: s_tst_ranksum, s_tst_signedrank_1s, s_tst_signedrank_2s
+  ! TODO: wrapper procedures to handle errors, invalid args, etc.
 
 contains
 
