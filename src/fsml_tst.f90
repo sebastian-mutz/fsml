@@ -293,67 +293,61 @@ end subroutine s_tst_ttest_2s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_anova_1w(groups, k, F, p)
+pure subroutine s_tst_anova_1w(x, f, p)
 
 ! ==== Description
-!! Performs one-way ANOVA for `k` groups stored in a rank-2 array.
-!! Each column in `groups` is a group of observations.
-!! TODO: pass 2 arrays instead of rank-2 array?
-!! TODO: use math notation instead
-!! TODO: can get k from groups; no need to pass
+!! Performs one-way ANOVA for `k` groups stored in a rank-2 array (`x`).
+!! Each column in `x` is a group of observations.
 
 ! ==== Declarations
-  real(wp), intent(in)    :: groups(:,:)     !! 2D array, each column is a group
-  integer(i4), intent(in) :: k               !! number of groups
-  real(wp), intent(out)   :: F               !! F-statistic
-  real(wp), intent(out)   :: p               !! p-value from F distribution
-  real(wp)                :: df_between      !! between-group degrees of freedom
-  real(wp)                :: df_within       !! within-group degrees of freedom
-  integer(i4)             :: i, j, ni, n_total
-  real(wp)                :: grand_mean
-  real(wp)                :: ss_between, ss_within
-  real(wp)                :: ms_between, ms_within
-  real(wp)                :: group_mean
-  real(wp), allocatable   :: flat(:)
-  real(wp)                :: val
+  real(wp), intent(in)  :: x(:,:)    !! 2D array, each column is a group
+  real(wp), intent(out) :: f         !! F-statistic
+  real(wp), intent(out) :: p         !! p-value from F distribution
+  real(wp)              :: df_b      !! between-group degrees of freedom
+  real(wp)              :: df_w      !! within-group degrees of freedom
+  integer(i4)           :: ni        !! number of elements in groups
+  integer(i4)           :: nt        !! number of elements in total
+  integer(i4)           :: ng        !! number of groups
+  real(wp)              :: mu_t      !! grand/total mean
+  real(wp)              :: mu_g      !! group mean
+  real(wp)              :: ss_b      !! ss between groups
+  real(wp)              :: ss_w      !! ss within groups
+  real(wp), allocatable :: x_flat(:) !! flattened x
+  integer(i4)           :: i, j      !! flexible integers
 
 ! ==== Instructions
 
   ! flatten all elements to compute grand mean and total n
-  allocate(flat(size(groups)))
-  n_total = 0
-  j = 1
-  do i = 1, size(groups,1)
-    do j = 1, size(groups,2)
-       val = groups(i,j)
-       ! TODO: think about implementing NaN and counter and edge case here
-       n_total = n_total + 1
-       flat(n_total) = val
-    enddo
-  enddo
+  allocate( x_flat( product( shape(x) ) ) )
+  nt = size(x)
+  x_flat = reshape(x, [nt])
 
-  grand_mean = f_sts_mean(flat(:n_total))
+  ! get grand mean
+  mu_t = f_sts_mean(x_flat(:nt))
 
   ! initialise sums
-  ss_between = 0.0_wp
-  ss_within = 0.0_wp
+  ss_b = 0.0_wp
+  ss_w = 0.0_wp
 
-  do j = 1, k
-     ! TODO: think about implementing NaN and counter and edge case here
-     group_mean = f_sts_mean(groups(:ni,j))
-     ss_between = ss_between + real(ni, kind=wp) * (group_mean - grand_mean) ** 2
-     ss_within  = ss_within + sum((groups(:ni,j) - group_mean) ** 2)
+  ! get number of groups
+  ng = size(x, 2)
+
+  do j = 1, ng
+     ni = size(x, 1)
+     mu_g = f_sts_mean(x(:,j))
+     ss_b = ss_b + real(ni, kind=wp) * (mu_g - mu_t) ** 2
+     ss_w = ss_w + sum( (x(:,j) - mu_g) ** 2 )
   enddo
 
-  df_between = real(k - 1, kind=wp)
-  df_within  = real(n_total - k, kind=wp)
+  ! degrees of freedom
+  df_b = real(ng - 1, kind=wp)
+  df_w = real(nt - ng, kind=wp)
 
-  ms_between = ss_between / df_between
-  ms_within  = ss_within / df_within
+  ! calculate f statistics
+  f = (ss_b / df_b) / (ss_w / df_w)
 
-  F = ms_between / ms_within
-
-  p = 1.0_wp - f_dst_f_cdf_core(F, df_between, df_within, 0.0_wp, 1.0_wp, "left")
+  ! get right tail p value with F distribution CDF procedure; use default loc, scale
+  p = f_dst_f_cdf_core(F, df_b, df_w, 0.0_wp, 1.0_wp, "right")
 
 end subroutine s_tst_anova_1w
 
