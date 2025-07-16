@@ -19,7 +19,7 @@ FSML is in a pre-alpha state. Existing procedures and API may change significant
 ![logo](assets/logo/FSML_small.png)
 <!--![logo](media/logo/FSML_small.png)-->
 
-FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U ), linear parametric methods and models (e.g., principal component analysis, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
 **Key features:**
 
@@ -228,7 +228,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Paired sample t-test               | ✓       |
 | Pooled t-test (2 sample)           | ✓       |
 | Welch's t-test (2 sample)          | ✓       |
-| Analysis of variance               | -       |
+| Analysis of variance (one way)     | -       |
 | Mann–Whitney U rank-sum (2 sample) | ✓       |
 | Wilcoxon signed-rank (1 sample)    | ✓       |
 | Wilcoxon signed-rank (paired)      | ✓       |
