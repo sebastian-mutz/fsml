@@ -293,6 +293,75 @@ end subroutine s_tst_ttest_2s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
+pure subroutine s_tst_anova_1w(groups, k, F, p)
+
+! ==== Description
+!! Performs one-way ANOVA for `k` groups stored in a rank-2 array.
+!! Each column in `groups` is a group of observations.
+!! TODO: pass 2 arrays instead of rank-2 array?
+!! TODO: use math notation instead
+!! TODO: can get k from groups; no need to pass
+
+! ==== Declarations
+  real(wp), intent(in)    :: groups(:,:)     !! 2D array, each column is a group
+  integer(i4), intent(in) :: k               !! number of groups
+  real(wp), intent(out)   :: F               !! F-statistic
+  real(wp), intent(out)   :: p               !! p-value from F distribution
+  real(wp)                :: df_between      !! between-group degrees of freedom
+  real(wp)                :: df_within       !! within-group degrees of freedom
+  integer(i4)             :: i, j, ni, n_total
+  real(wp)                :: grand_mean
+  real(wp)                :: ss_between, ss_within
+  real(wp)                :: ms_between, ms_within
+  real(wp)                :: group_mean
+  real(wp), allocatable   :: flat(:)
+  real(wp)                :: val
+
+! ==== Instructions
+
+  ! flatten all elements to compute grand mean and total n
+  allocate(flat(size(groups)))
+  n_total = 0
+  j = 1
+  do i = 1, size(groups,1)
+    do j = 1, size(groups,2)
+       val = groups(i,j)
+       ! TODO: think about implementing NaN and counter and edge case here
+       n_total = n_total + 1
+       flat(n_total) = val
+    enddo
+  enddo
+
+  grand_mean = f_sts_mean(flat(:n_total))
+
+  ! initialise sums
+  ss_between = 0.0_wp
+  ss_within = 0.0_wp
+
+  do j = 1, k
+     ! TODO: think about implementing NaN and counter and edge case here
+     group_mean = f_sts_mean(groups(:ni,j))
+     ss_between = ss_between + real(ni, kind=wp) * (group_mean - grand_mean) ** 2
+     ss_within  = ss_within + sum((groups(:ni,j) - group_mean) ** 2)
+  enddo
+
+  df_between = real(k - 1, kind=wp)
+  df_within  = real(n_total - k, kind=wp)
+
+  ms_between = ss_between / df_between
+  ms_within  = ss_within / df_within
+
+  F = ms_between / ms_within
+
+  p = 1.0_wp - f_dst_f_cdf_core(F, df_between, df_within, 0.0_wp, 1.0_wp, "left")
+
+end subroutine s_tst_anova_1w
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
 
 ! ==== Description
