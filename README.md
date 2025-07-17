@@ -228,7 +228,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Paired sample t-test               | ✓       |
 | Pooled t-test (2 sample)           | ✓       |
 | Welch's t-test (2 sample)          | ✓       |
-| Analysis of variance (one way)     | -       |
+| Analysis of variance (one way)     | ✓       |
 | Mann–Whitney U rank-sum (2 sample) | ✓       |
 | Wilcoxon signed-rank (1 sample)    | ✓       |
 | Wilcoxon signed-rank (paired)      | ✓       |

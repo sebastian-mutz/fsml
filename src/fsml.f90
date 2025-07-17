@@ -39,6 +39,7 @@ module fsml
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
+  public :: fsml_anova_1way
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   ! public utility procedures
   public :: fsml_rank
@@ -382,6 +383,43 @@ interface fsml_ttest_2sample
   !! In case of assumed equal variances, the degrees of freedom is calculated as follows:
   !! $$ \nu = n_1 + n_2 - 2 $$
   module procedure s_tst_ttest_2s
+end interface
+
+! 1-way ANOVA
+interface fsml_anova_1way
+  !! The one-way ANOVA (Analysis of Variance) tests whether three or more population means
+  !! \( \mu_1, \mu_2, \dots, \mu_k \) are equal.
+  !!
+  !! The null hypothesis \( H_0 \) and alternative hypothesis \( H_1 \) are defined as:
+  !! \( H_0 \): \( \mu_1 = \mu_2 = \cdots = \mu_k \), and
+  !! \( H_1 \): At least one \( \mu_j \) differs from the others.
+  !!
+  !! The data is passed to the procedure as a rank-2 array `x`, where each column is a group of observations.
+  !! The procedure partitions then the total variability in the data (  \( SS_{total} \) ) into
+  !! variability between groups ( \( SS_{between} \); variability explained by groups ), and
+  !! variability within groups ( \( SS_{within} \); unexplained or residual variability ), so that
+  !! $$ SS_{total} =  SS_{between} + SS_{within} $$
+  !!
+  !! The F-statistic (`f`) is the ratio of the mean sum of squares between groups
+  !! to the mean sum of squares within groups:
+  !! $$ F = \frac{SS_{between} / (k - 1)}{SS_{within} / (n - k)} $$
+  !! where \( k \) is the number of groups, \( n \) is the total number of observations,
+  !! \( SS_{between} \) is the sum of squares between groups, and
+  !! \( SS_{within} \) is the sum of squares within groups.
+  !!
+  !! The degrees of freedom are \( \nu_1 = k - 1 \) between groups (`df_b`)
+  !! and \( \nu_2 = n - k \) within groups (`df_w`).
+  !!
+  !! The resulting p-value (`p`) is computed from the F-distribution:
+  !! $$ p = P(F_{\nu_1, \nu_2} > F_{observed}) = 1 - \text{CDF}(F_{observed}) $$
+  !!
+  !! It is computed with the elemental procedure `f_dst_f_cdf_core`.
+  !!
+  !! The ANOVA makes the assumptions that
+  !! a) the groups are independent,
+  !! b) the observations within each group are normally distributed, and
+  !! c) The variances within groups are equal.
+  module procedure s_tst_anova_1w
 end interface
 
 ! Wilcoxon 1-sample signed rank test

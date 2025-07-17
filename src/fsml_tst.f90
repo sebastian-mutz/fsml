@@ -26,6 +26,7 @@ module fsml_tst
 
   ! declare public procedures
   public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
+  public :: s_tst_anova_1w
   public :: s_tst_ranksum, s_tst_signedrank_1s, s_tst_signedrank_2s
   ! TODO: wrapper procedures to handle errors, invalid args, etc.
 
@@ -293,21 +294,20 @@ end subroutine s_tst_ttest_2s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_anova_1w(x, f, p)
+pure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
 
 ! ==== Description
-!! Performs one-way ANOVA for `k` groups stored in a rank-2 array (`x`).
-!! Each column in `x` is a group of observations.
+!! One-way ANOVA.
 
 ! ==== Declarations
   real(wp), intent(in)  :: x(:,:)    !! 2D array, each column is a group
   real(wp), intent(out) :: f         !! F-statistic
   real(wp), intent(out) :: p         !! p-value from F distribution
-  real(wp)              :: df_b      !! between-group degrees of freedom
-  real(wp)              :: df_w      !! within-group degrees of freedom
+  real(wp), intent(out) :: df_b      !! degrees of freedom between groups
+  real(wp), intent(out) :: df_w      !! degrees of freedom within groups
   integer(i4)           :: ni        !! number of elements in groups
-  integer(i4)           :: nt        !! number of elements in total
-  integer(i4)           :: ng        !! number of groups
+  integer(i4)           :: n         !! number of elements in total
+  integer(i4)           :: k         !! number of groups
   real(wp)              :: mu_t      !! grand/total mean
   real(wp)              :: mu_g      !! group mean
   real(wp)              :: ss_b      !! ss between groups
@@ -318,36 +318,36 @@ pure subroutine s_tst_anova_1w(x, f, p)
 ! ==== Instructions
 
   ! flatten all elements to compute grand mean and total n
-  allocate( x_flat( product( shape(x) ) ) )
-  nt = size(x)
-  x_flat = reshape(x, [nt])
+  n = size(x)
+  allocate(x_flat(n))
+  x_flat = reshape(x, [n])
 
   ! get grand mean
-  mu_t = f_sts_mean(x_flat(:nt))
+  mu_t = f_sts_mean(x_flat)
 
   ! initialise sums
   ss_b = 0.0_wp
   ss_w = 0.0_wp
 
   ! get number of groups
-  ng = size(x, 2)
+  k = size(x, 2)
 
-  do j = 1, ng
-     ni = size(x, 1)
+  ni = size(x, 1)
+  do j = 1, k
      mu_g = f_sts_mean(x(:,j))
      ss_b = ss_b + real(ni, kind=wp) * (mu_g - mu_t) ** 2
      ss_w = ss_w + sum( (x(:,j) - mu_g) ** 2 )
   enddo
 
   ! degrees of freedom
-  df_b = real(ng - 1, kind=wp)
-  df_w = real(nt - ng, kind=wp)
+  df_b = real(k - 1, kind=wp)
+  df_w = real(n - k, kind=wp)
 
   ! calculate f statistics
   f = (ss_b / df_b) / (ss_w / df_w)
 
   ! get right tail p value with F distribution CDF procedure; use default loc, scale
-  p = f_dst_f_cdf_core(F, df_b, df_w, 0.0_wp, 1.0_wp, "right")
+  p = f_dst_f_cdf_core(f, df_b, df_w, 0.0_wp, 1.0_wp, "right")
 
 end subroutine s_tst_anova_1w
 

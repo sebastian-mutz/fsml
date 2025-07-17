@@ -48,7 +48,12 @@ program example_tst
                                    1.12_wp, &
                                    1.01_wp, &
                                    1.12_wp]
-  real(wp)               :: t, p, df
+  real(wp)   , parameter :: x2d(5,3) = reshape([ &
+                                     & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! Group 1
+                                     & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, & ! Group 2
+                                     & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  & ! Group 3
+                                     & ], shape=[5,3])
+  real(wp)               :: t, p, df, df1, df2
 
 ! ==== Instructions
 
@@ -112,6 +117,21 @@ program example_tst
   ! test statistic (t):     0.4850
   ! degrees of freedom:    19.3423
   ! p-value:                0.6331
+
+  ! 1-way ANOVA
+  call fsml_anova_1way(x2d, t, df1, df2, p)
+  write(*,'(A)') "> 1-way ANOVA"
+  write(*,'(A,5F10.4)') "  group 1:            ", x2d(:, 1)
+  write(*,'(A,5F10.4)') "  group 2:            ", x2d(:, 2)
+  write(*,'(A,5F10.4)') "  group 3:            ", x2d(:, 3)
+  write(*,'(A,F10.4)')  "  test statistic (F): ", t
+  write(*,'(A,F10.4)')  "  df between:         ", df1
+  write(*,'(A,F10.4)')  "  df within:          ", df2
+  write(*,'(A,F10.4)')  "  p-value:            ", p
+  ! test statistic (F):     4.5868
+  ! df between:             2.0000
+  ! df within:             12.0000
+  ! p-value:                0.0331
 
 
 ! ---- Non-Parametric Tests
