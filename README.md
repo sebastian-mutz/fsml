@@ -199,6 +199,7 @@ Basic Statistics (descriptive measures for understanding data).
 | Linear trend           | ✓       |
 | Correlation (Pearson)  | ✓       |
 | Mahalanobis distance   | -       |
+| Bhattacharyya distance | -       |
 
 <br>
 
