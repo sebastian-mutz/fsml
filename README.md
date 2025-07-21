@@ -115,7 +115,6 @@ program fsml_tests
   write(*,'(A,F10.4)')   "  test statistic (t): ", t
   write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
-  print*
   ! test statistic (t):     0.4672
   ! degrees of freedom:     9.0000
   ! p-value:                0.6514
@@ -125,30 +124,25 @@ program fsml_tests
   write(*,'(A,F10.4)')   "  test statistic (t): ", t
   write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
-  print*
   ! test statistic (t):     0.4862
   ! degrees of freedom:    21.0000
   ! p-value:                0.6319
 
   ! 1-sample Wilcoxon signed rank test
   call fsml_signedrank_1sample(x1, mu, t, p, h1="two")
+  write(*,'(A)') "> 1-sample Wilcoxon signed rank test"
   write(*,'(A,F10.4)')   "  test statistic (w): ", t
-  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
-  print*
-  ! test statistic (w):    25.0000
-  ! degrees of freedom:    19.3423
-  ! p-value:                0.7989
+  ! test statistic (w):    27.0000
+  ! p-value:                0.9594
 
   ! 2-sample Wilcoxon Mann-Whitney U rank sum test
   call fsml_ranksum(x1, x2, t, p, h1="two")
+  write(*,'(A)') "> Mann-Whitney U rank sum test"
   write(*,'(A,F10.4)')   "  test statistic (U): ", t
-  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
-  print*
-  ! test statistic (U):    61.0000
-  ! degrees of freedom:    19.3423
-  ! p-value:                0.8041
+  ! test statistic (U):    59.5000
+  ! p-value:                0.7330
 
 end program fsml_tests
 ```
