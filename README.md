@@ -199,7 +199,6 @@ Basic Statistics (descriptive measures for understanding data).
 | Linear trend           | ✓       |
 | Correlation (Pearson)  | ✓       |
 | Mahalanobis distance   | -       |
-| Bhattacharyya distance | -       |
 
 <br>
 
@@ -233,7 +232,7 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Mann–Whitney U rank-sum (2 sample) | ✓       |
 | Wilcoxon signed-rank (1 sample)    | ✓       |
 | Wilcoxon signed-rank (paired)      | ✓       |
-| Kruskall Wallis H                  | -       |
+| Kruskall Wallis H test             | ✓       |
 
 <br>
 
