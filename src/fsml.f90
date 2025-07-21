@@ -41,6 +41,7 @@ module fsml
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
   public :: fsml_anova_1way
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
+  public :: fsml_kruskalwallis
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -504,6 +505,46 @@ interface fsml_ranksum
   !!
   !! The procedure takes into consideration tied ranks.
   module procedure s_tst_ranksum
+end interface
+
+! Kruskal Wallis test
+interface fsml_kruskalwallis
+  !! The Kruskal-Wallis H-test is used to determine whether samples originate from the same
+  !! distribution without assuming normality. It is therefore considered a nonparametric
+  !! alternative to the one-way ANOVA (Analysis of Variance).
+  !!
+  !! The null hypothesis \( H_0 \) and alternative hypothesis \( H_1 \) are defined as:
+  !! \( H_0 \): The populations have the same distribution (medians are equal), and
+  !! \( H_1 \): At least one population differs from the others.
+  !!
+  !! The data is passed to the procedure as a rank-2 array `x`, where each column is a group of observations.
+  !! All values are ranked across the entire dataset, with tied values assigned the average rank.
+  !!
+  !! The Kruskal-Wallis H-statistic (`h`) is computed as:
+  !! $$
+  !! H = \frac{12}{n(n+1)} \sum_{j=1}^{k} \frac{R_j^2}{n_j} - 3(n+1)
+  !! $$
+  !! where:
+  !! - \( n \) is the total number of observations,
+  !! - \( k \) is the number of groups,
+  !! - \( n_j \) is the number of observations in group \( j \), and
+  !! - \( R_j \) is the sum of ranks in group \( j \).
+  !!
+  !! The degrees of freedom are:
+  !! $$ \nu = k - 1 $$
+  !! and returned as `df`.
+  !!
+  !! The p-value (`p`) is computed from the chi-squared distribution:
+  !! $$ p = P(\chi^2_{\nu} > H_{observed}) = 1 - \text{CDF}(H_{observed}) $$
+  !!
+  !! It is computed using the elemental procedure `f_dst_chi2_cdf_core`.
+  !!
+  !! The Kruskal-Wallis test assumes that:
+  !! a) all groups are independent,
+  !! b) the response variable is ordinal or continuous,
+  !! c) the group distributions have the same shape,
+  !! and d) observations are independent both within and between groups.
+  module procedure s_tst_kruskalwallis
 end interface
 
 ! ==================================================================== !

@@ -28,6 +28,7 @@ module fsml_tst
   public :: s_tst_ttest_1s, s_tst_ttest_paired, s_tst_ttest_2s
   public :: s_tst_anova_1w
   public :: s_tst_ranksum, s_tst_signedrank_1s, s_tst_signedrank_2s
+  public :: s_tst_kruskalwallis
   ! TODO: wrapper procedures to handle errors, invalid args, etc.
 
 contains
@@ -594,5 +595,71 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   deallocate(ranks)
 
 end subroutine s_tst_ranksum
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_kruskalwallis(x, h, df, p)
+
+! ==== Description
+!! Kruskal-Wallis H-test for independent samples.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(:,:)     !! 2D array, each column is a group
+  real(wp)   , intent(out) :: h          !! Kruskal-Wallis H-statistic
+  real(wp)   , intent(out) :: p          !! p-value from chi-squared distribution
+  real(wp)   , intent(out) :: df         !! degrees of freedom (k - 1)
+  integer(i4)              :: k          !! number of groups
+  integer(i4)              :: n          !! total number of samples
+  integer(i4)              :: ni         !! group size (assumes balanced)
+  real(wp)   , allocatable :: x_flat(:)  !! flattened x array
+  integer(i4), allocatable :: i_ranks(:) !! integer ranks
+  real(wp)   , allocatable :: r_ranks(:) !! real ranks
+  real(wp)   , allocatable :: r_sum(:)   !! sum of ranks per group
+  integer(i4)              :: idx        !! group indexing
+  integer(i4)              :: i, j       !! flexible integers
+
+! ==== Instructions
+
+  ! get sizes
+  k = size(x, 2)
+  ni = size(x, 1)
+  n = k * ni
+
+  ! flatten x and allocate ranks
+  allocate(x_flat(n))
+  allocate(i_ranks(n))
+  allocate(r_ranks(n))
+  x_flat = reshape(x, [n])
+
+  ! compute ranks
+  call s_utl_rank(x_flat, i_ranks)
+  r_ranks = real(i_ranks, kind=wp)
+
+  ! allocate and compute rank sums for each group
+  allocate(r_sum(k))
+  r_sum = 0.0_wp
+  idx = 1
+  do j = 1, k
+     r_sum(j) = sum( r_ranks(idx:idx + ni - 1) )
+     idx = idx + ni
+  end do
+
+  ! compute H-statistic
+  h = 0.0_wp
+  do j = 1, k
+     h = h + ( r_sum(j) ** 2 ) / real(ni, wp)
+  end do
+  h = 12.0_wp * h / real(n * (n + 1), wp) - 3.0_wp * real(n + 1, wp)
+
+  ! degrees of freedom and p-value
+  df = real(k - 1, wp)
+  p = f_dst_chi2_cdf_core(h, df, 0.0_wp, 1.0_wp, "right")
+
+end subroutine s_tst_kruskalwallis
+
+
 
 end module fsml_tst
