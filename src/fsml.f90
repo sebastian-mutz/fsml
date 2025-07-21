@@ -507,7 +507,7 @@ interface fsml_ranksum
   module procedure s_tst_ranksum
 end interface
 
-! Kruskal Wallis test
+! Kruskal Wallis H test
 interface fsml_kruskalwallis
   !! The Kruskal-Wallis H-test is used to determine whether samples originate from the same
   !! distribution without assuming normality. It is therefore considered a nonparametric

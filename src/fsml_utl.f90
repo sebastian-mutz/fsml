@@ -39,7 +39,7 @@ pure subroutine s_utl_rank(x, ranks)
 
 ! ==== Declarations
   real(wp)                , intent(in)  :: x(:)     !! x array
-  integer(i4), allocatable, intent(out) :: ranks(:) !! ranks of x
+  real(wp)   , allocatable, intent(out) :: ranks(:) !! ranks of x
   integer(i4), allocatable              :: idx(:)   !! index vector to sort x
   real(wp)                              :: rank_sum !! sum of tied ranks
   integer(i4)                           :: cnt      !! counter

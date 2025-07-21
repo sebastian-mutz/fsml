@@ -374,7 +374,7 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   real(wp)                                :: mr        !! float sample size for x
   real(wp)         , allocatable          :: d(:)      !! differences
   real(wp)         , allocatable          :: dm(:)     !! absolute (modulus of) differences
-  integer(i4)      , allocatable          :: ranks(:)  !! ranks of absolute differences
+  real(wp)         , allocatable          :: ranks(:)  !! ranks of absolute differences
   integer(i4)      , allocatable          :: idx(:)    !! indeces for x > 0
   real(wp)                                :: rpos      !! sum of positive ranks
   real(wp)                                :: rneg      !! sum of negative ranks
@@ -428,9 +428,9 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   rneg = 0.0_wp
   do i = 1, m
      if (d(idx(i)) .gt. 0.0_wp) then
-        rpos = rpos + real(ranks(i), wp)
+        rpos = rpos + ranks(i)
      else
-        rneg = rneg + real(ranks(i), wp)
+        rneg = rneg + ranks(i)
      endif
   enddo
 
@@ -529,7 +529,7 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   real(wp)                                :: n1r      !! float sample size for x1
   real(wp)                                :: n2r      !! float sample size for x2
   real(wp)         , allocatable          :: x(:)     !! combined x1 and x2
-  integer(i4)      , allocatable          :: ranks(:) !! stores ranks
+  real(wp)         , allocatable          :: ranks(:) !! stores ranks
   real(wp)                                :: rx1      !! rank sum for x1
   real(wp)                                :: rx2      !! rank sum for x2
   real(wp)                                :: u1       !! U statistic 1
@@ -559,8 +559,8 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   call s_utl_rank(x, ranks)
 
   ! sum ranks of sample x
-  rx1 = sum(real(ranks(1:n1),  kind=wp))
-  rx2 = sum(real(ranks(n1+1:), kind=wp))
+  rx1 = sum( ranks(1:n1) )
+  rx2 = sum( ranks(n1+1:) )
 
   ! compute U statistics
   u1 = n1r * n2r + (n1r * (n1r + 1.0_wp) / 2.0_wp) - rx1
@@ -604,7 +604,7 @@ end subroutine s_tst_ranksum
 pure subroutine s_tst_kruskalwallis(x, h, df, p)
 
 ! ==== Description
-!! Kruskal-Wallis H-test for independent samples.
+!! Kruskal-Wallis H-test for independent samples. No tie correction.
 
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(:,:)     !! 2D array, each column is a group
@@ -615,8 +615,7 @@ pure subroutine s_tst_kruskalwallis(x, h, df, p)
   integer(i4)              :: n          !! total number of samples
   integer(i4)              :: ni         !! group size (assumes balanced)
   real(wp)   , allocatable :: x_flat(:)  !! flattened x array
-  integer(i4), allocatable :: i_ranks(:) !! integer ranks
-  real(wp)   , allocatable :: r_ranks(:) !! real ranks
+  real(wp)   , allocatable :: ranks(:)   !! real ranks
   real(wp)   , allocatable :: r_sum(:)   !! sum of ranks per group
   integer(i4)              :: idx        !! group indexing
   integer(i4)              :: i, j       !! flexible integers
@@ -628,38 +627,42 @@ pure subroutine s_tst_kruskalwallis(x, h, df, p)
   ni = size(x, 1)
   n = k * ni
 
-  ! flatten x and allocate ranks
+  ! allocate ranks
   allocate(x_flat(n))
-  allocate(i_ranks(n))
-  allocate(r_ranks(n))
+  allocate(ranks(n))
+  allocate(r_sum(k))
+
+  ! flatten x
   x_flat = reshape(x, [n])
 
   ! compute ranks
-  call s_utl_rank(x_flat, i_ranks)
-  r_ranks = real(i_ranks, kind=wp)
+  call s_utl_rank(x_flat, ranks)
 
   ! allocate and compute rank sums for each group
-  allocate(r_sum(k))
   r_sum = 0.0_wp
   idx = 1
   do j = 1, k
-     r_sum(j) = sum( r_ranks(idx:idx + ni - 1) )
+     r_sum(j) = sum( ranks(idx:idx + ni - 1) )
      idx = idx + ni
   end do
 
   ! compute H-statistic
   h = 0.0_wp
   do j = 1, k
-     h = h + ( r_sum(j) ** 2 ) / real(ni, wp)
+     h = h + ( r_sum(j) ** 2 ) / real(ni, kind=wp)
   end do
-  h = 12.0_wp * h / real(n * (n + 1), wp) - 3.0_wp * real(n + 1, wp)
+  h = 12.0_wp * h / real(n * (n + 1), wp) - 3.0_wp * real(n + 1, kind=wp)
 
   ! degrees of freedom and p-value
-  df = real(k - 1, wp)
+  df = real(k - 1, kind=wp)
   p = f_dst_chi2_cdf_core(h, df, 0.0_wp, 1.0_wp, "right")
 
-end subroutine s_tst_kruskalwallis
+  ! deallocate
+  deallocate(x_flat)
+  deallocate(ranks)
+  deallocate(r_sum)
 
+end subroutine s_tst_kruskalwallis
 
 
 end module fsml_tst

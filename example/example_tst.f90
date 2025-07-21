@@ -146,13 +146,10 @@ program example_tst
   write(*,'(A)') "> 1-sample Wilcoxon signed rank test"
   write(*,'(A,10F10.4)') "  samples:            ", x1
   write(*,'(A,F10.4)')   "  test statistic (w): ", t
-  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
   print*
-  ! test statistic (w):    25.0000
-  ! degrees of freedom:    19.3423
-  ! p-value:                0.7989
-
+  ! test statistic (w):    27.0000
+  ! p-value:                0.9594
 
   ! 2-sample (paired sample) Wilcoxon signed rank test
   call fsml_signedrank_paired(x1, x2(:n1), t, p, h1="two")
@@ -160,11 +157,9 @@ program example_tst
   write(*,'(A,10F10.4)') "  samples 1:          ", x1
   write(*,'(A,10F10.4)') "  samples 2:          ", x2(:n1)
   write(*,'(A,F10.4)')   "  test statistic (w): ", t
-  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
   print*
   ! test statistic (w):    21.0000
-  ! degrees of freedom:    19.3423
   ! p-value:                0.8590
 
 
@@ -174,11 +169,23 @@ program example_tst
   write(*,'(A,10F10.4)') "  samples 1:          ", x1
   write(*,'(A,13F10.4)') "  samples 2:          ", x2
   write(*,'(A,F10.4)')   "  test statistic (U): ", t
-  write(*,'(A,F10.4)')   "  degrees of freedom: ", df
   write(*,'(A,F10.4)')   "  p-value:            ", p
   print*
-  ! test statistic (U):    61.0000
-  ! degrees of freedom:    19.3423
-  ! p-value:                0.8041
+  ! test statistic (U):    59.5000
+  ! p-value:                0.7330
+
+
+  ! Kruskal Wallis H test
+  call fsml_kruskalwallis(x2d, t, df, p)
+  write(*,'(A)') "> Kruskal Wallis H test"
+  write(*,'(A,5F10.4)') "  group 1:            ", x2d(:, 1)
+  write(*,'(A,5F10.4)') "  group 2:            ", x2d(:, 2)
+  write(*,'(A,5F10.4)') "  group 3:            ", x2d(:, 3)
+  write(*,'(A,F10.4)')  "  test statistic (H): ", t
+  write(*,'(A,F10.4)')  "  degrees of freedom  ", df
+  write(*,'(A,F10.4)')  "  p-value:            ", p
+  ! test statistic (H):     5.9850
+  ! degrees of freedom      2.0000
+  ! p-value:                0.0502
 
 end program example_tst
