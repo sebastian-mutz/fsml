@@ -82,7 +82,9 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   ! make working copy of data
   x_w = x
 
-  ! ---- prepare data
+  ! ---- construct covariance or correlation matrix
+
+  ! prepare data
   do j = 1, n
      ! centre (get anomalies)
      tmp = f_sts_mean(x_w(:,j))
@@ -102,11 +104,13 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      x_w(:,j) = x_w(:,j) * sqrt(wt_w(j))
   enddo
 
-  ! ---- covariance/correlation matrix
+  ! construct matrix
   tmp = real(m - 1, kind=wp)
   c = matmul(transpose(x_w), x_w) / tmp
 
-  ! ---- eigen-decomposition using stdlib eigh
+  ! ---- calculate outputs
+
+  ! eigen-decomposition using stdlib eigh
   call eigh(c, w, vectors=eof)
 
   ! ---- normalise eigenvectors
@@ -116,7 +120,7 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   !   eof(:,i) = eof(:,i) / tmp
   !enddo
 
-  ! ---- extract and reorder eigenvalues/eigenvectors in descending order
+  ! extract and reorder eigenvalues/eigenvectors in descending order
   eof = 0.0_wp
   ev  = 0.0_wp
   nn  = 0
@@ -127,11 +131,11 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      eof(:,nn) = eof(:,i)
   enddo
 
-  ! ---- compute principal components
+  ! compute principal components
   pc = 0.0_wp
   pc(:,1:nn) = matmul(x_w, eof(:,1:nn))
 
-  ! ---- undo weight scaling for EOFs
+  ! undo weight scaling for EOFs
   if (nn .gt. 0) then
      do i = 1, n
         tmp = 1.0_wp / sqrt(wt_w(i))
@@ -139,7 +143,7 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      enddo
   endif
 
-  ! ---- scale EOFs for plotting
+  ! scale EOFs for plotting
   if (present(eof_scaled)) then
      if (nn .gt. 0) then
         eof_scaled = 0.0_wp
@@ -150,7 +154,7 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      endif
   endif
 
-  ! ---- explained variance (%)
+  ! explained variance (%)
   if (present(r2)) then
      r2 = 0.0_wp
      r2(1:nn) = ev(1:nn) / sum(ev(1:nn)) * 100.0_wp
