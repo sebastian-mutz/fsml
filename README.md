@@ -39,7 +39,7 @@ FSML uses double precision (real64) by default, but can be switched project-wide
 
 #### Reading and Basic Statistics
 
-The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_read_csv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_corr* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
+The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_read_csv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_pcc* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
 
 ```fortran
 program fsml_statistics
@@ -180,11 +180,11 @@ This stage is reached once FSML:
 
 <br>
 
-#### Basic Statistics
+#### Basic Statistics (STS)
 
 Basic Statistics (descriptive measures for understanding data).
 
-| Basic Statistics (STS) | Covered |
+| Basic Statistics       | Covered |
 | ---------------------- | ------- |
 | Mean                   | ✓       |
 | Variance               | ✓       |
@@ -192,15 +192,14 @@ Basic Statistics (descriptive measures for understanding data).
 | Covariance             | ✓       |
 | Linear trend           | ✓       |
 | Correlation (Pearson)  | ✓       |
-| Mahalanobis distance   | -       |
 
 <br>
 
-#### Distributions and Functions
+#### Distributions and Functions (DST)
 
 Each distribution comes with procedures for the following functions: Probability Density Function (PDF), Cumulative Distribution Function (CDF), and Percent Point Function (PPF).
 
-| Distributions (DST)    | Covered |
+| Distributions          | Covered |
 | ---------------------- | ------- |
 | Normal                 | ✓       |
 | Student's t            | ✓       |
@@ -212,11 +211,11 @@ Each distribution comes with procedures for the following functions: Probability
 
 <br>
 
-#### Hypothesis Testing
+#### Hypothesis Testing (TST)
 
 Hypothesis Testing (statistical tests for inference and comparing groups).
 
-| Hypothesis Testing (TST)           | Covered |
+| Hypothesis Testing                | Covered |
 | ---------------------------------- | ------- |
 | Student t-test (1 sample)          | ✓       |
 | Paired sample t-test               | ✓       |
@@ -230,11 +229,11 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 <br>
 
-#### Linear Parametric Models (LPM)
+#### Linear Algebra Procedures (LIN)
 
- Models that assume a linear relationship between the features/independent variables and target variable, and estimate parameters (coefficients).
+ Procedures that rely heavily on linear algebra.
 
-| Linear Parametric Models (LPM)| Covered |
+| Linear Algebra Procedures     | Covered |
 | ----------------------------- | ------- |
 | Multiple OLS regression       | -       |
 | LASSO regression              | -       |
@@ -245,16 +244,16 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 
 <br>
 
-#### Non-Linear Models (NLM)
+#### Nonlinear and Algorithmic Procedures (NLA)
 
-Models for clustering and/or capturing non-linear relationships, either explicitly or through flexible structures (such as decision trees). Methods in brackets are optional, new implementations (rather than reworked old code).
+Models for clustering and/or capturing non-linear relationships.
 
-| Non-Linear Models (NLM)     | Covered |
-| --------------------------- | ------- |
-| Hierarchical clustering     | -       |
-| K-means clustering          | -       |
-| Random forests regression   | -       |
-| (Multilayer perceptron)     | -       |
+| Nonlinear and Algorithmic Procedure | Covered |
+| ----------------------------------- | ------- |
+| Hierarchical clustering             | -       |
+| K-means clustering                  | -       |
+| Random forests regression           | -       |
+| (Multilayer perceptron)             | -       |
 
 <br>
 

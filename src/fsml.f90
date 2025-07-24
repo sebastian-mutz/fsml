@@ -21,6 +21,7 @@ module fsml
   use :: fsml_sts
   use :: fsml_dst
   use :: fsml_tst
+  use :: fsml_lin
   use :: fsml_utl
 
   ! basic options
@@ -545,6 +546,18 @@ interface fsml_kruskalwallis
   !! c) the group distributions have the same shape,
   !! and d) observations are independent both within and between groups.
   module procedure s_tst_kruskalwallis
+end interface
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+! ---- Linear Parametric Models
+
+! EOF analysis / PCA
+interface fsml_pca
+  !! Performs Empirical Orthogonal Function (EOF) analysis, equivalent to
+  !! Principal Component Analysis (PCA).
+  !! Uses LAPACK routine DSYEV from Fortran stdlib for eigen decomposition.
+  module procedure s_lin_pca
 end interface
 
 ! ==================================================================== !
