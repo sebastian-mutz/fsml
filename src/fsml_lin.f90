@@ -35,9 +35,6 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
 
 ! ==== Description
 !! Empirical Orthogonal Function (EOF) analysis / Principal Component Analysis (PCA)
-!! NOTE: Uses stdlib_linalg's `eigh` routine for symmetric eigen-decomposition.
-!! Cannot be pure as it relies on impure eigh.
-!! Output arrays initialised with zeros and overwritten only where nonzero eigenvalues.
 
 ! ==== Declarations
   integer(i4), intent(in)            :: m               !! number of rows

@@ -43,6 +43,8 @@ module fsml
   public :: fsml_anova_1way
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
+  ! public linear (algebra) procedures
+  public :: fsml_pca
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -324,9 +326,11 @@ end interface
 interface fsml_ttest_1sample
   !! The 1-sample t-test determines if the sample mean has the value specified in the null hypothesis.
   !!
+  !! ### Hypotheses:
   !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
   !! \( H_{0} \): \( \bar{x}  =  \mu_0 \), and \( H_{1} \): \( \bar{x} \neq \mu_0 \)
   !!
+  !! ### Procedure:
   !! The test statstic \( t \) is calculated as follows:
   !! $$ t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}$$
   !! where \( \bar{x} \) is the sample mean,
@@ -346,9 +350,11 @@ interface fsml_ttest_paired
   !! It is mathematically equivalent to the 1-sample t-test conducted
   !! on the difference vector \( d \) with \( \mu_0 = 0 \).
   !!
+  !! ### Hypotheses:
   !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
   !! \( H_{0} \): \( \bar{d}  =  0 \), and \( H_{1} \): \( \bar{d} \neq 0 \)
   !!
+  !! ### Procedure:
   !! The test statstic \( t \) is calculated as follows:
   !! $$ t = \frac{\bar{d} - 0}{s_d / \sqrt{n}}$$
   !! where \( \bar{d} \) is the mean of the differences between the sample sets,
@@ -365,9 +371,11 @@ interface fsml_ttest_2sample
   !! The 2-sample t-test determines if two population means \( \mu_1 \) and \( \mu_2\) are the same.
   !! The procedure can handle 2-sample t-tests for equal variances and Welch's t-tests for unequal variances.
   !!
+  !! ### Hypotheses:
   !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
   !! \( H_{0} \): \( \mu_1 \ = \mu_2 \), and \( H_{1} \): \( \mu_1 \ \neq \mu_2\)
   !!
+  !! ### Procedure:
   !! The procedure defaults to Welch's t-test for unequal variances if `eq_var` is not specified.
   !! In this case, the test statstic \( t \) is calculated as follows:
   !! $$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2} }} $$
@@ -392,10 +400,12 @@ interface fsml_anova_1way
   !! The one-way ANOVA (Analysis of Variance) tests whether three or more population means
   !! \( \mu_1, \mu_2, \dots, \mu_k \) are equal.
   !!
+  !! ### Hypotheses:
   !! The null hypothesis \( H_0 \) and alternative hypothesis \( H_1 \) are defined as:
   !! \( H_0 \): \( \mu_1 = \mu_2 = \cdots = \mu_k \), and
   !! \( H_1 \): At least one \( \mu_j \) differs from the others.
   !!
+  !! ### Procedure:
   !! The data is passed to the procedure as a rank-2 array `x`, where each column is a group of observations.
   !! The procedure partitions then the total variability in the data (  \( SS_{total} \) ) into
   !! variability between groups ( \( SS_{between} \); variability explained by groups ), and
@@ -429,11 +439,8 @@ interface fsml_signedrank_1sample
   !! The 1-sample Wilcoxon signed rank test is a non-parametric test that
   !! determines if data comes from a symmetric population with centre \( mu_0 \).
   !! It can be regarded as a non-parametric version of the 1-sample t-test.
-  !! The test statistic \( W \) is the smaller of the sum of positive and
-  !! negative signed ranks:
-  !! $$ W = \min \left( \sum_{d_i > 0} R_i, \sum_{d_i < 0} R_i \right) $$
   !!
-  !!
+  !! ### Hypotheses:
   !! If the data consists of independent and similarly distributed samples
   !! from distribution \( D \), the null hypothesis \( H_0 \) can be expressed as:
   !!
@@ -452,6 +459,11 @@ interface fsml_signedrank_1sample
   !!
   !! \( D \) is symmetric around \( \mu < \mu_0 \)
   !!
+  !! ### Procedure:
+  !! The test statistic \( W \) is the smaller of the sum of positive and
+  !! negative signed ranks:
+  !! $$ W = \min \left( \sum_{d_i > 0} R_i, \sum_{d_i < 0} R_i \right) $$
+  !!
   !! The procedure takes into consideration tied ranks.
   module procedure s_tst_signedrank_1s
 end interface
@@ -462,6 +474,7 @@ interface fsml_signedrank_paired
   !! if two related paired samples come from the same distribution.
   !! It can be regarded as a non-parametric version of the paired t-test.
   !!
+  !! ### Hypotheses:
   !! The Wilcoxon signed rank test is mathematically equivalent to the
   !! 1-sample Wilcoxon signed rank test conducted on the difference vector
   !! \( d = x_1 - x_2 \) with \( mu_0 \) set to zero. Consequently, the
@@ -493,16 +506,18 @@ interface fsml_ranksum
   !! \( x_2 \) are have the same distribution. It can be regarded as the non-parametric
   !! equivalent of the 2-sample t-test.
   !!
+  !! ### Hypotheses:
+  !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
+  !! \( H_0 \): the distributions of \( x_1 \) and \( x_2 \) are equal.
+  !! \( H_1 \): the distributions of \( x_1 \) and \( x_2 \) are not equal.
+  !!
+  !! ### Procedure:
   !! The Mann–Whitney U statistic is calculated for each sample as follows:
   !! $$ U_i = R_i - \frac{n_i \cdot (n_i + 1)}{2} $$
   !! where \( R_i \) is the sum of ranks of sample set \( i \)
   !! and \( n_i \) is the sample size of sample set \( i \).
   !! The final U statistic is:
   !! $$ U = \min(U_1, U_2) $$
-  !!
-  !! The null hypothesis \( H_{0} \) and alternative hypothesis \( H_{1} \) can be written as:
-  !! \( H_0 \): the distributions of \( x_1 \) and \( x_2 \) are equal.
-  !! \( H_1 \): the distributions of \( x_1 \) and \( x_2 \) are not equal.
   !!
   !! The procedure takes into consideration tied ranks.
   module procedure s_tst_ranksum
@@ -514,10 +529,12 @@ interface fsml_kruskalwallis
   !! distribution without assuming normality. It is therefore considered a nonparametric
   !! alternative to the one-way ANOVA (Analysis of Variance).
   !!
+  !! ### Hypotheses:
   !! The null hypothesis \( H_0 \) and alternative hypothesis \( H_1 \) are defined as:
   !! \( H_0 \): The populations have the same distribution (medians are equal), and
   !! \( H_1 \): At least one population differs from the others.
   !!
+  !! ### Procedure:
   !! The data is passed to the procedure as a rank-2 array `x`, where each column is a group of observations.
   !! All values are ranked across the entire dataset, with tied values assigned the average rank.
   !!
@@ -554,9 +571,75 @@ end interface
 
 ! EOF analysis / PCA
 interface fsml_pca
-  !! Performs Empirical Orthogonal Function (EOF) analysis, equivalent to
-  !! Principal Component Analysis (PCA).
-  !! Uses LAPACK routine DSYEV from Fortran stdlib for eigen decomposition.
+  !! Principal Component Analysis (PCA) or Empirical Orthogonal Function (EOF) analysis
+  !! is a procedure that reduces the dimensionality of multivariate data by identifying
+  !! a set of orthogonal vectors (eigenvectors or EOFs) that represent directions of
+  !! maximum variance in the dataset. EOF analysis is often used interchangably with the
+  !! geographically weighted PCA. As they are mathematically identical, a single pca
+  !! procedure is offered with optional arguments and outputs that also makes it usable
+  !! as a classic EOF analysis.
+  !!
+  !! For a classic PCA, the input matrix `x` is assumed to contain observations in rows
+  !! and variables in columns.
+  !!
+  !! For a classic EOF analysis, the input matrix `x` is assumed to contain time in rows
+  !! and space in columns.
+  !!
+  !! Optionally, the data can be standardised (using the correlation matrix) and/or
+  !! column-wise weights can be applied prior to analysis. While the latter is unusual
+  !! for a standard PCA, it is common for EOF analysis (geographically weighted PCA
+  !! as often applied in geographical sciences).
+  !!
+  !! The covariance or correlation matrix \( \mathbf{C} \) is computed as:
+  !! $$
+  !! \mathbf{C} = \frac{1}{m - 1} \mathbf{X}^\top \mathbf{X}
+  !! $$
+  !! where:
+  !! - \( \mathbf{X} \) is the preprocessed (centred and optionally standardised) data matrix,
+  !! - \( m \) is the number of observations (rows in `x`).
+  !!
+  !! A symmetric eigen-decomposition is performed:
+  !! $$
+  !! \mathbf{C} \mathbf{E} = \mathbf{E} \Lambda
+  !! $$
+  !! where:
+  !! - \( \mathbf{E} \) contains the eigenvectors (EOFs),
+  !! - \( \Lambda \) is a diagonal matrix of eigenvalues representing variance explained.
+  !!
+  !! The principal components (PCs) are given by:
+  !! $$
+  !! \mathbf{PC} = \mathbf{X} \mathbf{E}
+  !! $$
+  !!
+  !! The explained variance for each component is computed as:
+  !! $$
+  !! r^2_j = \frac{\lambda_j}{\sum_k \lambda_k} \times 100
+  !! $$
+  !!
+  !! EOFs may optionally be scaled for plotting:
+  !! $$
+  !! \text{EOF}_{\text{scaled}} = \text{EOF} \cdot \sqrt{\lambda_j}
+  !! $$
+  !!
+  !! This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+  !! eigenvalues and eigenvectors of the symmetric covariance matrix.
+  !!
+  !! ### Input arguments:
+  !! - `x(m,n)`: Input data matrix (observations × variables)
+  !! - `m`: Number of rows (observations)
+  !! - `n`: Number of columns (variables)
+  !! - `opt`: (Optional) Use 0 for covariance matrix, 1 for correlation matrix (default: 1)
+  !! - `wt(n)`: (Optional) Column weights (default: equal weights)
+  !!
+  !! ### Output arguments:
+  !! - `pc(m,n)`: Principal components (scores)
+  !! - `eof(n,n)`: EOFs / eigenvectors (unweighted)
+  !! - `ev(n)`: Eigenvalues (explained variance)
+  !! - `r2(n)`: (Optional) Percentage of variance explained by each component
+  !! - `eof_scaled(n,n)`: (Optional) EOFs scaled by square root of eigenvalues
+  !!
+  !! The number of valid EOF/PC modes is determined by the number of non-zero eigenvalues.
+  !! Arrays are initialised to zero and populated only where eigenvalues are strictly positive.
   module procedure s_lin_pca
 end interface
 

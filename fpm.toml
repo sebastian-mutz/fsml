@@ -31,21 +31,3 @@ main = "main.f90"
 [dependencies]
 stdlib = { git="https://github.com/fortran-lang/stdlib", branch="stdlib-fpm" }
 #stdlib = "*"
-
-[extra.ford]
-project = "FSML"
-author = "Sebastian G. Mutz"
-author_description = "Climate/Earth scientist (assoc. professor) with passion for statistics, modelling, AI, games, music, open culture & coding (Fortran & Python). 🇪🇺 🦊🌱"
-author_pic = "https://avatars.githubusercontent.com/u/46564062?v=4"
-email = "sebastian@mutz.science"
-github = "https://github.com/sebastian-mutz"
-linkedin = "https://www.linkedin.com/in/sebastian-gerhard-m-5b9952210/"
-website = "http://mutz.science/"
-license = "MIT license"
-doc_license = "by"
-favicon = "./assets/logo/FSML_icon.png"
-project_download = "https://github.com/sebastian-mutz/fsml"
-preprocess = true
-display = ["public", "protected", "private"]
-media_dir = "./assets/"
-max_frontpage_items = 4

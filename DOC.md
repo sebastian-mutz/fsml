@@ -1,18 +1,47 @@
-# <span style="color:#734f96">Fortran Statistics and Machine Learning</span>
+---
+project: FSML
+license: MIT license
+project_download: https://github.com/sebastian-mutz/fsml
+favicon: ./doc/media/logo/FSML_icon.png
+author: Sebastian G. Mutz
+author_description: Climate/Earth scientist (assoc. professor) with passion for statistics, modelling, AI, games, music, open culture & coding (Fortran & Python). 🇪🇺 🦊🌱
+author_pic: https://avatars.githubusercontent.com/u/46564062?v=4
+github: https://github.com/sebastian-mutz
+website: http://mutz.science/
+linkedin: https://www.linkedin.com/in/sebastian-gerhard-m-5b9952210/
+doc_license: by
+print_creation_date: true
+creation_date: %Y-%m-%d %H:%M %z
+preprocess: true
+max_frontpage_items: 4
+src_dir: src
+exclude_dir: src/tests
+output_dir: ../../doc
+page_dir: doc
+media_dir: doc/media
+display: public
+         protected
+         private
+source: true
+md_extensions: markdown.extensions.toc
+graph: true
+coloured_edges: false
+sort: permission-alpha
+dbg: true
+---
 
-[![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-![30%](https://progress-bar.xyz/30?title=Alpha)
+@warning
+FSML is in a pre-alpha state. Existing procedures and API may change significantly.
+@endwarning
 
+[TOC]
 
-> [!IMPORTANT]
-> FSML is in a pre-alpha state. Existing procedures and API may change significantly.
->
+<br>
+# <span style="color:#734f96">Description</span>
 
-## <span style="color:#734f96">Description</span>
+![logo](media/logo/FSML_small.png)
 
-![logo](doc/media/logo/FSML_small.png)
-
-FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+`FSML` (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
 **Key features:**
 
@@ -22,12 +51,13 @@ FSML (Fortran Statistics and Machine Learning) is a scientific toolkit consistin
  - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
 **Note:**
-FSML uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the `fsml_ini` module. The data type in your FSML application should match this.
+`FSML` uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the `fsml_ini` module. The data type in your `FSML` application should match this.
 
-## <span style="color:#734f96">Examples</span>
+# <span style="color:#734f96">Examples</span>
 
+<br>
 
-#### Reading and Basic Statistics
+### Reading and Basic Statistics
 
 The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_read_csv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_pcc* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
 
@@ -55,8 +85,9 @@ program fsml_statistics
 
 end program fsml_statistics
 ```
+<br>
 
-#### Statistical Distribution Functions
+### Statistical Distribution Functions
 
 The example below demonstrates the use of pdf (probability density function), cdf (cumulative distribution function), and ppf (percent point function/quantile function) procedures for different statistical distributions.
 
@@ -80,8 +111,9 @@ program fsml_distributions
 
 end program fsml_distributions
 ```
+<br>
 
-#### Statistical Tests
+### Statistical Tests
 
 In the example below, we create 2 data vectors and demonstrate how to conduct a range of statistical tests on them. We then let the programme output the test results in a clean format. The commented values are the expected output.
 
@@ -135,7 +167,9 @@ program fsml_tests
 end program fsml_tests
 ```
 
-## <span style="color:#734f96">Development</span>
+<br>
+
+# <span style="color:#734f96">Development</span>
 
 FSML is an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written in the past 15 years, and to bundle and publish it as a well organised and well documented library.
 
@@ -144,13 +178,15 @@ The published research below uses some of the to-be-reworked code and demonstrat
 - [Mutz and Ehlers (2019)](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis).
 - [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier).
 
+<br>
 
-### <span style="color:#734f96">Alpha</span>
+## <span style="color:#734f96">Alpha</span>
 
 I will consider the library to be in "alpha" once FSML covers all of the functionality outlined below.
 
+<br>
 
-### <span style="color:#734f96">Beta</span>
+## <span style="color:#734f96">Beta</span>
 
 This stage is reached once FSML:
 
@@ -158,11 +194,13 @@ This stage is reached once FSML:
 - has proper documentation.
 - fully works with GFortran and LFortran compilers.
 
+<br>
 
-### <span style="color:#734f96">Progress</span>
+## <span style="color:#734f96">Progress</span>
 
+<br>
 
-#### Basic Statistics (STS)
+### Basic Statistics (STS)
 
 Basic Statistics (descriptive measures for understanding data).
 
@@ -175,7 +213,9 @@ Basic Statistics (descriptive measures for understanding data).
 | Linear trend           | ✓       |
 | Correlation (Pearson)  | ✓       |
 
-#### Distributions and Functions (DST)
+<br>
+
+### Distributions and Functions (DST)
 
 Each distribution comes with procedures for the following functions: Probability Density Function (PDF), Cumulative Distribution Function (CDF), and Percent Point Function (PPF).
 
@@ -189,7 +229,9 @@ Each distribution comes with procedures for the following functions: Probability
 | Chi-squared            | ✓       |
 | F                      | ✓       |
 
-#### Hypothesis Testing (TST)
+<br>
+
+### Hypothesis Testing (TST)
 
 Hypothesis Testing (statistical tests for inference and comparing groups).
 
@@ -205,7 +247,9 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Wilcoxon signed-rank (paired)      | ✓       |
 | Kruskall Wallis H test             | ✓       |
 
-#### Linear Algebra Procedures (LIN)
+<br>
+
+### Linear Algebra Procedures (LIN)
 
  Procedures that rely heavily on linear algebra.
 
@@ -218,7 +262,9 @@ Hypothesis Testing (statistical tests for inference and comparing groups).
 | Discriminant analysis (LDA)   | -       |
 | Bayesian classification       | -       |
 
-#### Nonlinear and Algorithmic Procedures (NLA)
+<br>
+
+### Nonlinear and Algorithmic Procedures (NLA)
 
 Models for clustering and/or capturing non-linear relationships.
 
@@ -229,7 +275,9 @@ Models for clustering and/or capturing non-linear relationships.
 | Random forests regression           | -       |
 | (Multilayer perceptron)             | -       |
 
-#### Machine Learning Framework Extensions
+<br>
+
+### Machine Learning Framework Extensions
 
 Additional procedures are provided to make the application of the methods above in a machine learning framework easier.
 
@@ -239,15 +287,30 @@ Additional procedures are provided to make the application of the methods above 
 | Cross-validation setting    | -       |
 | Model performance metrics   | -       |
 
-#### Additional Functionality
+<br>
+
+### Additional Functionality
 
 | Additional Functionality    | Covered |
 | --------------------------- | ------- |
 | Read from CSV file          | ✓       |
 | Simple fortran dataframe    | ✓       |
 
-## <span style="color:#734f96">Installation</span>
+<br>
+# <span style="color:#734f96">Installation</span>
 
 FSML can be installed/compiled with the [fortran package manager (fpm)](https://github.com/fortran-lang/fpm).
 
 
+<br>
+# <span style="color:#734f96">API Documentation</span>
+
+This is the main API documentation landing page generated by [FORD].
+
+[FORD]: https://github.com/Fortran-FOSS-Programmers/ford#readme
+
+
+<br>
+# <span style="color:#734f96">License</span>
+
+The `FSML` source code and related files and documentation are distributed under the MIT license.
