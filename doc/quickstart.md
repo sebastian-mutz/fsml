@@ -13,6 +13,7 @@ Jump right into the action!
 ## GitHub
 
 ## FPM
+FSML can be installed/compiled with the [fortran package manager (fpm)](https://github.com/fortran-lang/fpm).
 
 # <span style="color:#734f96">Project Setup</span>
 
