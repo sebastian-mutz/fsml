@@ -112,7 +112,7 @@ where  \(v\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_pdf(interface)]] `(x, df, [,mu, sigma])`
+`result =` [[fsml(module):fsml_t_pdf(interface)]] `(x, df [,mu, sigma])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -138,7 +138,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t d
 The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`), and tail option (`tail`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_cdf(interface)]] `(x, df, [,mu, sigma, tail])`
+`result =` [[fsml(module):fsml_t_cdf(interface)]] `(x, df [,mu, sigma, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -171,7 +171,7 @@ Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 will return large negative or positive numbers (highly dependent on the tolerance threshold).
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_ppf(interface)]] `(p, df, [,mu, sigma])`
+`result =` [[fsml(module):fsml_t_ppf(interface)]] `(p, df [,mu, sigma])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -200,11 +200,29 @@ Probability density function for gamma distribution.
 Uses intrinsic exp function.
 $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} \cdot x^{\alpha - 1} \cdot e^{-\lambda \cdot x}, \quad x > 0, \ \alpha > 0, \ \lambda > 0 $$
 
+The equation can also be expressed with the scale parameter \( \beta \), which is the inverse of the rate parameter \( \lambda \), so that \( \beta =  \frac{1}{\lambda} \).
+
+$$ f(x) = \frac{1}{\Gamma(\alpha) \, \beta^\alpha} \cdot x^{\alpha - 1} \cdot e^{-x/\beta}, \quad x > 0,\ \alpha > 0,\ \beta > 0 $$
+
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`)  are optional arguments.
+
+
 ### Syntax
+`result =` [[fsml(module):fsml_gamma_pdf(interface)]] `(x, [,alpha, beta, loc])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -213,11 +231,26 @@ $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} \cdot x^{\alpha - 1} \cdot e^{-\
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distribution.
 
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`), the location parameter (`loc`), and tail option (`tail`) are optional arguments  are optional arguments.
+
 ### Syntax
+`result =` [[fsml(module):fsml_gamma_cdf(interface)]] `(x, [,alpha, beta, loc, tail])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -225,13 +258,28 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distr
 
 ### Description
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
-Procedure uses bisection method. `p` should be between 0.0 and 1.0.
+
+It computes the position (`x`) based on the probability (`p`).
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`)  are optional arguments.
+
+**Note:** The procedure uses bisection method.
 
 ### Syntax
+`result =` [[fsml(module):fsml_gamma_ppf(interface)]] `(x, [,alpha, beta, loc])`
 
 ### Parameters
+`p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `p`.
 
 
 <br>
