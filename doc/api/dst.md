@@ -24,7 +24,7 @@ $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left
 The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_pdf(interface)]] `(x, [,mu, sigma])`
+`result =` [[fsml(module):fsml_norm_pdf(interface)]]`(x, [,mu, sigma])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -49,7 +49,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal dist
 The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`), and tail option (`tail`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_cdf(interface)]] `(x, [,mu, sigma, tail])`
+`result =` [[fsml(module):fsml_norm_cdf(interface)]]`(x, [,mu, sigma, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -81,7 +81,7 @@ Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 will return large negative or positive numbers (highly dependent on the tolerance threshold).
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_ppf(interface)]] `(p, [,mu, sigma])`
+`result =` [[fsml(module):fsml_norm_ppf(interface)]]`(p, [,mu, sigma])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -112,7 +112,7 @@ where  \(v\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_pdf(interface)]] `(x, df [,mu, sigma])`
+`result =` [[fsml(module):fsml_t_pdf(interface)]]`(x, df [,mu, sigma])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -138,7 +138,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t d
 The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`), and tail option (`tail`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_cdf(interface)]] `(x, df [,mu, sigma, tail])`
+`result =` [[fsml(module):fsml_t_cdf(interface)]]`(x, df [,mu, sigma, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -171,7 +171,7 @@ Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 will return large negative or positive numbers (highly dependent on the tolerance threshold).
 
 ### Syntax
-`result =` [[fsml(module):fsml_t_ppf(interface)]] `(p, df [,mu, sigma])`
+`result =` [[fsml(module):fsml_t_ppf(interface)]]`(p, df [,mu, sigma])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -204,11 +204,11 @@ The equation can also be expressed with the scale parameter \( \beta \), which i
 
 $$ f(x) = \frac{1}{\Gamma(\alpha) \, \beta^\alpha} \cdot x^{\alpha - 1} \cdot e^{-x/\beta}, \quad x > 0,\ \alpha > 0,\ \beta > 0 $$
 
-The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`)  are optional arguments.
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_pdf(interface)]] `(x, [,alpha, beta, loc])`
+`result =` [[fsml(module):fsml_gamma_pdf(interface)]]`(x, [,alpha, beta, loc])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -231,10 +231,10 @@ The result is a scalar of the same type as `x`.
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distribution.
 
-The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`), the location parameter (`loc`), and tail option (`tail`) are optional arguments  are optional arguments.
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`), the location parameter (`loc`), and tail option (`tail`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_cdf(interface)]] `(x, [,alpha, beta, loc, tail])`
+`result =` [[fsml(module):fsml_gamma_cdf(interface)]]`(x, [,alpha, beta, loc, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -260,12 +260,12 @@ The result is a scalar of the same type as `x`.
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for gamma distribution.
 
 It computes the position (`x`) based on the probability (`p`).
-The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`)  are optional arguments.
+The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the location parameter (`loc`)  are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 **Note:** The procedure uses bisection method.
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_ppf(interface)]] `(x, [,alpha, beta, loc])`
+`result =` [[fsml(module):fsml_gamma_ppf(interface)]]`(x, [,alpha, beta, loc])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -294,11 +294,22 @@ Probability density function for exponential distribution.
 Uses intrinsic exp function.
 $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
 
+The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
+
 ### Syntax
+`result =` [[fsml(module):fsml_exp_pdf(interface)]]`(x, [,lambda, loc])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`lambda`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -307,11 +318,24 @@ $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential distribution.
 
+The rate parameter \( \lambda \) (`lambda`), location parameter (`loc`), and tail option (`tail`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
+
 ### Syntax
+`result =` [[fsml(module):fsml_exp_cdf(interface)]]`(x, [,lambda, loc, tail])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`lambda`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -321,11 +345,23 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for exponential distribution.
 Procedure uses bisection method. `p` should be between 0.0 and 1.0.
 
+It computes the position (`x`) based on the probability (`p`).
+The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
+
 ### Syntax
+`result =` [[fsml(module):fsml_exp_ppf(interface)]]`(x, [,lambda, loc])`
 
 ### Parameters
+`p`: A scalar of type `real`.
+
+`lambda`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`:  A scalar of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `p`.
 
 
 <br>
