@@ -14,6 +14,7 @@ and quantile function or percent point function (PPF) for each distribution.
 # <span style="color:#734f96">Normal Distribution</span>
 
 
+<br>
 ## `fsml_norm_pdf`
 
 ### Description
@@ -35,9 +36,11 @@ The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma
 Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-The result is a scalar and the same type as `x`.
+The result is a scalar of the same type as `x`.
 
 
+
+<br>
 ## `fsml_norm_cdf`
 
 ### Description
@@ -60,9 +63,11 @@ The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`),
 Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-The result is a scalar and the same type as `x`.
+The result is a scalar of the same type as `x`.
 
 
+
+<br>
 ## `fsml_norm_ppf`
 
 ### Description
@@ -79,7 +84,6 @@ will return large negative or positive numbers (highly dependent on the toleranc
 `result =` [[fsml(module):fsml_norm_ppf(interface)]] `(p, [,mu, sigma])`
 
 ### Parameters
-
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
 
 `mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
@@ -89,12 +93,14 @@ will return large negative or positive numbers (highly dependent on the toleranc
 Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-The result is a scalar and the same type as `p`.
+The result is a scalar of the same type as `p`.
 
 
 <br>
 # <span style="color:#734f96">Student's t Distribution</span>
 
+
+<br>
 ## `fsml_t_pdf`
 
 ### Description
@@ -103,59 +109,90 @@ Uses intrinsic gamma function (Fortran 2008 and later).
 $$ f(x) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu \cdot \pi}\, \cdot \Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu + 1}{2}} $$
 where  \(v\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 
-The value for degrees of freedom (`df`) must be 1.0 or higher.
-The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-It will default to 1.0 if not passed.
+The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
 
 ### Syntax
+`result =` [[fsml(module):fsml_t_pdf(interface)]] `(x, df, [,mu, sigma])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
+
+<br>
 ## `fsml_t_cdf`
 
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for student t distribution.
 
-The value for degrees of freedom (`df`) must be 1.0 or higher.
-The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-It will default to 1.0 if not passed.
-The tail option (`tail`) is an optional argument. If passed, it must be one of the following:
-*"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to "left".
+The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`), and tail option (`tail`) are optional arguments.
 
 ### Syntax
+`result =` [[fsml(module):fsml_t_cdf(interface)]] `(x, df, [,mu, sigma, tail])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
+
+<br>
 ## `fsml_t_ppf`
 
 ### Description
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for t distribution.
 
-Procedure uses bisection method.
+It computes the position (`x`) based on the probability (`p`) and degrees of freedom (`df`).
+The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
+
+**Note:** The procedure uses bisection method.
 Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 will return large negative or positive numbers (highly dependent on the tolerance threshold).
 
-The value for degrees of freedom (`df`) must be 1.0 or higher.
-The location parameter (`mu`) is an optional argument and will default to 0.0 if not passed.
-The scale parameter (`sigma`) is an optional argument. If passed, it must be non-zero positive.
-It will default to 1.0 if not passed.
-
 ### Syntax
+`result =` [[fsml(module):fsml_t_ppf(interface)]] `(p, df, [,mu, sigma])`
 
 ### Parameters
+`p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `p`.
 
 
 <br>
 # <span style="color:#734f96">Gamma Distribution</span>
 
+
+<br>
 ## `fsml_gamma_pdf`
 
 ### Description
@@ -169,6 +206,8 @@ $$ f(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} \cdot x^{\alpha - 1} \cdot e^{-\
 
 ### Returns
 
+
+<br>
 ## `fsml_gamma_cdf`
 
 ### Description
@@ -180,6 +219,8 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distr
 
 ### Returns
 
+
+<br>
 ## `fsml_gamma_ppf`
 
 ### Description
@@ -196,6 +237,8 @@ Procedure uses bisection method. `p` should be between 0.0 and 1.0.
 <br>
 # <span style="color:#734f96">Exponential Distribution</span>
 
+
+<br>
 ## `fsml_exp_pdf`
 
 ### Description
@@ -209,6 +252,8 @@ $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
 
 ### Returns
 
+
+<br>
 ## `fsml_exp_cdf`
 
 ### Description
@@ -220,6 +265,8 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential
 
 ### Returns
 
+
+<br>
 ## `fsml_exp_ppf`
 
 ### Description
@@ -232,9 +279,12 @@ Procedure uses bisection method. `p` should be between 0.0 and 1.0.
 
 ### Returns
 
+
 <br>
 # <span style="color:#734f96">Chi-Squared Distribution</span>
 
+
+<br>
 ## `fsml_chi2_pdf`
 
 ### Description
@@ -249,6 +299,8 @@ where \(k\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 
 ### Returns
 
+
+<br>
 ## `fsml_chi2_cdf`
 
 ### Description
@@ -260,6 +312,8 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squ
 
 ### Returns
 
+
+<br>
 ## `fsml_chi2_ppf`
 
 ### Description
@@ -272,9 +326,12 @@ Uses the bisection method for numerical inversion of the CDF.
 
 ### Returns
 
+
 <br>
 # <span style="color:#734f96">F Distribution</span>
 
+
+<br>
 ## `fsml_f_pdf`
 
 ### Description
@@ -291,6 +348,8 @@ The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), whe
 
 ### Returns
 
+
+<br>
 ## `fsml_f_cdf`
 
 ### Description
@@ -302,6 +361,8 @@ Cumulative density function \(F(x) = \mathbb{P}(X \leq x)\) for the F distributi
 
 ### Returns
 
+
+<br>
 ## `fsml_f_ppf`
 
 ### Description
@@ -318,6 +379,8 @@ Uses the bisection method to numerically invert the CDF.
 <br>
 # <span style="color:#734f96">Generalised Pareto Distribution</span>
 
+
+<br>
 ## `fsml_gpd_pdf`
 
 ### Description
@@ -331,6 +394,8 @@ where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigm
 
 ### Returns
 
+
+<br>
 ## `fsml_gpd_cdf`
 
 ### Description
@@ -342,6 +407,8 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised
 
 ### Returns
 
+
+<br>
 ## `fsml_gpd_ppf`
 
 ### Description
@@ -354,4 +421,6 @@ Procedure uses bisection method. `p` must be between 0.0 and 1.0.
 
 ### Returns
 
+
+<br>
 # <span style="color:#734f96">Examples</span>
