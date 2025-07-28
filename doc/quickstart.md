@@ -1,13 +1,16 @@
 ---
 title: Quick Start
 ---
-About this Guide
+
+# <span style="color:#734f96">About this Guide</span>
 
 This guide lets you jump right into the action with minimal preparation.
 
-\[TOC]
+[TOC]
 
-# Get the Tools
+
+<br>
+# <span style="color:#734f96">Get the Tools</span>
 
 @note If you already have the latest `gfortran` or `lfortran` compiler and `fpm`
 , you can continue [here](./quickstart.html#get-the-code) @endnote
@@ -42,7 +45,7 @@ conda install -c conda-forge gfortran
 ```
 **LFortran** is a new, interactive compiler that is still under heavy
 development. If you're looking to use FSML in a jupyter notebook and you're
-comfortable occasional tinkering (and bug reporting to help improve LFortran!),
+comfortable with the occasional tinkering (and bug reporting to help improve LFortran!),
 LFortran is your choice. You can get LFortran with as follows:
 
 ```
@@ -74,7 +77,9 @@ simply run:
 ```
 ford doc.md
 ```
-# Get the Code
+
+<br>
+# <span style="color:#734f96">Get the Code</span>
 
 ## Download and build with FPM
 
@@ -87,7 +92,9 @@ can be listed as a dependency and will be downloaded and compiled automatically
 If you prefer to include, compile or use FSML any other way, you can download
 the source code directly here.
 
-# Set Up Your Project
+
+<br>
+# <span style="color:#734f96">Project Setup</span>
 
 ## Create a new FSML project with FPM
 
@@ -96,15 +103,8 @@ the source code directly here.
   be downloaded and compiled without hassle.
 - Build/run the project: FPM uses gfortran by default. If you want to use FSML
   with lfortran, you will have to specify this through the compiler flag.
+- `use :: fsml`
 
-## Download manually
 
-If you prefer to include, compile or use FSML any other way, you can download
-the source code directly here.
-
-# Read Data
-
-# Analyse Data
-
-# Model Data
-
+<br>
+# <span style="color:#734f96">Examples</span>

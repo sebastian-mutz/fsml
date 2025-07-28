@@ -17,6 +17,8 @@ module fsml_tst
   ! load modules
   use :: fsml_ini
   use :: fsml_utl
+  use :: fsml_con
+  use :: fsml_err
   use :: fsml_sts
   use :: fsml_dst
 
@@ -35,10 +37,10 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
+impure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 
 ! ==== Description
-!! The 1-sample t-test.
+!! Impure wrapper procedure for `s_tst_ttest_1s_core`.
 
 ! ==== Declarations
   real(wp)         , intent(in)           :: x(:) !! x vector (samples)
@@ -48,9 +50,6 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   real(wp)         , intent(out)          :: df   !! degrees of freedom
   real(wp)         , intent(out)          :: p    !! p-value
   character(len=16)                       :: h1_w !! final value for h1
-  real(wp)                                :: xbar !! sample mean
-  real(wp)                                :: s    !! sample standard deviation
-  integer(i4)                             :: n    !! sample size
 
 ! ==== Instructions
 
@@ -60,7 +59,56 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   h1_w = "two"
   if (present(h1)) h1_w = h1
 
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if size is valid
+  if (size(x) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
 ! ---- conduct test
+
+  ! call pure function
+  call s_tst_ttest_1s_core(x, mu0, t, df, p, h1_w)
+
+end subroutine s_tst_ttest_1s
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_ttest_1s_core(x, mu0, t, df, p, h1)
+
+! ==== Description
+!! The 1-sample t-test.
+
+! ==== Declarations
+  real(wp)         , intent(in)  :: x(:) !! x vector (samples)
+  real(wp)         , intent(in)  :: mu0  !! population mean (null hypothesis expected value)
+  character(len=*) , intent(in)  :: h1   !! \( H_{1} \) option: two (default), le, ge
+  real(wp)         , intent(out) :: t    !! test statistic
+  real(wp)         , intent(out) :: df   !! degrees of freedom
+  real(wp)         , intent(out) :: p    !! p-value
+  real(wp)                       :: xbar !! sample mean
+  real(wp)                       :: s    !! sample standard deviation
+  integer(i4)                    :: n    !! sample size
+
+! ==== Instructions
 
   ! get mean, sample size, and sample standard deviation (using n-1)
   xbar = f_sts_mean_core(x)
@@ -74,7 +122,7 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   df = real(n, kind=wp) - 1.0_wp
 
   ! get p-value
-  select case(h1_w)
+  select case(h1)
      ! less than
      case("lt")
         p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="left")
@@ -84,9 +132,6 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
      ! two-sided
      case("two")
         p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="two")
-     ! invalid option
-     case default
-        p = -1.0_wp
   end select
 
   contains
@@ -110,17 +155,19 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 
   end function f_tst_ttest_1s_t
 
-end subroutine s_tst_ttest_1s
+end subroutine s_tst_ttest_1s_core
+
+
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
+impure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
 
 ! ==== Description
-!! The paired sample t-test (or  dependent sample t-test).
+!! Impure wrapper procedure for `s_tst_ttest_paired_core`.
 
 ! ==== Declarations
   real(wp)         , intent(in)           :: x1(:) !! x1 vector (samples)
@@ -139,10 +186,41 @@ pure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
   h1_w = "two"
   if (present(h1)) h1_w = h1
 
-! ---- conduct test on difference vector
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
 
-  ! use procedure for 1-sample t-test and set mu0 to 0
-  call s_tst_ttest_1s( (x1 - x2), 0.0_wp, t, df, p, h1)
+  ! check if size is valid
+  if (size(x1) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if x1 and x2 have same size
+  if (size(x1) .ne. size(x2)) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_ttest_paired_core(x1, x2, t, df, p, h1_w)
 
 end subroutine s_tst_ttest_paired
 
@@ -151,10 +229,37 @@ end subroutine s_tst_ttest_paired
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
+pure subroutine s_tst_ttest_paired_core(x1, x2, t, df, p, h1)
 
 ! ==== Description
-!! The 2-sample t-test.
+!! The paired sample t-test (or dependent sample t-test).
+!! It is a special case of `s_tst_ttest_1s` offered and uses
+!! the same pure procedure (`s_tst_ttest_1s_core`).
+
+! ==== Declarations
+  real(wp)         , intent(in)  :: x1(:) !! x1 vector (samples)
+  real(wp)         , intent(in)  :: x2(:) !! x2 vector (samples); must be same length as x1
+  character(len=*) , intent(in)  :: h1    !! \( H_{1} \) option: two (default), le, ge
+  real(wp)         , intent(out) :: t     !! test statistic
+  real(wp)         , intent(out) :: df    !! degrees of freedom
+  real(wp)         , intent(out) :: p     !! p-value
+
+! ==== Instructions
+
+  ! use procedure for 1-sample t-test on difference vector and set mu0 to 0
+  call s_tst_ttest_1s_core( (x1 - x2), 0.0_wp, t, df, p, h1)
+
+end subroutine s_tst_ttest_paired_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
+
+! ==== Description
+!! Impure wrapper procedure for `s_tst_ttest_2s_core`.
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x1(:)    !! x1 vector (samples)
@@ -166,13 +271,6 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   real(wp)        , intent(out)          :: p        !! p-value
   character(len=16)                      :: h1_w     !! final value for h1
   logical                                :: eq_var_w !! final value for eq_var
-  real(wp)                               :: x1bar    !! sample mean for x1
-  real(wp)                               :: x2bar    !! sample mean for x2
-  real(wp)                               :: s1       !! sample 1 standard deviation
-  real(wp)                               :: s2       !! sample 2 standard deviation
-  integer(i4)                            :: n1       !! sample size for x1
-  integer(i4)                            :: n2       !! sample size for x2
-  real(wp)                               :: s1n, s2n !! equation terms
 
 ! ==== Instructions
 
@@ -182,9 +280,75 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   h1_w = "two"
   if (present(h1)) h1_w = h1
 
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
   ! assume unequal variances, overwrite if option is passed
   eq_var_w = .false.
   if (present(eq_var)) eq_var_w = eq_var
+
+  ! check if size is valid
+  if (size(x1) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if x1 and x2 have same size
+  if (size(x1) .ne. size(x2)) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     t  = c_sentinel_r
+     df = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_ttest_2s_core(x1, x2, t, df, p, eq_var_w, h1_w)
+
+end subroutine s_tst_ttest_2s
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_ttest_2s_core(x1, x2, t, df, p, eq_var, h1)
+
+! ==== Description
+!! The 2-sample t-test.
+
+! ==== Declarations
+  real(wp)        , intent(in)  :: x1(:)    !! x1 vector (samples)
+  real(wp)        , intent(in)  :: x2(:)    !! x2 vector (samples)
+  character(len=*), intent(in)  :: h1       !! \( H_{1} \) option: two (default), le, ge
+  logical         , intent(in)  :: eq_var   !! true if equal variances assumed
+  real(wp)        , intent(out) :: t        !! test statistic
+  real(wp)        , intent(out) :: df       !! degrees of freedom
+  real(wp)        , intent(out) :: p        !! p-value
+  real(wp)                      :: x1bar    !! sample mean for x1
+  real(wp)                      :: x2bar    !! sample mean for x2
+  real(wp)                      :: s1       !! sample 1 standard deviation
+  real(wp)                      :: s2       !! sample 2 standard deviation
+  integer(i4)                   :: n1       !! sample size for x1
+  integer(i4)                   :: n2       !! sample size for x2
+  real(wp)                      :: s1n, s2n !! equation terms
+
+! ==== Instructions
 
 ! ---- conduct test
 
@@ -199,14 +363,14 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
      & real( (n2-1), kind=wp ) )
 
   ! get test statistic
-  if (eq_var_w) then
+  if (eq_var) then
      t = f_tst_ttest_2s_pooled_t(x1bar, x2bar, s1, s2, n1, n2)
   else
      t = f_tst_ttest_2s_welch_t(x1bar, x2bar, s1, s2, n1, n2)
   endif
 
   ! get degrees of freedom
-  if (eq_var_w) then
+  if (eq_var) then
      df = real( (n1 + n2 - 2), kind=wp )
   else
      s1n = (s1 * s1) / real( (n1), kind=wp )
@@ -217,7 +381,7 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   endif
 
   ! get p-value
-  select case(h1_w)
+  select case(h1)
      ! less than
      case("lt")
         p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="left")
@@ -227,9 +391,6 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
      ! two-sided
      case("two")
         p = f_dst_t_cdf_core(t, df, mu=0.0_wp, sigma=1.0_wp, tail="two")
-     ! invalid option
-     case default
-        p = -1.0_wp
   end select
 
   contains
@@ -288,7 +449,7 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 
   end function f_tst_ttest_2s_pooled_t
 
-end subroutine s_tst_ttest_2s
+end subroutine s_tst_ttest_2s_core
 
 
 
@@ -455,9 +616,6 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
      ! two-sided
      case("two")
         p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="two")
-     ! invalid option
-     case default
-        p = -1.0_wp
   end select
 
   ! deallocate
@@ -585,9 +743,6 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
      ! two-sided
      case("two")
         p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="two")
-     ! invalid option
-     case default
-        p = -1.0_wp
   end select
 
   ! deallocate

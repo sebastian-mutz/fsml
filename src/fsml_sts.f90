@@ -57,6 +57,8 @@ impure function f_sts_mean(x) result(mean)
   endif
 
 ! ---- compute mean
+
+  ! call pure function
   mean = f_sts_mean_core(x)
 
 end function f_sts_mean
@@ -104,6 +106,8 @@ impure function f_sts_var(x) result(var)
   endif
 
 ! ---- compute variance
+
+  ! call pure function
   var  = f_sts_var_core(x)
 
 end function f_sts_var
@@ -152,6 +156,8 @@ impure function f_sts_std(x) result(std)
   endif
 
 ! ---- compute standard deviation
+
+  ! call pure function
   std = sqrt( f_sts_var_core(x) )
 
 end function f_sts_std
@@ -169,6 +175,8 @@ pure function f_sts_std_core(x) result(std)
   real(wp)             :: std    !! standard deviation
 
 ! ==== Instructions
+
+  ! call pure function
   std = sqrt( f_sts_var_core(x) )
 
 end function f_sts_std_core
@@ -201,7 +209,7 @@ impure function f_sts_cov(x,y) result(cov)
   endif
 
   ! check if x and y have same size
-  if (size(x) .ne. size(x)) then
+  if (size(x) .ne. size(y)) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(4))
      cov = c_sentinel_r
@@ -209,6 +217,8 @@ impure function f_sts_cov(x,y) result(cov)
   endif
 
 ! ---- compute covariance
+
+  ! call pure function
   cov = f_sts_cov_core(x,y)
 
 end function f_sts_cov
@@ -261,7 +271,7 @@ impure function f_sts_trend(x,y) result(trend)
   endif
 
   ! check if x and y have same size
-  if (size(x) .ne. size(x)) then
+  if (size(x) .ne. size(y)) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(4))
      trend = c_sentinel_r
@@ -269,6 +279,8 @@ impure function f_sts_trend(x,y) result(trend)
   endif
 
 ! ---- compute trend
+
+  ! call pure function
   trend = f_sts_trend_core(x,y)
 
 end function f_sts_trend
@@ -317,7 +329,7 @@ impure function f_sts_pcc(x,y) result(corr)
   endif
 
   ! check if x and y have same size
-  if (size(x) .ne. size(x)) then
+  if (size(x) .ne. size(y)) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(4))
      corr = c_sentinel_r
@@ -325,6 +337,8 @@ impure function f_sts_pcc(x,y) result(corr)
   endif
 
 ! ---- compute Pearson correlation coefficient
+
+  ! call pure function
   corr = f_sts_pcc_core(x,y)
 
 end function f_sts_pcc

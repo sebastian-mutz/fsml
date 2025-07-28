@@ -72,7 +72,7 @@ Currently covered are procedures for sample statistics (STS), statistical distri
 
 ### Alpha
 
-I will consider the library to be in "alpha" once FSML covers all of the functionality outlined below.
+I will consider the library to be in "alpha" once FSML covers all of the originally planned functionality.
 
 ### Beta
 

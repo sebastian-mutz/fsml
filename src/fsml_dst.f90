@@ -295,15 +295,15 @@ elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
 !! Percent point function/quantile function for normal distribution.
 
 ! ==== Declarations
-  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in) :: mu               !! distribution location (mean)
-  real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
+  real(wp)   , intent(in) :: p                  !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: mu                 !! distribution location (mean)
+  real(wp)   , intent(in) :: sigma              !! distribution dispersion/scale (standard deviation)
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
   real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
-  real(wp)                :: a, b             !! section bounds for bisection algorithm
-  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)             :: i                !! for iteration
-  real(wp)                :: x                !! sample position
+  real(wp)                :: a, b               !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                  !! for iteration
+  real(wp)                :: x                  !! sample position
 
 ! ==== Instructions
 
@@ -620,16 +620,16 @@ elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
 !! Percent point function/quantile function for t distribution.
 
 ! ==== Declarations
-  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in) :: df               !! degrees of freedom
-  real(wp)   , intent(in) :: mu               !! distribution location (mean)
-  real(wp)   , intent(in) :: sigma            !! distribution dispersion/scale (standard deviation)
+  real(wp)   , intent(in) :: p                  !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: df                 !! degrees of freedom
+  real(wp)   , intent(in) :: mu                 !! distribution location (mean)
+  real(wp)   , intent(in) :: sigma              !! distribution dispersion/scale (standard deviation)
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
   real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
-  real(wp)                :: a, b             !! section bounds for bisection algorithm
-  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)             :: i                !! for iteration
-  real(wp)                :: x                !! sample position
+  real(wp)                :: a, b               !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                  !! for iteration
+  real(wp)                :: x                  !! sample position
 
 ! ==== Instructions
 
@@ -951,16 +951,16 @@ elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
 !! Percent point function/quantile function for gamma distribution.
 
 ! ==== Declarations
-  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in) :: alpha            !! shape  parameter
-  real(wp)   , intent(in) :: beta             !! scale parameter
-  real(wp)   , intent(in) :: loc              !! location parameter
+  real(wp)   , intent(in) :: p                  !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: alpha              !! shape  parameter
+  real(wp)   , intent(in) :: beta               !! scale parameter
+  real(wp)   , intent(in) :: loc                !! location parameter
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
   real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
-  real(wp)                :: a, b             !! section bounds for bisection algorithm
-  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)             :: i                !! for iteration
-  real(wp)                :: x                !! sample position
+  real(wp)                :: a, b               !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                  !! for iteration
+  real(wp)                :: x                  !! sample position
 
 ! ==== Instructions
 
@@ -1229,15 +1229,15 @@ elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
 !! Percent point function/quantile function for exponential distribution.
 
 ! ==== Declarations
-  real(wp)   , intent(in) :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in) :: loc              !! location parameter
-  real(wp)   , intent(in) :: lambda           !! lambda parameter, beta(scale) = 1/lambda = mu/mean
+  real(wp)   , intent(in) :: p                  !! probability between 0.0 - 1.0
+  real(wp)   , intent(in) :: loc                !! location parameter
+  real(wp)   , intent(in) :: lambda             !! lambda parameter, beta(scale) = 1/lambda = mu/mean
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
   real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
-  real(wp)                :: a, b             !! section bounds for bisection algorithm
-  real(wp)                :: x_mid, p_mid     !! x and p mid points in bisection algorithm
-  integer(i4)             :: i                !! for iteration
-  real(wp)                :: x                !! sample position
+  real(wp)                :: a, b               !! section bounds for bisection algorithm
+  real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
+  integer(i4)             :: i                  !! for iteration
+  real(wp)                :: x                  !! sample position
 
 ! ==== Instructions
 
@@ -1548,16 +1548,16 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
 !! Percent point function/quantile functionfor the chi-squared distribution.
 
 ! ==== Declarations
-  real(wp), intent(in)   :: p                !! probability between 0.0 and 1.0
-  real(wp), intent(in)   :: df               !! degrees of freedom
-  real(wp), intent(in)   :: loc              !! location parameter
-  real(wp), intent(in)   :: scale            !! scale parameter
+  real(wp), intent(in)   :: p                  !! probability between 0.0 and 1.0
+  real(wp), intent(in)   :: df                 !! degrees of freedom
+  real(wp), intent(in)   :: loc                !! location parameter
+  real(wp), intent(in)   :: scale              !! scale parameter
   integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
   real(wp), parameter    :: tol = c_bisect_tol !! tolerance for convergence
-  real(wp)               :: a, b             !! interval bounds
-  real(wp)               :: x_mid, p_mid     !! midpoint and corresponding CDF value
-  integer(i4)            :: i                !! iteration counter
-  real(wp)               :: x                !! sample position
+  real(wp)               :: a, b               !! interval bounds
+  real(wp)               :: x_mid, p_mid       !! midpoint and corresponding CDF value
+  integer(i4)            :: i                  !! iteration counter
+  real(wp)               :: x                  !! sample position
 
 ! ==== Instructions
 
@@ -1910,17 +1910,17 @@ elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
 !! Percent point function / quantile function for the F distribution.
 
 ! ==== Declarations
-  real(wp), intent(in)   :: p                !! probability (0.0 < p < 1.0)
-  real(wp), intent(in)   :: d1               !! numerator degrees of freedom
-  real(wp), intent(in)   :: d2               !! denominator degrees of freedom
-  real(wp), intent(in)   :: loc              !! location parameter
-  real(wp), intent(in)   :: scale            !! scale parameter
+  real(wp), intent(in)   :: p                  !! probability (0.0 < p < 1.0)
+  real(wp), intent(in)   :: d1                 !! numerator degrees of freedom
+  real(wp), intent(in)   :: d2                 !! denominator degrees of freedom
+  real(wp), intent(in)   :: loc                !! location parameter
+  real(wp), intent(in)   :: scale              !! scale parameter
   integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
   real(wp)   , parameter :: tol = c_bisect_tol !! tolerance for convergence
-  real(wp)               :: a, b             !! search bounds
-  real(wp)               :: x_mid, p_mid     !! midpoint and its CDF
-  integer(i4)            :: i                !! iteration counter
-  real(wp)               :: x                !! result: quantile at p
+  real(wp)               :: a, b               !! search bounds
+  real(wp)               :: x_mid, p_mid       !! midpoint and its CDF
+  integer(i4)            :: i                  !! iteration counter
+  real(wp)               :: x                  !! result: quantile at p
 
 ! ==== Instructions
 

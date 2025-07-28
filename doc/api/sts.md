@@ -21,10 +21,12 @@ where \( n \) is the size of (or number of observations in) vector `x`,
 ### Description
 
 ### Syntax
-`result =` [[fsml(module):fsml_mean(interface)]] `(x)`
+`result =` [[fsml(module):fsml_mean(interface)]]`(x)`
 
 ### Parameters
 `x`: A rank-1 array of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
 The result is a scalar and the same type as `x`.
@@ -43,10 +45,15 @@ where \( n \) is the size of (or number of observations in) vector `x`,
 \( \bar{x} \) is the arithmetic mean of `x`.
 
 ### Syntax
+`result =` [[fsml(module):fsml_var(interface)]]`(x)`
 
 ### Parameters
+`x`: A rank-1 array of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar and the same type as `x`.
 
 
 <br>
@@ -60,10 +67,15 @@ $$ \sigma = \sqrt{\operatorname{var}(x)} $$
 where \( \operatorname{var}(x) \) is the variance of vector `x`.
 
 ### Syntax
+`result =` [[fsml(module):fsml_std(interface)]]`(x)`
 
 ### Parameters
+`x`: A rank-1 array of type `real`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar and the same type as `x`.
 
 
 <br>
@@ -81,10 +93,17 @@ where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
+`result =` [[fsml(module):fsml_cov(interface)]]`(x, y)`
 
 ### Parameters
+`x`: A rank-1 array of type `real`. It must be the same size as `y`.
+
+`y`: A rank-1 array of type `real`. It must be the same size as `x`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
@@ -102,10 +121,17 @@ where \( m \) is the slope of the regression line (linear trend),
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
+`result =` [[fsml(module):fsml_trend(interface)]]`(x, y)`
 
 ### Parameters
+`x`: A rank-1 array of type `real`. It must be the same size as `y`.
+
+`y`: A rank-1 array of type `real`. It must be the same size as `x`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
@@ -123,11 +149,17 @@ where \( \rho_{x,y} \) is the Pearson correlation coefficient for vectors `x` an
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
+`result =` [[fsml(module):fsml_pcc(interface)]]`(x, y)`
 
 ### Parameters
+`x`: A rank-1 array of type `real`. It must be the same size as `y`.
+
+`y`: A rank-1 array of type `real`. It must be the same size as `x`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-
+The result is a scalar and the same type as `x` and `y`.
 
 
 # <span style="color:#734f96">Examples</span>
