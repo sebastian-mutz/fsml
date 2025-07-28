@@ -84,7 +84,7 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   ! prepare data
   do j = 1, n
      ! centre (get anomalies)
-     tmp = f_sts_mean(x_w(:,j))
+     tmp = f_sts_mean_core(x_w(:,j))
      x_w(:,j) = x_w(:,j) - tmp
      ! standardise if specified (if correlation matrix is to be used)
      if (opt_w .eq. 1) then

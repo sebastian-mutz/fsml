@@ -16,6 +16,8 @@ module fsml_sts
 
   ! load modules
   use :: fsml_ini
+  use :: fsml_con
+  use :: fsml_err
 
   ! basic options
   implicit none
@@ -23,12 +25,42 @@ module fsml_sts
 
   ! declare public procedures
   public :: f_sts_mean, f_sts_var, f_sts_std, f_sts_cov, f_sts_trend, f_sts_pcc
+  public :: f_sts_mean_core
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_mean(x) result(mean)
+impure function f_sts_mean(x) result(mean)
+
+! ==== Description
+!! Impure wrapper function for `f_sts_mean_core`.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)             :: mean   !! arithmetic mean
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if sigma value is valid
+  if (size(x) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     mean = c_sentinel_r
+     return
+  endif
+
+! ---- compute mean
+  mean = f_sts_mean_core(x)
+
+end function f_sts_mean
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_sts_mean_core(x) result(mean)
 
 ! ==== Description
 !! Computes arithmetic mean.
@@ -40,7 +72,7 @@ pure function f_sts_mean(x) result(mean)
 ! ==== Instructions
   mean = sum(x) / real(size(x), kind=wp)
 
-end function f_sts_mean
+end function f_sts_mean_core
 
 
 ! ==================================================================== !
@@ -56,7 +88,7 @@ pure function f_sts_var(x) result(var)
   real(wp)             :: var    !! variance
 
 ! ==== Instructions
-  xbar = f_sts_mean(x)
+  xbar = f_sts_mean_core(x)
   var  = dot_product( (x - xbar), (x - xbar) ) / real(size(x), kind=wp)
 
 end function f_sts_var
@@ -94,8 +126,8 @@ pure function f_sts_cov(x,y) result(cov)
   real(wp)             :: cov    !! covariance
 
 ! ==== Instructions
-  xbar = f_sts_mean(x)
-  ybar = f_sts_mean(y)
+  xbar = f_sts_mean_core(x)
+  ybar = f_sts_mean_core(y)
   cov = dot_product( (x - xbar), (y - ybar) ) / real(size(x), kind=wp)
 
 end function f_sts_cov

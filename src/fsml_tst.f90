@@ -63,7 +63,7 @@ pure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 ! ---- conduct test
 
   ! get mean, sample size, and sample standard deviation (using n-1)
-  xbar = f_sts_mean(x)
+  xbar = f_sts_mean_core(x)
   n = size(x)
   s = sqrt( dot_product( (x - xbar), (x - xbar) ) / real( (n-1), kind=wp ) )
 
@@ -189,8 +189,8 @@ pure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 ! ---- conduct test
 
   ! get means, sample sizes, and sample standard deviations (using n-1)
-  x1bar = f_sts_mean(x1)
-  x2bar = f_sts_mean(x2)
+  x1bar = f_sts_mean_core(x1)
+  x2bar = f_sts_mean_core(x2)
   n1 = size(x1)
   n2 = size(x2)
   s1 = sqrt( dot_product( (x1 - x1bar), (x1 - x1bar) ) / &
@@ -324,7 +324,7 @@ pure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
   x_flat = reshape(x, [n])
 
   ! get grand mean
-  mu_t = f_sts_mean(x_flat)
+  mu_t = f_sts_mean_core(x_flat)
 
   ! initialise sums
   ss_b = 0.0_wp
@@ -335,7 +335,7 @@ pure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
 
   ni = size(x, 1)
   do j = 1, k
-     mu_g = f_sts_mean(x(:,j))
+     mu_g = f_sts_mean_core(x(:,j))
      ss_b = ss_b + real(ni, kind=wp) * (mu_g - mu_t) ** 2
      ss_w = ss_w + sum( (x(:,j) - mu_g) ** 2 )
   enddo

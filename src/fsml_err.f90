@@ -57,9 +57,9 @@ subroutine s_err_print(error)
   character(len=128)           :: fstring
 
 ! ==== Instructions
-  fstring = trim(error) // " (" // trim(f_utl_r2c(sentinel_r)) // ")"
+  fstring = trim(error) // " (" // trim(f_utl_r2c(c_sentinel_r)) // ")"
 !  fstring = txt_error // trim(error) // txt_info // &
-!          & " (" // trim(f_utl_r2c(sentinel_r)) // ")" // txt_reset
+!          & " (" // trim(f_utl_r2c(c_sentinel_r)) // ")" // txt_reset
   write(std_e, '(A)') fstring
 
 end subroutine s_err_print

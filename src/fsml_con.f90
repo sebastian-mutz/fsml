@@ -23,15 +23,15 @@ module fsml_con
 
   ! declare public procedures
   public :: c_pi
-  public :: sentinel_r
-  public :: bisect_tol, bisect_i
+  public :: c_sentinel_r
+  public :: c_bisect_tol, c_bisect_i
 
   ! mathematical constants
   real(wp), parameter    :: c_pi = 3.1415926535897932384626433832795028841972_wp !! pi
 
   ! computational constants
-  real(wp), parameter    :: sentinel_r = -999.0_wp  !! real sentinel value
-  real(wp), parameter    :: bisect_tol = 1.0e-12_wp !! convergence tolerance for bisection method (dst)
-  integer(i4), parameter :: bisect_i   = 200        !! max. number of iterations for bisection method (dst)
+  real(wp), parameter    :: c_sentinel_r = -999.0_wp  !! real sentinel value
+  real(wp), parameter    :: c_bisect_tol = 1.0e-12_wp !! convergence tolerance for bisection method (dst)
+  integer(i4), parameter :: c_bisect_i   = 200        !! max. number of iterations for bisection method (dst)
 
 end module fsml_con
