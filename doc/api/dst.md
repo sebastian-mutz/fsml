@@ -66,7 +66,6 @@ Invalid argument values will result in the return of a sentinel value.
 The result is a scalar of the same type as `x`.
 
 
-
 <br>
 ## `fsml_norm_ppf`
 
@@ -265,7 +264,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the loc
 **Note:** The procedure uses bisection method.
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_ppf(interface)]]`(x, [,alpha, beta, loc])`
+`result =` [[fsml(module):fsml_gamma_ppf(interface)]]`(p, [,alpha, beta, loc])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -349,7 +348,7 @@ It computes the position (`x`) based on the probability (`p`).
 The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_exp_ppf(interface)]]`(x, [,lambda, loc])`
+`result =` [[fsml(module):fsml_exp_ppf(interface)]]`(p, [,lambda, loc])`
 
 ### Parameters
 `p`: A scalar of type `real`.
@@ -377,11 +376,25 @@ Uses intrinsic exp and gamma function.
 $$ f(x) = \frac{x^{\frac{k}{2} - 1} \cdot e^{ - \frac{x}{2} }}{2^{\frac{k}{2}} \cdot \Gamma\left(\frac{k}{2}\right)}, \quad x \geq 0, \ k > 0 $$
 where \(k\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 
+The procedure calculates the probability based on the provided parameters `x` and `df`.
+The location (`loc`) and scale parameter (`scale`) are optional arguments. The parameters `loc` and `scale` shift and scale the distribution, respectively, by a specified factor.
+
 ### Syntax
+`result =` [[fsml(module):fsml_chi2_pdf(interface)]]`(x, df [,loc, scale])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -390,11 +403,27 @@ where \(k\) = degrees of freedom (`df`) and \(\Gamma\) is the gamma function.
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squared distribution.
 
+The procedure calculates the probability based on the provided parameters `x` and `df`.
+The location (`loc`), scale parameter (`scale`), and tail option (`tail`) arguments are optional arguments. The parameters `loc` and `scale` shift and scale the distribution, respectively, by a specified factor.
+
 ### Syntax
+`result =` [[fsml(module):fsml_chi2_cdf(interface)]]`(x, df [,loc, scale, tail])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -404,16 +433,29 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for the chi-squ
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for the chi-squared distribution.
 Uses the bisection method for numerical inversion of the CDF.
 
+It computes the position (`x`) based on the probability (`p`) and degrees of freedom (`df`).
+The location (`loc`) and scale parameter (`scale`) are optional arguments. The parameters `loc` and  `scale` shift and scale the distribution, respectively, by a specified factor.
+
 ### Syntax
+`result =` [[fsml(module):fsml_chi2_ppf(interface)]]`(p, df [,loc, scale])`
 
 ### Parameters
+`p`: A scalar of type `real`.
+
+`df`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `p`.
 
 
 <br>
 # <span style="color:#734f96">F Distribution</span>
-
 
 <br>
 ## `fsml_f_pdf`
@@ -424,14 +466,29 @@ $$ f(x) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)} \cdot \l
 where \(d_1\) = numerator degrees of freedom, \(d_2\) = denominator degrees of freedom and \( B \) is the complete beta function.
 (Uses intrinsic gamma function for beta.)
 
-The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), where \( U_1 \) and \( U_2 \) are are random variables with chi-square distributions with \( d_1 \) and \( d_2 \) degrees of freedom, respectively.
+The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), where \( U_1 \) and \( U_2 \) are are random variables with chi-square distributions with \( d_1 \) (`d1`) and \( d_2 \) (`d1`) degrees of freedom, respectively.
+
+The procedure calculates the probability based on the provided parameters `x`, `d1`, and `d2`.
+The location (`loc`) and scale parameter (`scale`) are optional arguments. The parameters `loc` and `scale` shift and scale the distribution, respectively, by a specified factor.
 
 ### Syntax
+`result =` [[fsml(module):fsml_f_pdf(interface)]]`(x, d1, d2 [,loc, scale])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`d1`: A scalar of type `real`. It must be *1.0* or higher.
+
+`d2`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-
+The result is a scalar of the same type as `x`.
 
 <br>
 ## `fsml_f_cdf`
@@ -439,11 +496,30 @@ The F distribution is the distribution of \( X = \frac{U_1/d_1}{U_2/d_2} \), whe
 ### Description
 Cumulative density function \(F(x) = \mathbb{P}(X \leq x)\) for the F distribution.
 
+The procedure calculates the probability based on the provided parameters `x`, `d1`, and `d2`.
+The location (`loc`), scale parameter (`scale`), and tail option (`tail`) arguments are optional arguments. The parameters `loc` and `scale` shift and scale the distribution, respectively, by a specified factor.
+
 ### Syntax
+`result =` [[fsml(module):fsml_f_cdf(interface)]]`(x, d1, d2 [,loc, scale, tail])`
 
 ### Parameters
 
+`x`: A scalar of type `real`.
+
+`d1`: A scalar of type `real`. It must be *1.0* or higher.
+
+`d2`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
+
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -453,12 +529,27 @@ Cumulative density function \(F(x) = \mathbb{P}(X \leq x)\) for the F distributi
 Percent point function / quantile function \( Q(p) = F^{-1}(p) \) for the F distribution.
 Uses the bisection method to numerically invert the CDF.
 
+It computes the position (`x`) based on the probability (`p`) and degrees of freedom (`d1` and `d2`).
+The location (`loc`) and scale parameter (`scale`) are optional arguments. The parameters `loc` and  `scale` shift and scale the distribution, respectively, by a specified factor.
+
 ### Syntax
+`result =` [[fsml(module):fsml_f_ppf(interface)]]`(p, d1, d2 [,loc, scale])`
 
 ### Parameters
+`p`: A scalar of type `real`.
+
+`d1`: A scalar of type `real`. It must be *1.0* or higher.
+
+`d2`: A scalar of type `real`. It must be *1.0* or higher.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-
+The result is a scalar of the same type as `p`.
 
 <br>
 # <span style="color:#734f96">Generalised Pareto Distribution</span>
@@ -470,13 +561,27 @@ Uses the bisection method to numerically invert the CDF.
 ### Description
 Probability density function for generalised pareto distribution.
 $$ f(x) = \frac{1}{\sigma} \cdot \left ( 1 + \frac{\xi \cdot (x - \mu)}{\sigma} \right)^{-\frac{1}{\xi} - 1}, \quad x \geq \mu, \ \sigma > 0, \ \xi \in \mathbb{R} $$
-where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigma), \(\mu\) (mu) is the location (not mean).
+where \(\xi\)(`xi`) is a shape parameter, \(\mu\) (`mu`) is the location, and \(\sigma\) (`sigma`) is the scale parameter.
+
+The procedure calculates the probability based on the provided parameters `x` and `xi`.
+The location (`mu`) and scale parameter (`sigma`) are optional arguments.
 
 ### Syntax
+`result =` [[fsml(module):fsml_gpd_pdf(interface)]]`(x, xi [,mu, sigma])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`xi`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -485,11 +590,27 @@ where \(\xi\) is a shape parameter (xi), \(\sigma\) is the scale parameter (sigm
 ### Description
 Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised pareto distribution.
 
+The procedure calculates the probability based on the provided parameters `x` and `xi`.
+The location (`mu`) and scale parameter (`sigma`), and tail option (`tail`) are optional arguments.
+
 ### Syntax
+`result =` [[fsml(module):fsml_gpd_cdf(interface)]]`(x, xi [,mu, sigma, tail])`
 
 ### Parameters
+`x`: A scalar of type `real`.
+
+`xi`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`tail`: An optional argument and positive `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `x`.
 
 
 <br>
@@ -499,12 +620,30 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for generalised
 Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
 Procedure uses bisection method. `p` must be between 0.0 and 1.0.
 
+It computes the position (`x`) based on the probability (`p`) and `xi`.
+The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
+
 ### Syntax
+`result =` [[fsml(module):fsml_gpd_ppf(interface)]]`(p, xi [,mu, sigma])`
 
 ### Parameters
+`p`: A scalar of type `real`.
+
+`xi`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
+The result is a scalar of the same type as `p`.
 
 
 <br>
 # <span style="color:#734f96">Examples</span>
+
+```fortran
+{!example/example_dst.f90!}
+```
