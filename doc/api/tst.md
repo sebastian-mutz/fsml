@@ -2,14 +2,14 @@
 title: TST: Statistical Tests
 ---
 
-# <span style="color:#734f96">Overview</span>
+# Overview
 
 This is the API documentation for statistical hypothesis tests.
 
 [TOC]
 
 <br>
-# <span style="color:#734f96">Student t-test (1 sample)</span>
+# Student t-test (1 sample)
 
 ## `fsml_ttest_1sample`
 
@@ -36,7 +36,7 @@ $$ \nu = n -1 $$
 ### Returns
 
 <br>
-# <span style="color:#734f96">Paired sample t-test</span>
+# Paired sample t-test
 
 ## `fsml_ttest_paired`
 The paired sample t-test (or  dependent sample t-test) determines if
@@ -65,7 +65,7 @@ $$ \nu = n -1 $$
 ### Returns
 
 <br>
-# <span style="color:#734f96">Pooled and Welch's t-test (2 sample)</span>
+# Pooled and Welch's t-test (2 sample)
 
 ## `fsml_ttest_2sample`
 
@@ -100,7 +100,7 @@ $$ \nu = n_1 + n_2 - 2 $$
 ### Returns
 
 <br>
-# <span style="color:#734f96">Analysis of variance (one way)</span>
+# Analysis of variance (one way)
 
 ## `fsml_anova_1way`
 
@@ -145,7 +145,7 @@ c) The variances within groups are equal.
 ### Returns
 
 <br>
-# <span style="color:#734f96">Wilcoxon signed-rank (1 sample)</span>
+# Wilcoxon signed-rank (1 sample)
 
 ## `fsml_signedrank_1sample`
 
@@ -185,7 +185,7 @@ The procedure takes into consideration tied ranks.
 ### Returns
 
 <br>
-# <span style="color:#734f96">Wilcoxon signed-rank (paired)</span>
+# Wilcoxon signed-rank (paired)
 
 ## `fsml_signedrank_paired`
 
@@ -223,7 +223,7 @@ The procedure takes into consideration tied ranks.
 ### Returns
 
 <br>
-# <span style="color:#734f96">Mann–Whitney U rank-sum (2 sample)</span>
+# Mann–Whitney U rank-sum (2 sample)
 
 ## `fsml_ranksum`
 
@@ -253,7 +253,7 @@ The procedure takes into consideration tied ranks.
 ### Returns
 
 <br>
-# <span style="color:#734f96">Kruskall Wallis H test</span>
+# Kruskall Wallis H test
 
 ## `fsml_kruskalwallis`
 
@@ -306,4 +306,4 @@ and d) observations are independent both within and between groups.
 
 
 
-# <span style="color:#734f96">Examples</span>
+# Examples

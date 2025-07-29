@@ -2,11 +2,11 @@
 title: API Reference
 ---
 
-# <span style="color:#734f96">API Reference</span>
+# API Reference
 
 This is a guide to public-facing API (Application Programming Interface) of FSML!
 
-# <span style="color:#734f96">Structure</span>
+# Structure
 
 The FSML procedures are categorised into several thematic modules:
 
@@ -19,7 +19,7 @@ The FSML procedures are categorised into several thematic modules:
 While the public interfaces do not include these as prefixes, the handbook makes use of these categories to give it more structure.
 If you are interested in exploring the code, you will recognise these in module and procedure names.
 
-# <span style="color:#734f96">Coverage</span>
+# Coverage
 
 The following procedures are currently covered and have a public-facing interface. The links will take you directly to the documentation for the API.
 

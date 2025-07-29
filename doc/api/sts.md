@@ -2,14 +2,14 @@
 title: STS: Sample Statistics
 ---
 
-# <span style="color:#734f96">Overview</span>
+# Overview
 
 This is the API documentation for all sample statistics procedures.
 
 [TOC]
 
 <br>
-# <span style="color:#734f96">Mean</span>
+# Mean
 
 ## `fsml_mean`
 Computes arithmetic mean.
@@ -33,7 +33,7 @@ The result is a scalar and the same type as `x`.
 
 
 <br>
-# <span style="color:#734f96">Variance</span>
+# Variance
 
 ## `fsml_var`
 
@@ -57,7 +57,7 @@ The result is a scalar and the same type as `x`.
 
 
 <br>
-# <span style="color:#734f96">Standard Deviation</span>
+# Standard Deviation
 
 ## `fsml_std`
 
@@ -79,7 +79,7 @@ The result is a scalar and the same type as `x`.
 
 
 <br>
-# <span style="color:#734f96">Covariance</span>
+# Covariance
 
 ## `fsml_cov`
 
@@ -107,7 +107,7 @@ The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
-# <span style="color:#734f96">Linear Trend</span>
+# Linear Trend
 
 ## `fsml_trend`
 
@@ -135,7 +135,7 @@ The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
-# <span style="color:#734f96">Pearson Correlation Coefficient</span>
+# Pearson Correlation Coefficient
 
 ## `fsml_pcc`
 
@@ -162,5 +162,5 @@ Invalid argument values will result in the return of a sentinel value.
 The result is a scalar and the same type as `x` and `y`.
 
 
-# <span style="color:#734f96">Examples</span>
+# Examples
 

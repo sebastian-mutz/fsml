@@ -1,0 +1,137 @@
+body {
+    background-color: #e5e5e5;
+    color: #333333;
+    font-family: "Segoe UI", sans-serif;
+}
+
+h1 {
+    color: #734f96;
+}
+
+a {
+    color: #4a8fc7;
+}
+
+a:hover {
+    color: #58a8e8;
+}
+
+pre {
+    background-color: #dedad1;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+code {
+    background-color: #dedad1;
+    border-radius: 2px;
+    padding: 2px;
+    color: #9138e8;
+}
+
+
+
+
+/* Jumbotron box containing project summary */
+#jumbotron {
+    background-color: #dfdae3 !important;
+    border-color: #734f96 !important;
+    color: #734f96 !important;
+}
+
+
+/* Card and TOC sidebar */
+div.card.card-body.bg-light {
+    background-color: #dedede !important;
+    border-color: #bababa !important;
+}
+
+
+/* Buttons (as in cards) */
+.btn-group .btn {
+    background-color: #734f96 !important;
+    color: #ffffff !important;
+    border-color: #5e3a7a !important;
+}
+.btn-group .btn:hover {
+    background-color: #8d65c9 !important;
+    color: #ffffff !important;
+}
+
+
+/* top TOC bar */
+.container.p-2.mb-4.bg-light.border.rounded-3 {
+    background-color: #dedede !important;
+    border-color: #bababa !important;
+}
+
+
+
+/* ===== Admonitions/Boxes ===== */
+
+/* danger box */
+.btn.btn-lg.btn-danger {
+    background-color: #a84c97 !important;
+    border-color: #873177 !important;  /
+    color: #fff !important;
+}
+
+/* warning box */
+.alert.alert-warning {
+    background-color: #a15f75 !important;
+    color: #f9cfdc !important;
+    border-color: #91314e !important;
+}
+
+/* links in warning boxes */
+.alert.alert-warning a {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+
+/* note box */
+.alert.alert-info {
+    background-color: #778fa8 !important;
+    color: #d1e8ff !important;
+    border-color: #7c9fc2 !important;
+}
+
+/* links in note boxes */
+.alert.alert-info a {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+
+
+
+
+/* ===== Navigation related ===== */
+
+/* navigation links */
+nav.nav.nav-pills.flex-column .nav-link {
+    color: #734f96 !important;
+}
+
+/* Active nav-link inside vertical pills */
+nav.nav.nav-pills.flex-column .nav-link.active {
+    background-color: #734f96 !important;  /* new active background */
+    color: #ffffff !important;             /* white text */
+}
+
+/* Hover state for nav-link */
+nav.nav.nav-pills.flex-column .nav-link:hover {
+    background-color: #a179c7 !important;  /* lighter purple on hover */
+    color: #ffffff !important;
+}
+
+/* top nav */
+.nav.flex-column.align-items .nav-link {
+    color: #333333 !important;  /* default link color */
+}
+
+.nav.flex-column.align-items .nav-link.active {
+    color: #734f96 !important;  /* different color when active */
+    font-weight: bold;           /* optional: make active bold */
+}
+
+

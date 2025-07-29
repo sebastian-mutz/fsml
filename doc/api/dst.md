@@ -2,7 +2,7 @@
 title: DST: Statistical Distributions
 ---
 
-# <span style="color:#734f96">Overview</span>
+# Overview
 
 This is the API documentation for all statistical distribution procedures.
 There is a probability density function (PDF), cumulative distribution function (CDF),
@@ -11,7 +11,7 @@ and quantile function or percent point function (PPF) for each distribution.
 [TOC]
 
 <br>
-# <span style="color:#734f96">Normal Distribution</span>
+# Normal Distribution
 
 
 <br>
@@ -96,7 +96,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">Student's t Distribution</span>
+# Student's t Distribution
 
 
 <br>
@@ -188,7 +188,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">Gamma Distribution</span>
+# Gamma Distribution
 
 
 <br>
@@ -282,7 +282,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">Exponential Distribution</span>
+# Exponential Distribution
 
 
 <br>
@@ -364,7 +364,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">Chi-Squared Distribution</span>
+# Chi-Squared Distribution
 
 
 <br>
@@ -455,7 +455,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">F Distribution</span>
+# F Distribution
 
 <br>
 ## `fsml_f_pdf`
@@ -552,7 +552,7 @@ Invalid argument values will result in the return of a sentinel value.
 The result is a scalar of the same type as `p`.
 
 <br>
-# <span style="color:#734f96">Generalised Pareto Distribution</span>
+# Generalised Pareto Distribution
 
 
 <br>
@@ -642,7 +642,7 @@ The result is a scalar of the same type as `p`.
 
 
 <br>
-# <span style="color:#734f96">Examples</span>
+# Examples
 
 ```fortran
 {!example/example_dst.f90!}

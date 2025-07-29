@@ -2,22 +2,18 @@
 title: Handbook
 ---
 
-@warning
-This page is currently under construction!
-@endwarning
-
-# <span style="color:#734f96">Quick Start</span>
+# Quick Start
 
 Jump right into the action [here](./quickstart.html).
 
-# <span style="color:#734f96">API Reference</span>
+# API Reference
 
 A complete list of public-facing procedures can be found [here](./api/index.html).
 
-# <span style="color:#734f96">Contributing</span>
+# Contributing
 
 If you're interested in contributing to the project, please read the contributor guidelines [here](./contributor.html).
 
-# <span style="color:#734f96">Licence</span>
+# Licence
 
 View the licence (MIT) information [here](./licence.html).
