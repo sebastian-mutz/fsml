@@ -26,7 +26,7 @@ display: public
          private
 source: true
 md_extensions: markdown.extensions.toc
-graph: false
+graph: true
 coloured_edges: false
 css: ./doc/theme/fsml.css
 sort: permission-alpha

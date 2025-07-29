@@ -51,6 +51,11 @@ div.card.card-body.bg-light {
     background-color: #dedede !important;
     border-color: #bababa !important;
 }
+.card-header.bg-primary.text-white {
+    background-color: #734f96 !important;
+    color: #ffffff !important;
+    text-decoration-color: #ffffff !important;
+}
 
 /* buttons (as in cards) */
 .btn-group .btn {
@@ -68,6 +73,7 @@ div.card.card-body.bg-light {
     background-color: #dedede !important;
     border-color: #bababa !important;
 }
+
 
 
 
@@ -119,13 +125,13 @@ nav.nav.nav-pills.flex-column .nav-link {
 
 /* active nav-link inside vertical pills */
 nav.nav.nav-pills.flex-column .nav-link.active {
-    background-color: #734f96 !important;  /* new active background */
-    color: #ffffff !important;             /* white text */
+    background-color: #734f96 !important;
+    color: #ffffff !important;
 }
 
 /* hover state for nav-link */
 nav.nav.nav-pills.flex-column .nav-link:hover {
-    background-color: #a179c7 !important;  /* lighter purple on hover */
+    background-color: #a179c7 !important;
     color: #ffffff !important;
 }
 
@@ -135,8 +141,9 @@ nav.nav.nav-pills.flex-column .nav-link:hover {
 }
 
 .nav.flex-column.align-items .nav-link.active {
-    color: #734f96 !important;  /* different color when active */
-    font-weight: bold;           /* optional: make active bold */
+    color: #734f96 !important;
+    font-weight: bold;
 }
+
 
 

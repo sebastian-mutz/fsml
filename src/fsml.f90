@@ -74,7 +74,7 @@ end interface
 
 ! variance
 interface fsml_var
-  !! Computes variance.
+  !! Computes the population or sample variance (depending on passed arguments).
   !! $$ \operatorname{var}(x) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
   !! where \( n \) is the size of (or number of observations in) vector `x`,
   !! \( x_i \) are individual elements in `x`,
@@ -86,7 +86,7 @@ end interface
 
 ! standard deviation
 interface fsml_std
-  !! Computes standard deviation.
+  !! Computes the population or sample standard deviation (depending on passed arguments).
   !! $$ \sigma = \sqrt{\operatorname{var}(x)} $$
   !! where \( \operatorname{var}(x) \) is the variance of vector `x`.
   !! \( \nu \) (`ddof`) can also be passed and serves as a degrees of freedom adjustment
@@ -97,7 +97,7 @@ end interface
 
 ! covariance
 interface fsml_cov
-  !! Computes covariance.
+  !! Computes the population or sample covariance (depending on passed arguments).
   !! $$ \operatorname{cov}(x, y) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
   !! where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
   !! \( x_i \) and \( y_i \) are individual elements in `x` and `y`,

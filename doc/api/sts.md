@@ -52,7 +52,7 @@ where \( n \) is the size of (or number of observations in) vector `x`,
 ### Parameters
 `x`: A rank-1 array of type `real`.
 
-`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -67,11 +67,12 @@ The result is a scalar and the same type as `x`.
 
 ### Description
 Computes the population or sample standard deviation (depending on passed arguments).
-$$ \sigma = \sqrt{\operatorname{var}(x)} $$
-where \( \operatorname{var}(x) \) is the variance of vector `x`.
-\( \nu \) (`ddof`) can also be passed and serves as a degrees of freedom adjustment
-when the variance is caulculated. (`ddof = 0.0` for population standard deviation,
-`ddof = 1.0` for sample standard deviation)
+$$ \sigma = \sqrt{\operatorname{var}(x)} = \sqrt{ \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 } $$
+where \( \operatorname{var}(x) \) is the variance of vector `x`,
+\( n \) is the size of (or number of observations in) vector `x`,
+\( x_i \) are individual elements in `x`, and
+\( \nu \) (`ddof`) is a degrees of freedom adjustment
+(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance).
 
 ### Syntax
 `result =` [[fsml(module):fsml_std(interface)]]`(x [,ddof])`
@@ -79,7 +80,7 @@ when the variance is caulculated. (`ddof = 0.0` for population standard deviatio
 ### Parameters
 `x`: A rank-1 array of type `real`.
 
-`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -111,7 +112,7 @@ Vectors `x` and `y` must be the same size.
 
 `y`: A rank-1 array of type `real`. It must be the same size as `x`.
 
-`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 

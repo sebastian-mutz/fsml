@@ -29,6 +29,7 @@ conda config --add channels conda-forge
 conda create -n fsml_session
 conda activate fsml_session
 ```
+
 ### Compilers
 
 `FSML` supports the [GFortran](https://gcc.gnu.org/fortran/) and

@@ -59,8 +59,7 @@ impure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      t  = c_sentinel_r
@@ -186,8 +185,7 @@ impure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      t  = c_sentinel_r
@@ -280,8 +278,7 @@ impure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      t  = c_sentinel_r
@@ -578,8 +575,7 @@ impure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      w  = c_sentinel_r
@@ -738,8 +734,7 @@ impure subroutine s_tst_signedrank_2s(x1, x2, w, p, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      w  = c_sentinel_r
@@ -833,8 +828,7 @@ impure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   if (present(h1)) h1_w = h1
 
   ! check if h1 (tail) options are valid
-  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
-     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+  if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      u  = c_sentinel_r
@@ -961,8 +955,8 @@ impure subroutine s_tst_kruskalwallis(x, h, df, p)
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(:,:) !! 2D array, each column is a group
   real(wp)   , intent(out) :: h      !! Kruskal-Wallis H-statistic
-  real(wp)   , intent(out) :: p      !! p-value from chi-squared distribution
   real(wp)   , intent(out) :: df     !! degrees of freedom (k - 1)
+  real(wp)   , intent(out) :: p      !! p-value from chi-squared distribution
 
 ! ==== Instructions
 
@@ -999,8 +993,8 @@ pure subroutine s_tst_kruskalwallis_core(x, h, df, p)
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(:,:)     !! 2D array, each column is a group
   real(wp)   , intent(out) :: h          !! Kruskal-Wallis H-statistic
-  real(wp)   , intent(out) :: p          !! p-value from chi-squared distribution
   real(wp)   , intent(out) :: df         !! degrees of freedom (k - 1)
+  real(wp)   , intent(out) :: p          !! p-value from chi-squared distribution
   integer(i4)              :: k          !! number of groups
   integer(i4)              :: n          !! total number of samples
   integer(i4)              :: ni         !! group size (assumes balanced)
