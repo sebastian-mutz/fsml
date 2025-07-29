@@ -88,7 +88,7 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      x_w(:,j) = x_w(:,j) - tmp
      ! standardise if specified (if correlation matrix is to be used)
      if (opt_w .eq. 1) then
-        tmp = f_sts_std_core(x_w(:,j))
+        tmp = f_sts_std_core(x_w(:,j), 0.0_wp)
         if (tmp .gt. 0.0_wp) then
            x_w(:,j) = x_w(:,j) * (1.0_wp / tmp)
         else

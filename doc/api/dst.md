@@ -24,7 +24,7 @@ $$ f(x) = \frac{1}{\sigma \cdot \sqrt{2 \cdot \pi}} e^{ -\frac{1}{2} \cdot \left
 The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_pdf(interface)]]`(x, [,mu, sigma])`
+`result =` [[fsml(module):fsml_norm_pdf(interface)]]`(x [,mu, sigma])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -49,7 +49,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for normal dist
 The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`), and tail option (`tail`) are optional arguments.
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_cdf(interface)]]`(x, [,mu, sigma, tail])`
+`result =` [[fsml(module):fsml_norm_cdf(interface)]]`(x [,mu, sigma, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -80,7 +80,7 @@ Conditions p=0.0 and p=1.0 cannot return negative and positive infinity;
 will return large negative or positive numbers (highly dependent on the tolerance threshold).
 
 ### Syntax
-`result =` [[fsml(module):fsml_norm_ppf(interface)]]`(p, [,mu, sigma])`
+`result =` [[fsml(module):fsml_norm_ppf(interface)]]`(p [,mu, sigma])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -207,7 +207,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the loc
 
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_pdf(interface)]]`(x, [,alpha, beta, loc])`
+`result =` [[fsml(module):fsml_gamma_pdf(interface)]]`(x [,alpha, beta, loc])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -233,7 +233,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for gamma distr
 The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`), the location parameter (`loc`), and tail option (`tail`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_cdf(interface)]]`(x, [,alpha, beta, loc, tail])`
+`result =` [[fsml(module):fsml_gamma_cdf(interface)]]`(x [,alpha, beta, loc, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -264,7 +264,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the loc
 **Note:** The procedure uses bisection method.
 
 ### Syntax
-`result =` [[fsml(module):fsml_gamma_ppf(interface)]]`(p, [,alpha, beta, loc])`
+`result =` [[fsml(module):fsml_gamma_ppf(interface)]]`(p [,alpha, beta, loc])`
 
 ### Parameters
 `p`: A scalar of type `real`. It must be between *0.0* and *1.0*.
@@ -296,7 +296,7 @@ $$ f(x) = \lambda \cdot e^{-\lambda \cdot x}, \quad x \geq 0, \ \lambda > 0 $$
 The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_exp_pdf(interface)]]`(x, [,lambda, loc])`
+`result =` [[fsml(module):fsml_exp_pdf(interface)]]`(x [,lambda, loc])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -320,7 +320,7 @@ Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for exponential
 The rate parameter \( \lambda \) (`lambda`), location parameter (`loc`), and tail option (`tail`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_exp_cdf(interface)]]`(x, [,lambda, loc, tail])`
+`result =` [[fsml(module):fsml_exp_cdf(interface)]]`(x [,lambda, loc, tail])`
 
 ### Parameters
 `x`: A scalar of type `real`.
@@ -348,7 +348,7 @@ It computes the position (`x`) based on the probability (`p`).
 The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are optional arguments. The location parameter will shift the distribution in the manner that \( \mu \) does for the normal distribution.
 
 ### Syntax
-`result =` [[fsml(module):fsml_exp_ppf(interface)]]`(p, [,lambda, loc])`
+`result =` [[fsml(module):fsml_exp_ppf(interface)]]`(p [,lambda, loc])`
 
 ### Parameters
 `p`: A scalar of type `real`.

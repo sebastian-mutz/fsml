@@ -31,7 +31,6 @@ module fsml_tst
   public :: s_tst_anova_1w
   public :: s_tst_ranksum, s_tst_signedrank_1s, s_tst_signedrank_2s
   public :: s_tst_kruskalwallis
-  ! TODO: wrapper procedures to handle errors, invalid args, etc.
 
 contains
 
@@ -456,7 +455,46 @@ end subroutine s_tst_ttest_2s_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
+impure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
+
+! ==== Description
+!! Impure wrapper procedure for `s_tst_anova_1w_core`.
+
+! ==== Declarations
+  real(wp), intent(in)  :: x(:,:) !! 2D array, each column is a group
+  real(wp), intent(out) :: f      !! F-statistic
+  real(wp), intent(out) :: p      !! p-value from F distribution
+  real(wp), intent(out) :: df_b   !! degrees of freedom between groups
+  real(wp), intent(out) :: df_w   !! degrees of freedom within groups
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check that no. of elements and groups (must both be 2 or higher)
+  if (size(x, 1) .le. 1 .or. size(x, 2) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     f    = c_sentinel_r
+     p    = c_sentinel_r
+     df_b = c_sentinel_r
+     df_w = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_anova_1w_core(x, f, df_b, df_w, p)
+
+end subroutine s_tst_anova_1w
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_anova_1w_core(x, f, df_b, df_w, p)
 
 ! ==== Description
 !! One-way ANOVA.
@@ -511,44 +549,91 @@ pure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
   ! get right tail p value with F distribution CDF procedure; use default loc, scale
   p = f_dst_f_cdf_core(f, df_b, df_w, 0.0_wp, 1.0_wp, "right")
 
-end subroutine s_tst_anova_1w
+end subroutine s_tst_anova_1w_core
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
+impure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
+
+! ==== Description
+!! Impure wrapper procedure for `s_tst_signedrank_1s_core`.
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x(:) !! x vector (samples)
+  real(wp)         , intent(in)           :: mu0  !! population mean (null hypothesis expected value)
+  character(len=*) , intent(in), optional :: h1   !! \( H_{1} \): "two" (default), "lt", "gt"
+  real(wp)         , intent(out)          :: w    !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out)          :: p    !! p-value
+  character(len=16)                       :: h1_w !! final value for h1
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     w  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if size is valid
+  if (size(x) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     w  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_signedrank_1s_core(x, mu0, w, p, h1_w)
+
+end subroutine s_tst_signedrank_1s
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_signedrank_1s_core(x, mu0, w, p, h1)
 
 ! ==== Description
 !! The 1-sample Wilcoxon signed rank test.
 
 ! ==== Declarations
-  real(wp)         , intent(in)           :: x(:)      !! x vector (samples)
-  real(wp)         , intent(in)           :: mu0       !! population mean (null hypothesis expected value)
-  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
-  real(wp)         , intent(out)          :: p         !! p-value
-  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
-  character(len=16)                       :: h1_w      !! final value for h1
-  integer(i4)                             :: n         !! sample size
-  integer(i4)                             :: m         !! non-zero sample size
-  real(wp)                                :: mr        !! float sample size for x
-  real(wp)         , allocatable          :: d(:)      !! differences
-  real(wp)         , allocatable          :: dm(:)     !! absolute (modulus of) differences
-  real(wp)         , allocatable          :: ranks(:)  !! ranks of absolute differences
-  integer(i4)      , allocatable          :: idx(:)    !! indeces for x > 0
-  real(wp)                                :: rpos      !! sum of positive ranks
-  real(wp)                                :: rneg      !! sum of negative ranks
-  real(wp)                                :: mu        !! expected W under H0
-  real(wp)                                :: s         !! standard deviation under H0
-  real(wp)                                :: z         !! z statistic
-  integer(i4)                             :: i, j
+  real(wp)         , intent(in)  :: x(:)     !! x vector (samples)
+  real(wp)         , intent(in)  :: mu0      !! population mean (null hypothesis expected value)
+  real(wp)         , intent(out) :: w        !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out) :: p        !! p-value
+  character(len=*) , intent(in)  :: h1       !! \( H_{1} \): "two" (default), "lt", "gt"
+  integer(i4)                    :: n        !! sample size
+  integer(i4)                    :: m        !! non-zero sample size
+  real(wp)                       :: mr       !! float sample size for x
+  real(wp)         , allocatable :: d(:)     !! differences
+  real(wp)         , allocatable :: dm(:)    !! absolute (modulus of) differences
+  real(wp)         , allocatable :: ranks(:) !! ranks of absolute differences
+  integer(i4)      , allocatable :: idx(:)   !! indeces for x > 0
+  real(wp)                       :: rpos     !! sum of positive ranks
+  real(wp)                       :: rneg     !! sum of negative ranks
+  real(wp)                       :: mu       !! expected W under H0
+  real(wp)                       :: s        !! standard deviation under H0
+  real(wp)                       :: z        !! z statistic
+  integer(i4)                    :: i, j
 
 ! ==== Instructions
-
-  ! assume two-sided, overwrite if option is passed
-  h1_w = "two"
-  if (present(h1)) h1_w = h1
 
   ! get dims and allocate
   n = size(x)
@@ -606,7 +691,7 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   z = (w - mu) / s
 
   ! get p-value
-  select case(h1_w)
+  select case(h1)
      ! less than
      case("lt")
         p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="left")
@@ -624,44 +709,66 @@ pure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
   deallocate(ranks)
   deallocate(idx)
 
-end subroutine s_tst_signedrank_1s
+end subroutine s_tst_signedrank_1s_core
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_signedrank_2s(x1, x2, w, p, h1)
+impure subroutine s_tst_signedrank_2s(x1, x2, w, p, h1)
 
 ! ==== Description
-!! The Wilcoxon signed rank test.
+!! Impure wrapper procedure for `s_tst_signedrank_2s_core`.
 
 ! ==== Declarations
-  real(wp)         , intent(in)           :: x1(:)     !! sample 1 (paired data)
-  real(wp)         , intent(in)           :: x2(:)     !! sample 2 (paired data)
-  real(wp)         , intent(out)          :: w         !! W statistic (sum of signed ranks)
-  real(wp)         , intent(out)          :: p         !! p-value
-  character(len=*) , intent(in), optional :: h1        !! \( H_{1} \): "two" (default), "lt", "gt"
-  character(len=16)                       :: h1_w      !! final value for h1
-  real(wp)         , allocatable          :: d(:)      !! differences
+  real(wp)         , intent(in)           :: x1(:) !! sample 1 (paired data)
+  real(wp)         , intent(in)           :: x2(:) !! sample 2 (paired data)
+  character(len=*) , intent(in), optional :: h1    !! \( H_{1} \): "two" (default), "lt", "gt"
+  real(wp)         , intent(out)          :: w     !! W statistic (sum of signed ranks)
+  real(wp)         , intent(out)          :: p     !! p-value
+  character(len=16)                       :: h1_w  !! final value for h1
 
 ! ==== Instructions
+
+! ---- handle input
 
   ! assume two-sided, overwrite if option is passed
   h1_w = "two"
   if (present(h1)) h1_w = h1
 
-  ! get dims and allocate
-  allocate(d( size(x1) ))
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     w  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
 
-  ! compute differences and absolute values
-  d  = x1 - x2
+  ! check if size is valid
+  if (size(x1) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     w  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
 
-  ! use 1-sample signed-rank test with mu0 = 0
-  call s_tst_signedrank_1s(d, 0.0_wp, w, p, h1_w)
+  ! check if x1 and x2 have same size
+  if (size(x1) .ne. size(x2)) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     w  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
 
-  ! deallocate
-  deallocate(d)
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_signedrank_2s_core(x1, x2, w, p, h1_w)
 
 end subroutine s_tst_signedrank_2s
 
@@ -670,38 +777,128 @@ end subroutine s_tst_signedrank_2s
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
+pure subroutine s_tst_signedrank_2s_core(x1, x2, w, p, h1)
+
+! ==== Description
+!! The Wilcoxon signed rank test.
+
+! ==== Declarations
+  real(wp)        , intent(in)  :: x1(:) !! sample 1 (paired data)
+  real(wp)        , intent(in)  :: x2(:) !! sample 2 (paired data)
+  character(len=*), intent(in)  :: h1    !! \( H_{1} \): "two" (default), "lt", "gt"
+  real(wp)        , intent(out) :: w     !! W statistic (sum of signed ranks)
+  real(wp)        , intent(out) :: p     !! p-value
+  real(wp)        , allocatable :: d(:)  !! differences
+
+! ==== Instructions
+
+  ! get dims and allocate
+  allocate(d( size(x1) ))
+
+  ! compute differences and absolute values
+  d  = x1 - x2
+
+  ! use 1-sample signed-rank test with mu0 = 0
+  call s_tst_signedrank_1s_core(d, 0.0_wp, w, p, h1)
+
+  ! deallocate
+  deallocate(d)
+
+end subroutine s_tst_signedrank_2s_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure subroutine s_tst_ranksum(x1, x2, u, p, h1)
+
+! ==== Description
+!! Impure wrapper procedure for `s_tst_ranksum_core`.
+
+! ==== Declarations
+  real(wp)         , intent(in)           :: x1(:) !! x1 vector (samples)
+  real(wp)         , intent(in)           :: x2(:) !! x2 vector (samples)
+  real(wp)         , intent(out)          :: u     !! U statistic
+  real(wp)         , intent(out)          :: p     !! p-value
+  character(len=*) , intent(in), optional :: h1    !! \( H_{1} \) option: "two" (default), "lt", or "gt"
+  character(len=16)                       :: h1_w  !! final value for h1
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume two-sided, overwrite if option is passed
+  h1_w = "two"
+  if (present(h1)) h1_w = h1
+
+  ! check if h1 (tail) options are valid
+  if (h1_w .ne. "left" .and. h1_w .ne. "right" .and. &
+     &h1_w .ne. "two" .and. h1_w .ne. "confidence") then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(2))
+     u  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if size is valid
+  if (size(x1) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     u  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+  ! check if x1 and x2 have same size
+  if (size(x1) .ne. size(x2)) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     u  = c_sentinel_r
+     p  = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_ranksum_core(x1, x2, u, p, h1_w)
+
+end subroutine s_tst_ranksum
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_ranksum_core(x1, x2, u, p, h1)
 
 ! ==== Description
 !! The ranks sum test (Wilcoxon rank-sum test or Mann–Whitney U test).
 
 ! ==== Declarations
-  real(wp)         , intent(in)           :: x1(:)    !! x1 vector (samples)
-  real(wp)         , intent(in)           :: x2(:)    !! x2 vector (samples)
-  real(wp)         , intent(out)          :: u        !! U statistic
-  real(wp)         , intent(out)          :: p        !! p-value
-  character(len=*) , intent(in), optional :: h1       !! \( H_{1} \) option: "two" (default), "lt", or "gt"
-  character(len=16)                       :: h1_w     !! final value for h1
-  integer(i4)                             :: n1       !! sample size for x1
-  integer(i4)                             :: n2       !! sample size for x2
-  real(wp)                                :: n1r      !! float sample size for x1
-  real(wp)                                :: n2r      !! float sample size for x2
-  real(wp)         , allocatable          :: x(:)     !! combined x1 and x2
-  real(wp)         , allocatable          :: ranks(:) !! stores ranks
-  real(wp)                                :: rx1      !! rank sum for x1
-  real(wp)                                :: rx2      !! rank sum for x2
-  real(wp)                                :: u1       !! U statistic 1
-  real(wp)                                :: u2       !! U statistic 2
-  real(wp)                                :: mu       !! expected value of U (under H0)
-  real(wp)                                :: s        !! standard deviation of U (under H0)
-  real(wp)                                :: z        !! z statistic
-  integer(i4)                             :: i
+  real(wp)         , intent(in)  :: x1(:)    !! x1 vector (samples)
+  real(wp)         , intent(in)  :: x2(:)    !! x2 vector (samples)
+  real(wp)         , intent(out) :: u        !! U statistic
+  real(wp)         , intent(out) :: p        !! p-value
+  character(len=*) , intent(in)  :: h1       !! \( H_{1} \) option: "two" (default), "lt", or "gt"
+  integer(i4)                    :: n1       !! sample size for x1
+  integer(i4)                    :: n2       !! sample size for x2
+  real(wp)                       :: n1r      !! float sample size for x1
+  real(wp)                       :: n2r      !! float sample size for x2
+  real(wp)         , allocatable :: x(:)     !! combined x1 and x2
+  real(wp)         , allocatable :: ranks(:) !! stores ranks
+  real(wp)                       :: rx1      !! rank sum for x1
+  real(wp)                       :: rx2      !! rank sum for x2
+  real(wp)                       :: u1       !! U statistic 1
+  real(wp)                       :: u2       !! U statistic 2
+  real(wp)                       :: mu       !! expected value of U (under H0)
+  real(wp)                       :: s        !! standard deviation of U (under H0)
+  real(wp)                       :: z        !! z statistic
+  integer(i4)                    :: i
 
 ! ==== Instructions
-
-  ! assume two-sided, overwrite if option is passed
-  h1_w = "two"
-  if (present(h1)) h1_w = h1
 
   ! get dims and combine and rank all values
   n1 = size(x1)
@@ -733,7 +930,7 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   z = (u - mu) / s
 
   ! get p-value
-  select case(h1_w)
+  select case(h1)
      ! less than
      case("lt")
         p = f_dst_norm_cdf_core(z, mu=0.0_wp, sigma=1.0_wp, tail="left")
@@ -749,14 +946,52 @@ pure subroutine s_tst_ranksum(x1, x2, u, p, h1)
   deallocate(x)
   deallocate(ranks)
 
-end subroutine s_tst_ranksum
+end subroutine s_tst_ranksum_core
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_tst_kruskalwallis(x, h, df, p)
+impure subroutine s_tst_kruskalwallis(x, h, df, p)
+
+! ==== Description
+!! Impure wrapper procedure for `s_tst_kruskalwallis_core`.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(:,:) !! 2D array, each column is a group
+  real(wp)   , intent(out) :: h      !! Kruskal-Wallis H-statistic
+  real(wp)   , intent(out) :: p      !! p-value from chi-squared distribution
+  real(wp)   , intent(out) :: df     !! degrees of freedom (k - 1)
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check that no. of elements and groups (must both be 2 or higher)
+  if (size(x, 1) .le. 1 .or. size(x, 2) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     h  = c_sentinel_r
+     p  = c_sentinel_r
+     df = c_sentinel_r
+     return
+  endif
+
+! ---- conduct test
+
+  ! call pure procedure
+  call s_tst_kruskalwallis_core(x, h, df, p)
+
+
+end subroutine s_tst_kruskalwallis
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_tst_kruskalwallis_core(x, h, df, p)
 
 ! ==== Description
 !! Kruskal-Wallis H-test for independent samples. No tie correction.
@@ -817,7 +1052,7 @@ pure subroutine s_tst_kruskalwallis(x, h, df, p)
   deallocate(ranks)
   deallocate(r_sum)
 
-end subroutine s_tst_kruskalwallis
+end subroutine s_tst_kruskalwallis_core
 
 
 end module fsml_tst

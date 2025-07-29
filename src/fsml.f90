@@ -11,6 +11,8 @@ module fsml
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
+! TODO: copy module (to fsml_core), but expose pure core routines with same api. Allows devs to use either core routines or safe ones, depending on needs.
+
 ! FORD
 !! FSML interface module.
 
@@ -73,9 +75,11 @@ end interface
 ! variance
 interface fsml_var
   !! Computes variance.
-  !! $$ \operatorname{var}(x) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
+  !! $$ \operatorname{var}(x) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
   !! where \( n \) is the size of (or number of observations in) vector `x`,
-  !! \( x_i \) are individual elements in `x`, and
+  !! \( x_i \) are individual elements in `x`,
+  !! \( \nu \) (`ddof`) is a degrees of freedom adjustment
+  !! (`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
   !! \( \bar{x} \) is the arithmetic mean of `x`.
   module procedure f_sts_var
 end interface
@@ -85,15 +89,20 @@ interface fsml_std
   !! Computes standard deviation.
   !! $$ \sigma = \sqrt{\operatorname{var}(x)} $$
   !! where \( \operatorname{var}(x) \) is the variance of vector `x`.
+  !! \( \nu \) (`ddof`) can also be passed and serves as a degrees of freedom adjustment
+  !! when the variance is caulculated. (`ddof = 0.0` for population standard deviation,
+  !! `ddof = 1.0` for sample standard deviation)
   module procedure f_sts_std
 end interface
 
 ! covariance
 interface fsml_cov
   !! Computes covariance.
-  !! $$ \operatorname{cov}(x, y) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
+  !! $$ \operatorname{cov}(x, y) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
   !! where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
-  !! \( x_i \) and \( y_i \) are individual elements in `x` and `y`, and
+  !! \( x_i \) and \( y_i \) are individual elements in `x` and `y`,
+  !! \( \nu \) (`ddof`) is a degrees of freedom adjustment
+  !! (`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
   !! \( \bar{x} \) and \( \bar{y} \) are the arithmetic means of `x` and `y`.
   !!
   !! Vectors `x` and `y` must be the same size.

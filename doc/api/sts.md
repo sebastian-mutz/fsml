@@ -38,17 +38,21 @@ The result is a scalar and the same type as `x`.
 ## `fsml_var`
 
 ### Description
-Computes variance.
-$$ \operatorname{var}(x) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
+Computes the population or sample variance (depending on passed arguments).
+$$ \operatorname{var}(x) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
 where \( n \) is the size of (or number of observations in) vector `x`,
-\( x_i \) are individual elements in `x`, and
+\( x_i \) are individual elements in `x`,
+\( \nu \) (`ddof`) is a degrees of freedom adjustment
+(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
 \( \bar{x} \) is the arithmetic mean of `x`.
 
 ### Syntax
-`result =` [[fsml(module):fsml_var(interface)]]`(x)`
+`result =` [[fsml(module):fsml_var(interface)]]`(x [,ddof])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`.
+
+`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -62,15 +66,20 @@ The result is a scalar and the same type as `x`.
 ## `fsml_std`
 
 ### Description
-Computes standard deviation.
+Computes the population or sample standard deviation (depending on passed arguments).
 $$ \sigma = \sqrt{\operatorname{var}(x)} $$
 where \( \operatorname{var}(x) \) is the variance of vector `x`.
+\( \nu \) (`ddof`) can also be passed and serves as a degrees of freedom adjustment
+when the variance is caulculated. (`ddof = 0.0` for population standard deviation,
+`ddof = 1.0` for sample standard deviation)
 
 ### Syntax
-`result =` [[fsml(module):fsml_std(interface)]]`(x)`
+`result =` [[fsml(module):fsml_std(interface)]]`(x [,ddof])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`.
+
+`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -84,21 +93,25 @@ The result is a scalar and the same type as `x`.
 ## `fsml_cov`
 
 ### Description
-Computes covariance.
-$$ \operatorname{cov}(x, y) = \frac{1}{n} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
+Computes the population or sample covariance (depending on passed arguments).
+$$ \operatorname{cov}(x, y) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
 where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
-\( x_i \) and \( y_i \) are individual elements in `x` and `y`, and
+\( x_i \) and \( y_i \) are individual elements in `x` and `y`,
+\( \nu \) (`ddof`) is a degrees of freedom adjustment
+(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
 \( \bar{x} \) and \( \bar{y} \) are the arithmetic means of `x` and `y`.
 
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
-`result =` [[fsml(module):fsml_cov(interface)]]`(x, y)`
+`result =` [[fsml(module):fsml_cov(interface)]]`(x, y [,ddof])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`. It must be the same size as `y`.
 
 `y`: A rank-1 array of type `real`. It must be the same size as `x`.
+
+`ddof`: A scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -162,5 +175,10 @@ Invalid argument values will result in the return of a sentinel value.
 The result is a scalar and the same type as `x` and `y`.
 
 
+<br>
 # Examples
+
+```fortran
+{!example/example_sts.f90!}
+```
 

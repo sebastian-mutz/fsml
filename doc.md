@@ -1,8 +1,8 @@
 ---
 project: FSML
-summary: FSML (Fortran Statistics and Machine Learning) is a scientific toolkit for statistics and machine learning - from basic correlation and statistical hypothesis testing to random forests regression and clustering. It written in modern Fortran (2008+) and offered as an [FPM](https://fpm.fortran-lang.org/) package for easy integration into your projects. The source code is hosted on [GitHub](https://github.com/sebastian-mutz/fsml) and released under the [MIT licence](./page/licence.html).
+summary: FSML (Fortran Statistics and Machine Learning) is a scientific toolkit for statistics and machine learning - from basic correlation and statistical hypothesis testing to random forests regression and clustering. It is written in modern Fortran (2008+) and offered as an [FPM](https://fpm.fortran-lang.org/) package for easy integration into your projects. The source code is hosted on [GitHub](https://github.com/sebastian-mutz/fsml) and released under the [MIT licence](./page/licence.html).
 license: MIT license
-project_download: https://github.com/sebastian-mutz/fsml
+project_download: https://github.com/sebastian-mutz/fsml/archive/refs/heads/master.zip
 favicon: ./doc/media/logo/FSML_icon.png
 author: Sebastian G. Mutz
 author_description: Climate/Earth scientist (assoc. professor) with passion for statistics, modelling, AI, games, music, open culture & coding (Fortran & Python). 🇪🇺 🦊🌱

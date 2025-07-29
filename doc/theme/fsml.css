@@ -1,21 +1,26 @@
+/* ===== General ===== */
+
+/* general background and text */
 body {
     background-color: #e5e5e5;
     color: #333333;
     font-family: "Segoe UI", sans-serif;
 }
 
+/* purple main headings */
 h1 {
     color: #734f96;
 }
 
+/* link colours */
 a {
     color: #4a8fc7;
 }
-
 a:hover {
     color: #58a8e8;
 }
 
+/* code highlighting */
 pre {
     background-color: #dedad1;
     border-radius: 4px;
@@ -26,28 +31,28 @@ code {
     background-color: #dedad1;
     border-radius: 2px;
     padding: 2px;
-    color: #9138e8;
+    color: #a84c97;
 }
 
 
 
 
-/* Jumbotron box containing project summary */
+/* ===== Boxes ===== */
+
+/* jumbotron box containing project summary */
 #jumbotron {
     background-color: #dfdae3 !important;
     border-color: #734f96 !important;
     color: #734f96 !important;
 }
 
-
-/* Card and TOC sidebar */
+/* card and TOC sidebar */
 div.card.card-body.bg-light {
     background-color: #dedede !important;
     border-color: #bababa !important;
 }
 
-
-/* Buttons (as in cards) */
+/* buttons (as in cards) */
 .btn-group .btn {
     background-color: #734f96 !important;
     color: #ffffff !important;
@@ -58,12 +63,12 @@ div.card.card-body.bg-light {
     color: #ffffff !important;
 }
 
-
 /* top TOC bar */
 .container.p-2.mb-4.bg-light.border.rounded-3 {
     background-color: #dedede !important;
     border-color: #bababa !important;
 }
+
 
 
 
@@ -112,13 +117,13 @@ nav.nav.nav-pills.flex-column .nav-link {
     color: #734f96 !important;
 }
 
-/* Active nav-link inside vertical pills */
+/* active nav-link inside vertical pills */
 nav.nav.nav-pills.flex-column .nav-link.active {
     background-color: #734f96 !important;  /* new active background */
     color: #ffffff !important;             /* white text */
 }
 
-/* Hover state for nav-link */
+/* hover state for nav-link */
 nav.nav.nav-pills.flex-column .nav-link:hover {
     background-color: #a179c7 !important;  /* lighter purple on hover */
     color: #ffffff !important;
