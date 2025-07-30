@@ -2,7 +2,7 @@
 
 /* general background and text */
 body {
-    background-color: #e5e5e5;
+    background-color: #f0f0f0;
     color: #333333;
     font-family: "Segoe UI", sans-serif;
 }
@@ -48,7 +48,7 @@ code {
 
 /* card and TOC sidebar */
 div.card.card-body.bg-light {
-    background-color: #dedede !important;
+    background-color: #e5e5e5 !important;
     border-color: #bababa !important;
 }
 .card-header.bg-primary.text-white {
@@ -70,7 +70,7 @@ div.card.card-body.bg-light {
 
 /* top TOC bar */
 .container.p-2.mb-4.bg-light.border.rounded-3 {
-    background-color: #dedede !important;
+    background-color: #e5e5e5 !important;
     border-color: #bababa !important;
 }
 

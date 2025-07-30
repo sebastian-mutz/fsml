@@ -114,7 +114,7 @@ In your fpm project toml file, add the following lines:
 
 ```toml
 [dependencies]
-my_dependency = { git = "https://github.com/sebastian-mutz/fsml.git" }
+fsml = { git = "https://github.com/sebastian-mutz/fsml.git" }
 ```
 
 Include `FSML` in your fortran project just like you would include any other Fortran module:
