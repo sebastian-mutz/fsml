@@ -172,7 +172,7 @@ The null hypothesis \( H_0 \) and alternative hypothesis \( H_1 \) are defined a
 \( H_1 \): At least one \( \mu_j \) differs from the others.
 
 The data is passed to the procedure as a rank-2 array `x`, where each column is a group of observations.
-The procedure partitions then the total variability in the data (  \( SS_{total} \) ) into
+The procedure partitions the total variability in the data ( \( SS_{total} \) ) into
 variability between groups ( \( SS_{between} \); variability explained by groups ), and
 variability within groups ( \( SS_{within} \); unexplained or residual variability ), so that
 $$ SS_{total} =  SS_{between} + SS_{within} $$
