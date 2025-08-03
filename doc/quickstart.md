@@ -15,7 +15,7 @@ This guide lets you jump right into the action with minimal preparation.
 <br>
 # Get the Tools
 
-## Environment manager (recommended)
+### Environment manager (recommended)
 
 The use of [conda](https://docs.conda.io) is recommended for managing your
 environment. While strictly speaking not essential, using `conda` is convenient,
