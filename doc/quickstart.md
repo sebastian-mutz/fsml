@@ -96,7 +96,7 @@ If you prefer to compile or use `FSML` any other way, you can directly [download
 <br>
 # Project Setup
 
-This guide assues you already know how to set up a project with `FPM`. See the [FPM tutorial](https://fpm.fortran-lang.org/tutorial/index.html) for more details if you need an introduction to fpm - it's quick and easy to learn!
+This guide assumes you already know how to set up a project with `FPM`. See the [FPM tutorial](https://fpm.fortran-lang.org/tutorial/index.html) for more details if you need an introduction to fpm - it's quick and easy to learn!
 
 ### Step 1: Create a new Fortran project
 

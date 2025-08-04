@@ -230,7 +230,7 @@ pure subroutine s_tst_ttest_paired_core(x1, x2, t, df, p, h1)
 
 ! ==== Description
 !! The paired sample t-test (or dependent sample t-test).
-!! It is a special case of `s_tst_ttest_1s` offered and uses
+!! It is a special case of `s_tst_ttest_1s` and uses
 !! the same pure procedure (`s_tst_ttest_1s_core`).
 
 ! ==== Declarations

@@ -25,16 +25,16 @@ module fsml_lin
   private
 
   ! declare public procedures
-  public :: s_lin_pca
+  public :: s_lin_eof, s_lin_pca
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
+subroutine s_lin_eof(x, m, n, pc, eof, ew, opt, wt, eof_scaled, r2)
 
 ! ==== Description
-!! Empirical Orthogonal Function (EOF) analysis / Principal Component Analysis (PCA)
+!! Empirical Orthogonal Function (EOF) analysis
 
 ! ==== Declarations
   integer(i4), intent(in)            :: m               !! number of rows
@@ -44,9 +44,10 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   real(wp)   , intent(in) , optional :: wt(n)           !! optional weights (default = 1.0/n)
   real(wp)   , intent(out)           :: pc(m,n)         !! principal components
   real(wp)   , intent(out)           :: eof(n,n)        !! EOFs/eigenvectors (unweighted)
-  real(wp)   , intent(out)           :: ev(n)           !! eigenvalues
-  real(wp)   , intent(out), optional :: r2(n)           !! explained variance (%)
+  real(wp)   , intent(out)           :: ew(n)           !! eigenvalues
+  real(wp)   , intent(out), optional :: r2(n)           !! explained variance (fraction)
   real(wp)   , intent(out), optional :: eof_scaled(n,n) !! EOFs/eigenvectors scaled for plotting
+  real(wp)                           :: eof_tmp(n,n)    !! temp storage for EOFs
   real(wp)                           :: x_w(m,n)        !! working copy of data
   integer(i4)                        :: opt_w           !! final value for opt
   real(wp)                           :: wt_w(n)         !! final values for wt
@@ -63,11 +64,11 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   ! check matrix dimensions
   if (m .lt. 2 .or. n .lt. 1) then
      ! write error message and stop if invalid
-     call s_err_print("[fsml error] Passed array has invalid dimensions.")
+     call s_err_print(fsml_error(3))
      error stop
   endif
 
-  ! weight options
+  ! weight options; will default to 1/n if not specified
   tmp = real(n, kind=wp)
   wt_w = 1.0_wp / tmp
   if (present(wt)) wt_w = wt
@@ -108,24 +109,18 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
   ! ---- calculate outputs
 
   ! eigen-decomposition using stdlib eigh
-  call eigh(c, w, vectors=eof)
-
-  ! ---- normalise eigenvectors
-  ! NOTE: not needed; eigh returns orthonormal vectors. CHECK
-  !do i = 1, n
-  !   tmp = sqrt(sum(eof(:,i)**2))
-  !   eof(:,i) = eof(:,i) / tmp
-  !enddo
+  call eigh(c, w, vectors=eof_tmp)
 
   ! extract and reorder eigenvalues/eigenvectors in descending order
   eof = 0.0_wp
-  ev  = 0.0_wp
+  ew  = 0.0_wp
   nn  = 0
   do i = n, 1, -1
-     if (w(i) .le. 0.0_wp) exit
-     nn = nn + 1
-     ev(nn) = w(i)
-     eof(:,nn) = eof(:,i)
+     if (w(i) .gt. 0.0_wp) then
+        nn = nn + 1
+        ew(nn) = w(i)
+        eof(:,nn) = eof_tmp(:,i)
+     endif
   enddo
 
   ! compute principal components
@@ -145,18 +140,82 @@ subroutine s_lin_pca(x, m, n, opt, wt, pc, eof, ev, eof_scaled, r2)
      if (nn .gt. 0) then
         eof_scaled = 0.0_wp
         do j = 1, nn
-           tmp = sqrt(ev(j))
+           tmp = sqrt(ew(j))
            eof_scaled(:,j) = eof(:,j) * tmp
         enddo
      endif
   endif
 
-  ! explained variance (%)
+  ! explained variance (fraction)
   if (present(r2)) then
      r2 = 0.0_wp
-     r2(1:nn) = ev(1:nn) / sum(ev(1:nn)) * 100.0_wp
+     r2(1:nn) = ew(1:nn) / sum(ew(1:nn))
   endif
 
+end subroutine s_lin_eof
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_lin_pca(x, m, n, pc, ev, ew, r2)
+
+! ==== Description
+!! Principal Component Analysis (PCA).
+!! It is a special (simplified) case of EOF analysis offered as a separate
+!! procedure for clarity/familiarity. It calls `s_lin_eof` with equal weights.
+
+! ==== Declarations
+  integer(i4), intent(in)            :: m       !! number of rows
+  integer(i4), intent(in)            :: n       !! number of columns
+  real(wp)   , intent(in)            :: x(m,n)  !! input data
+  real(wp)   , intent(out)           :: pc(m,n) !! principal components
+  real(wp)   , intent(out)           :: ev(n,n) !! eigenvectors (unweighted)
+  real(wp)   , intent(out)           :: ew(n)   !! eigenvalues
+  real(wp)   , intent(out), optional :: r2(n)   !! explained variance (fraction)
+  real(wp)                           :: wt(n)   !! simple column weights
+
+! ==== Instructions
+
+  ! ---- handle input
+
+  ! check matrix dimensions
+  if (m .lt. 2 .or. n .lt. 1) then
+     ! write error message and stop if invalid
+     call s_err_print(fsml_error(3))
+     error stop
+  endif
+
+  ! ---- conduct analysis
+
+  ! set weights to 1
+  wt = 1.0_wp
+
+  ! call EOF procedure with simple weights and specify use of covariance matrix (opt=0)
+  call s_lin_eof(x, m, n, pc=pc, eof=ev, ew=ew, opt=0, wt=wt, r2=r2)
+
 end subroutine s_lin_pca
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end module fsml_lin

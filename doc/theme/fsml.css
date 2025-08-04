@@ -22,13 +22,13 @@ a:hover {
 
 /* code highlighting */
 pre {
-    background-color: #dedad1;
+    background-color: #e8e5df;
     border-radius: 4px;
     padding: 4px;
 }
 
 code {
-    background-color: #dedad1;
+    background-color: #e8e5df;
     border-radius: 2px;
     padding: 2px;
     color: #a84c97;

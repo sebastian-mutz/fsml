@@ -46,3 +46,12 @@ The following procedures are currently covered and have a public-facing interfac
 |                                              | [Generalised Pareto PDF](./dst.html#fsml_gpd_pdf) |                                                                          |
 |                                              | [Generalised Pareto CDF](./dst.html#fsml_gpd_cdf) |                                                                          |
 |                                              | [Generalised Pareto PPF](./dst.html#fsml_gpd_ppf) |                                                                          |
+
+<br>
+
+| Linear Procedures (LIN)                              | Nonlinear Procedures (NLP)                      |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| [Principal Component Analysis](./lin.html#fsml_pca)  | Hierarchical Clustering (in progress)           |
+| [Empirical Orthogonal Functions](./lin.html#fsml_eof)| K-Means Clustering (in progress)                |
+| Multiple Linear Regression (in progress)             |                                                 |
+| Linear Discriminant Analysis (in progress)           |                                                 |

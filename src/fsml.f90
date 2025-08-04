@@ -46,7 +46,7 @@ module fsml
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
-  public :: fsml_pca
+  public :: fsml_eof, fsml_pca
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -576,80 +576,112 @@ end interface
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-! ---- Linear Parametric Models
+! ---- Linear Procedures
 
-! EOF analysis / PCA
+! PCA
 interface fsml_pca
-  !! Principal Component Analysis (PCA) or Empirical Orthogonal Function (EOF) analysis
-  !! is a procedure that reduces the dimensionality of multivariate data by identifying
-  !! a set of orthogonal vectors (eigenvectors or EOFs) that represent directions of
-  !! maximum variance in the dataset. EOF analysis is often used interchangably with the
-  !! geographically weighted PCA. As they are mathematically identical, a single pca
-  !! procedure is offered with optional arguments and outputs that also makes it usable
-  !! as a classic EOF analysis.
+  !! Principal Component Analysis (PCA) is a procedure to reduce the dimensionality
+  !! of multivariate data by identifying a set of orthogonal vectors (eigenvectores)
+  !! that represent directions of maximum variance in the dataset.
   !!
-  !! For a classic PCA, the input matrix `x` is assumed to contain observations in rows
-  !! and variables in columns.
+  !! The procedure `fsml_pca` is a wrapper for `fsml_eof` and offers a simpler,
+  !! more familiar interface for non-geoscientists. The EOF interface allows for
+  !! more options to be passed that are irrelevant to standard applications of PCA.
+  !! The PCA procedure calls the EOF procedures with weights (`wt`) set to *1.0*,
+  !! and matrix options set to `opt = 0` to force the use of the covariance matrix
+  !! to be comparable to other common implementations of a PCA (e.g., sklearn).
   !!
-  !! For a classic EOF analysis, the input matrix `x` is assumed to contain time in rows
-  !! and space in columns.
-  !!
-  !! Optionally, the data can be standardised (using the correlation matrix) and/or
-  !! column-wise weights can be applied prior to analysis. While the latter is unusual
-  !! for a standard PCA, it is common for EOF analysis (geographically weighted PCA
-  !! as often applied in geographical sciences).
-  !!
-  !! The covariance or correlation matrix \( \mathbf{C} \) is computed as:
+  !! The covariance matrix \( \mathbf{C} \) is computed as:
   !! $$
   !! \mathbf{C} = \frac{1}{m - 1} \mathbf{X}^\top \mathbf{X}
   !! $$
-  !! where:
-  !! - \( \mathbf{X} \) is the preprocessed (centred and optionally standardised) data matrix,
-  !! - \( m \) is the number of observations (rows in `x`).
+  !! where \( \mathbf{X} \) is the preprocessed (centred and optionally standardised) data matrix,
+  !! and \( m \) is the number of observations (rows in `x`).
   !!
-  !! A symmetric eigen-decomposition is performed:
+  !! A symmetric eigen-decomposition is then performed:
   !! $$
   !! \mathbf{C} \mathbf{E} = \mathbf{E} \Lambda
   !! $$
-  !! where:
-  !! - \( \mathbf{E} \) contains the eigenvectors (EOFs),
-  !! - \( \Lambda \) is a diagonal matrix of eigenvalues representing variance explained.
+  !! where \( \mathbf{E} \) contains the EOFs (`ev`), and \( \Lambda \) is a diagonal matrix
+  !! of eigenvalues (`ew`).
   !!
-  !! The principal components (PCs) are given by:
+  !! The principal components or scores (PCs, `pc`) are given by:
   !! $$
   !! \mathbf{PC} = \mathbf{X} \mathbf{E}
   !! $$
+  !! The number of valid PC modes is determined by the number of non-zero eigenvalues.
+  !! Arrays are initialised to zero and populated only where eigenvalues are strictly positive.
   !!
-  !! The explained variance for each component is computed as:
+  !! The explained variance (`r2`) for each component is computed as a fraction:
   !! $$
-  !! r^2_j = \frac{\lambda_j}{\sum_k \lambda_k} \times 100
+  !! r^2_j = \frac{\lambda_j}{\sum_k \lambda_k}
   !! $$
+  !! where \( j \) is the PC index, and \( k \) spans all retained eigenvalues,
+  !! representing all principal components that explain variability in the data.
   !!
-  !! EOFs may optionally be scaled for plotting:
+  !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+  !! eigenvalues and eigenvectors of the symmetric covariance matrix.
+  module procedure s_lin_pca
+end interface
+
+! EOF Analysis
+interface fsml_eof
+  !! Empirical Orthogonal Function (EOF) analysis is a procedure to reduce the dimensionality
+  !! of multivariate data by identifying a set of orthogonal vectors (EOFs or eigenvectores)
+  !! that represent directions of maximum variance in the dataset.
+  !! The term *EOF analysis* is often used interchangably with the geographically weighted
+  !! principal component analysis (PCA). The procedures are mathematically equivalent, but
+  !! procedures for EOF analysis offer some additional options that are mostly relevant for
+  !! geoscience. The procedure `fsml_pca` is a wrapper for `fsml_eof` that offers a simpler,
+  !! more familiar interface for non-geoscientists.
+  !!
+  !! For a classic EOF analysis, the input matrix `x` holds data or observations that have been
+  !! discretised in time and space. Rows (`m`) and columns (`n`) can therefore be interpreted
+  !! as time and space dimensions, respectively. EOF analysis allows for geographical weighting,
+  !! which translates to column-wise weighting prior to analysis in the procedure.
+  !! Weights can be set by bassing the rank-1 array `wt` of dimension `n`. If this optional
+  !! argument is not passed, the procedure will default to equal weights of value \( wt=1/n \).
+  !! It is numerically more stable than *1.0*, which is the default for many implementations of a PCA.
+  !!
+  !! After the weighting is applied, the covariance or correlation matrix \( \mathbf{C} \) is computed:
+  !! $$
+  !! \mathbf{C} = \frac{1}{m - 1} \mathbf{X}^\top \mathbf{X}
+  !! $$
+  !! where \( \mathbf{X} \) is the preprocessed (centred and optionally standardised) data matrix,
+  !! and \( m \) is the number of observations (rows in `x`).
+  !! The value of the optional argument `opt` determines if the covariance matrix (`opt = 0`) or
+  !! correlation matrix (`opt = 1`) is constructed. If the argument is not passed, the procedure will
+  !! default to the use of the covariance matrix, as is the standard for a regular PCA.
+  !!
+  !! A symmetric eigen-decomposition is then performed:
+  !! $$
+  !! \mathbf{C} \mathbf{E} = \mathbf{E} \Lambda
+  !! $$
+  !! where \( \mathbf{E} \) contains the EOFs (`eof`), and \( \Lambda \) is a diagonal matrix
+  !! of eigenvalues (`ew`).
+  !!
+  !! The principal components or scores (PCs, `pc`) are given by:
+  !! $$
+  !! \mathbf{PC} = \mathbf{X} \mathbf{E}
+  !! $$
+  !! The number of valid EOF/PC modes is determined by the number of non-zero eigenvalues.
+  !! Arrays are initialised to zero and populated only where eigenvalues are strictly positive.
+  !!
+  !! The explained variance (`r2`) for each component is computed as a fraction:
+  !! $$
+  !! r^2_j = \frac{\lambda_j}{\sum_k \lambda_k}
+  !! $$
+  !! where \( j \) is the PC index, and \( k \) spans all retained eigenvalues,
+  !! representing all principal components that explain variability in the data.
+  !!
+  !! EOFs may optionally be scaled (`eof_scaled`) for more convenient plotting:
   !! $$
   !! \text{EOF}_{\text{scaled}} = \text{EOF} \cdot \sqrt{\lambda_j}
   !! $$
   !!
-  !! This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+  !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
   !! eigenvalues and eigenvectors of the symmetric covariance matrix.
-  !!
-  !! ### Input arguments:
-  !! - `x(m,n)`: Input data matrix (observations × variables)
-  !! - `m`: Number of rows (observations)
-  !! - `n`: Number of columns (variables)
-  !! - `opt`: (Optional) Use 0 for covariance matrix, 1 for correlation matrix (default: 1)
-  !! - `wt(n)`: (Optional) Column weights (default: equal weights)
-  !!
-  !! ### Output arguments:
-  !! - `pc(m,n)`: Principal components (scores)
-  !! - `eof(n,n)`: EOFs / eigenvectors (unweighted)
-  !! - `ev(n)`: Eigenvalues (explained variance)
-  !! - `r2(n)`: (Optional) Percentage of variance explained by each component
-  !! - `eof_scaled(n,n)`: (Optional) EOFs scaled by square root of eigenvalues
-  !!
-  !! The number of valid EOF/PC modes is determined by the number of non-zero eigenvalues.
-  !! Arrays are initialised to zero and populated only where eigenvalues are strictly positive.
-  module procedure s_lin_pca
+  module procedure s_lin_eof
 end interface
 
 ! ==================================================================== !
