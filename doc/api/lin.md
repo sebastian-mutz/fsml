@@ -139,7 +139,7 @@ $$
 $$
 
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
-eigenvalues and eigenvectors of the symmetric covariance matrix.
+eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
 ### Syntax
 `result =` [[fsml(module):fsml_eof(interface)]]`(x, m, n, pc, eof, ew [, opt, wt, eof_scaled, r2])`
@@ -153,7 +153,7 @@ eigenvalues and eigenvectors of the symmetric covariance matrix.
 
 `opt`: An optional argument and scalar of type `integer`. It must be *0* or *1*. If not passed, it will default to *0*.
 
-`wt(n)`: An optional argument and rank-1 array of type `real`. If not passed, it will default to equal weights of value *1/n*.
+`wt`: An optional argument and rank-1 array of type `real`. If not passed, it will default to equal weights of value *1/n*.
 
 Invalid argument values will result in the return of a sentinel value.
 

@@ -24,9 +24,9 @@ program example_lin
   integer(i4), parameter :: m = 5, n = 3
   integer(i4)            :: i
   real(wp)   , parameter :: x(m,n) = reshape([ &
-                                     & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! Group 1
-                                     & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, & ! Group 2
-                                     & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  & ! Group 3
+                                     & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, &
+                                     & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, &
+                                     & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  &
                                      & ], shape=[5,3])
   real(wp)               ::  pc(m,n), eof(n,n), ew(n), eof_scaled(n,n), r2(n), wt(n)
 
