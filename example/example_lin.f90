@@ -39,30 +39,33 @@ program example_lin
   print*
   write(*,'(A)')  "  principal components:  "
   write(*,'(3F10.5)')  (pc(i,:), i=1,m)
+  print*
+  write(*,'(A)')   "  eigenvectors:         "
+  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  print*
+  write(*,'(A)')   "  eigenvalues:          "
+  write(*,'(3F10.5)')  ew
+  print*
+  write(*,'(A)')   "  explained variance:   "
+  write(*,'(3F10.5)')  r2
+  print*
   ! principal components:
   ! -0.54693  -0.07722   0.13896
   !  0.42315  -0.07015   0.27645
   ! -0.42586  -0.05419  -0.13456
   !  0.13778   0.43289  -0.06344
   !  0.41185  -0.23133  -0.21741
-  print*
-  write(*,'(A)')   "  eigenvectors:         "
-  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  !
   ! eigenvectors:
   !  0.28392   0.36310   0.88744
   !  0.47190   0.75276  -0.45897
   !  0.83469  -0.54909  -0.04238
-  print*
-  write(*,'(A)')   "  eigenvalues:          "
-  write(*,'(3F10.5)')  ew
+  !
   ! eigenvalues:
   !  0.21204   0.06368   0.04128
-  print*
-  write(*,'(A)')   "  explained variance:   "
-  write(*,'(3F10.5)')  r2
+  !
   ! explained variance:
   !  0.66888   0.20089   0.13023
-  print*
 
 ! ---- Empirical Orthogonal Functions
 
@@ -76,37 +79,41 @@ program example_lin
   print*
   write(*,'(A)')  "  principal components:  "
   write(*,'(3F10.5)')  (pc(i,:), i=1,m)
+  print*
+  write(*,'(A)')   "  EOFs (eigenvectors):  "
+  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  print*
+  write(*,'(A)')   "  eigenvalues:          "
+  write(*,'(3F10.5)')  ew
+  print*
+  write(*,'(A)')   "  explained variance:   "
+  write(*,'(3F10.5)')  r2
+  print*
+  write(*,'(A)')   "  scaled EOFs:          "
+  write(*,'(3F10.5)')  (eof_scaled(i,:), i=1,n)
+  print*
   ! principal components:
   ! -0.54693  -0.07722   0.13896
   !  0.42315  -0.07015   0.27645
   ! -0.42586  -0.05419  -0.13456
   !  0.13778   0.43289  -0.06344
   !  0.41185  -0.23133  -0.21741
-  print*
-  write(*,'(A)')   "  EOFs (eigenvectors):  "
-  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  !
   ! eigenvectors:
   !  0.28392   0.36310   0.88744
   !  0.47190   0.75276  -0.45897
   !  0.83469  -0.54909  -0.04238
-  print*
-  write(*,'(A)')   "  eigenvalues:          "
-  write(*,'(3F10.5)')  ew
+  !
   ! eigenvalues:
   !  0.21204   0.06368   0.04128
-  print*
-  write(*,'(A)')   "  explained variance:   "
-  write(*,'(3F10.5)')  r2
+  !
   ! explained variance:
   !  0.66888   0.20089   0.13023
-  print*
-  write(*,'(A)')   "  scaled EOFs:          "
-  write(*,'(3F10.5)')  (eof_scaled(i,:), i=1,n)
+  !
   ! scaled EOFs:
   !  0.13074   0.09163   0.18031
   !  0.21730   0.18996  -0.09325
   !  0.38435  -0.13856  -0.00861
-  print*
 
 
 end program example_lin
