@@ -135,7 +135,7 @@ program example_lin
 
 ! ---- 2-Class Multivariate Linear Discriminant Analysis
 
-  call fsml_lda_2class(x2, nc, n, m, score, sa, g, mh)
+  call fsml_lda_2class(x2, nc, n, m, sa, g, score, mh)
   write(*,'(A)') "> linear discriminant analysis (2-class)"
   print*
   write(*,'(A,F10.5)') "  classification score: ", score
@@ -145,5 +145,12 @@ program example_lin
   write(*,'(A)') "  standardised coefficients:"
   write(*,'(3F10.5)') sa
   print*
+  ! classification score:    0.80000
+  ! Mahalanobis distance:    1.43391
+  ! discriminant value g:   -2.58344
+  !
+  ! standardised coefficients:
+  ! 0.38562   1.43199  -2.13615
+
 
 end program example_lin

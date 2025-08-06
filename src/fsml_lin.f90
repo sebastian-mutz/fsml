@@ -200,7 +200,7 @@ end subroutine s_lin_pca
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_lin_lda_2c(x, nc, nv, nd, score, sa, g, mh)
+subroutine s_lin_lda_2c(x, nc, nv, nd, sa, g, score, mh)
 
 ! ==== Description
 !! 2-class multivariate Linear Discriminant Analysis (LDA)
@@ -212,32 +212,27 @@ subroutine s_lin_lda_2c(x, nc, nv, nd, score, sa, g, mh)
 !! - Discriminant criterion
 
 ! ==== Declarations
-  integer(i4), intent(in)  :: nc              !! number of classes (must be 2)
-  integer(i4), intent(in)  :: nv              !! number of variables
-  integer(i4), intent(in)  :: nd              !! number of datapoints per class
-  real(wp)   , intent(in)  :: x(nc,nv,nd)     !! input data (nc classes × nv variables × nd samples)
-  real(wp)   , intent(out) :: score           !! classification score (fraction of correct classifications)
-  real(wp)   , intent(out) :: sa(nv)          !! standardised discriminant coefficients
-  real(wp)   , intent(out) :: g               !! discriminant criterion
-  real(wp)   , intent(out) :: mh              !! Mahalanobis distance
-  real(wp)                 :: xmv(nc,nv)      !! group mean vectors
-  real(wp)                 :: s_g(nc,nv,nv)   !! group covariance matrices
-  real(wp)                 :: s_pool(nv,nv)   !! pooled covariance matrix
-  real(wp)                 :: s_pool_i(nv,nv) !! inverse of pooled covariance matrix
-  real(wp)                 :: a(nv)           !! discriminant vector
-  real(wp)                 :: tmpv(nd)        !! temporary vector
-  real(wp)                 :: d_pool(nc*nd)   !! pooled data for std calc
-  real(wp)                 :: tmp             !! temporary scalars
-  integer(i4)              :: i, j, k, l      !! loop counters
-  ! matrix inversion helpers
-  real(wp)                 :: m((nv*(nv+1))/2)
-  real(wp)                 :: mi((nv*(nv+1))/2)
-  real(wp)                 :: workspace(nv)
-  integer(i4)              :: nullty, err
+  integer(i4), intent(in)            :: nc              !! number of classes (must be 2)
+  integer(i4), intent(in)            :: nv              !! number of variables
+  integer(i4), intent(in)            :: nd              !! number of datapoints per class
+  real(wp)   , intent(in)            :: x(nc,nv,nd)     !! input data (nc classes × nv variables × nd samples)
+  real(wp)   , intent(out)           :: score           !! classification score (fraction of correct classifications)
+  real(wp)   , intent(out)           :: sa(nv)          !! standardised discriminant coefficients
+  real(wp)   , intent(out)           :: g               !! discriminant criterion
+  real(wp)   , intent(out), optional :: mh              !! Mahalanobis distance
+  real(wp)                           :: xmv(nc,nv)      !! group mean vectors
+  real(wp)                           :: s_g(nc,nv,nv)   !! group covariance matrices
+  real(wp)                           :: s_pool(nv,nv)   !! pooled covariance matrix
+  real(wp)                           :: s_pool_i(nv,nv) !! inverse of pooled covariance matrix
+  real(wp)                           :: a(nv)           !! discriminant vector
+  real(wp)                           :: d_pool(nc*nd)   !! pooled data for std calc
+  real(wp)                           :: tmpv(nd)        !! temporary vector
+  real(wp)                           :: tmp             !! temporary scalars
+  integer(i4)                        :: i, j, k         !! loop counters
   ! eigen-decomposition helpers
-  real(wp)                 :: ew(nv)          !! eigenvalues of pooled covariance
-  real(wp)                 :: ev(nv,nv)       !! eigenvectors of pooled covariance
-  real(wp)                 :: ew_diag(nv,nv)  !! diagonal matrix of inverted eigenvalues
+  real(wp)                           :: ew(nv)          !! eigenvalues of pooled covariance
+  real(wp)                           :: ev(nv,nv)       !! eigenvectors of pooled covariance
+  real(wp)                           :: ew_diag(nv,nv)  !! diagonal matrix of inverted eigenvalues
 
 ! ==== Instructions
 

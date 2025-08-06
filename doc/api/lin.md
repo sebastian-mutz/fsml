@@ -58,7 +58,7 @@ representing all principal components that explain variability in the data.
 eigenvalues and eigenvectors of the symmetric covariance matrix.
 
 ### Syntax
-`result =` [[fsml(module):fsml_pca(interface)]]`(x, m, n, pc, ev, ew [, r2])`
+`call` [[fsml(module):fsml_pca(interface)]]`(x, m, n, pc, ev, ew [, r2])`
 
 ### Parameters
 `x`: A rank-2 array of type `real` with dimensions `m`, `n`.
@@ -142,7 +142,7 @@ $$
 eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
 ### Syntax
-`result =` [[fsml(module):fsml_eof(interface)]]`(x, m, n, pc, eof, ew [, opt, wt, eof_scaled, r2])`
+`call` [[fsml(module):fsml_eof(interface)]]`(x, m, n, pc, eof, ew [, opt, wt, eof_scaled, r2])`
 
 ### Parameters
 `x`: A rank-2 array of type `real` with dimensions `m`, `n`.
@@ -167,6 +167,95 @@ Invalid argument values will result in the return of a sentinel value.
 `r2`: An optional return and rank-1 array of type `real`.
 
 `eof_scaled`: An optional return and rank-2 array of type `real` (same type as `x`) with dimensions `n`, `n`.
+
+
+<br>
+# Linear Discriminant Analysis (2-Class)
+
+## `fsml_lda_2class`
+
+### Description
+The 2-class multivariate Linear Discriminant Analysis (LDA) is a statistical
+procedure for classification and the investigation and explanation of differences
+between two groups (or classes) with regard to their attribute variables.
+It quantifies the discriminability of the groups and the contribution of each of
+the attribute variables to this discriminability.
+
+The procedure finds a discriminant function that best separates the two groups.
+The function can be expressed as a linear combination of the attribute variables:
+
+$$
+Y = \nu_0 + \nu_1 X_1 + \nu_2 X_2 + \dots + \nu_m X_m + \dots + \nu_M X_M
+$$
+
+where \( Y \) is the discriminant function, \( X_m (m=1...M) \) are the attribute
+variables used in evaluating the differences between the groups, \( nu_m (m=1...M) \)
+are the discriminant coefficients associated with each variable, \( M \) (`nv`) is
+the number of variables, and \( \nu_0 \) is the y-intercept.
+(**Note**: Mathematically, it is analogous to a multivariate linear regression function.)
+
+Each attribute variable \( X_m \) contains elements \( x_{mn} (n=1…N) \) (`x`), where
+\( N \) (`nd`) is the number of elements in each group. Each element is associated with a
+discriminant value \( y_n \) described by:
+
+$$
+Y_n = \nu_1 X_{1n} + \nu_2 X_{2n} + \dots + \nu_m X_{mn} + \dots + \nu_M X_{Mn}
+$$
+
+Geometrically, this can be visualised as elements \( y_n \) being projected on the
+discriminant axis \( Y \). The optimal discriminant function is then determined by
+finding an axis, on which the projected elements for the two groups are best separated.
+The best separation is given by maximising the discriminant criterion \( \Gamma \) (`g`),
+a signal to noise ratio, so that:
+
+$$
+\Gamma = \frac{\text{scatter between groups }}{\text{scatter within groups }}
+= \frac{(\bar{y}_{G1} - \bar{y}_{G2})^2}
+{\sum_{j=1}^{n_1} (y_{G1j} - \bar{y}_{G1})^2 + \sum_{j=1}^{n_2} (y_{G2j} - \bar{y}_{G2})^2}
+\rightarrow \max
+$$
+
+where \( n_1 \) and \( n_2 \) are the number of elements in groups \( G1 \) and \( G2 \),
+respectively. The procedure assumes that these are the same (`nd`) and only accepts 2 groups (`nc = 2`).
+
+The discriminant coefficients are then standardised (`sa`) using the standard deviations
+of respective variables. The discriminant function represents a model that best seperates
+the groups and can be used as a classification model. The skill of that model is determined
+by forgetting the association of each element with the groups and using the model to reclassify
+the elements. The score (`score`) is the fraction of correct classifications and can be
+interpreted as a measure of how well the function works as a classification model.
+
+The procedure optionally returns the Mahalanobis distance (`mh`) as a measure of distance
+between the groups.
+
+**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
+
+@note The procedure has not been validated with other implementations yet, as most implement the LDA slightly differently. This implementation follows Wilks (2011) and Mutz and Ehlers (2019). @endnote
+
+### Syntax
+
+`call` [[fsml(module):fsml_lda_2class(interface)]]`(x, nc, nv, nd, sa, g, score [, mh])`
+
+### Parameters
+`x`: A rank-3 array of type `real` with dimensions `nc`, `nv`, `nd`.
+
+`nc`: A scalar of type `integer`. It must be *2*.
+
+`nv`: A scalar of type `integer`.
+
+`nd`: A scalar of type `integer`.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+`sa`: A rank-1 array of type `real` and dimension `nv`.
+
+`g`: A scalar of type `real`.
+
+`score`: A rank-3 array of type `real`.
+
+`mh`: An optional return and scalar of type `real`
 
 
 <br>
