@@ -42,17 +42,17 @@ Computes the population or sample variance (depending on passed arguments).
 $$ \operatorname{var}(x) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
 where \( n \) is the size of (or number of observations in) vector `x`,
 \( x_i \) are individual elements in `x`,
-\( \nu \) (`ddof`) is a degrees of freedom adjustment
-(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
+\( \nu \) (`ddf`) is a degrees of freedom adjustment
+(`ddf = 0.0` for population variance, `ddf = 1.0` for sample variance), and
 \( \bar{x} \) is the arithmetic mean of `x`.
 
 ### Syntax
-`result =` [[fsml(module):fsml_var(interface)]]`(x [,ddof])`
+`result =` [[fsml(module):fsml_var(interface)]]`(x [,ddf])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`.
 
-`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddf`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -71,16 +71,16 @@ $$ \sigma = \sqrt{\operatorname{var}(x)} = \sqrt{ \frac{1}{n - \nu} \cdot \sum_{
 where \( \operatorname{var}(x) \) is the variance of vector `x`,
 \( n \) is the size of (or number of observations in) vector `x`,
 \( x_i \) are individual elements in `x`, and
-\( \nu \) (`ddof`) is a degrees of freedom adjustment
-(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance).
+\( \nu \) (`ddf`) is a degrees of freedom adjustment
+(`ddf = 0.0` for population variance, `ddf = 1.0` for sample variance).
 
 ### Syntax
-`result =` [[fsml(module):fsml_std(interface)]]`(x [,ddof])`
+`result =` [[fsml(module):fsml_std(interface)]]`(x [,ddf])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`.
 
-`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddf`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -98,21 +98,21 @@ Computes the population or sample covariance (depending on passed arguments).
 $$ \operatorname{cov}(x, y) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
 where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
 \( x_i \) and \( y_i \) are individual elements in `x` and `y`,
-\( \nu \) (`ddof`) is a degrees of freedom adjustment
-(`ddof = 0.0` for population variance, `ddof = 1.0` for sample variance), and
+\( \nu \) (`ddf`) is a degrees of freedom adjustment
+(`ddf = 0.0` for population variance, `ddf = 1.0` for sample variance), and
 \( \bar{x} \) and \( \bar{y} \) are the arithmetic means of `x` and `y`.
 
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
-`result =` [[fsml(module):fsml_cov(interface)]]`(x, y [,ddof])`
+`result =` [[fsml(module):fsml_cov(interface)]]`(x, y [,ddf])`
 
 ### Parameters
 `x`: A rank-1 array of type `real`. It must be the same size as `y`.
 
 `y`: A rank-1 array of type `real`. It must be the same size as `x`.
 
-`ddof`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
+`ddf`: An optional argument and scalar of type `real`. If passed, it must be either *0.0* or *1.0*. It will default to *0.0* if not passed.
 
 Invalid argument values will result in the return of a sentinel value.
 

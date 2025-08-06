@@ -56,7 +56,7 @@ program example_sts
   ! 0.66974399999999989
 
   ! sample variance of vector x1
-  print*, "sample variance (x1): ", fsml_var(x1, ddof=1.0_wp)
+  print*, "sample variance (x1): ", fsml_var(x1, ddf=1.0_wp)
   ! 0.74415999999999993
 
   ! standard deviation of vector x1
@@ -64,7 +64,7 @@ program example_sts
   ! 0.81837888535812064
 
   ! sample standard deviation of vector x1
-  print*, "sample standard deviation (x1): ", fsml_std(x1, ddof=1.0_wp)
+  print*, "sample standard deviation (x1): ", fsml_std(x1, ddf=1.0_wp)
   ! 0.86264708890716135
 
   ! covariance of x1 and x2
@@ -72,7 +72,7 @@ program example_sts
   ! 3.4878000000000006E-002
 
   ! sample covariance of x1 and x2
-  print*, "sample covariance (x1, x2): ", fsml_cov(x1, x2, ddof=1.0_wp)
+  print*, "sample covariance (x1, x2): ", fsml_cov(x1, x2, ddf=1.0_wp)
   ! 3.8753333333333341E-002
 
   ! linear regression slope for x1 and x2

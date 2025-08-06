@@ -84,15 +84,15 @@ end function f_sts_mean_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_sts_var(x, ddof) result(var)
+impure function f_sts_var(x, ddf) result(var)
 
 ! ==== Description
 !! Impure wrapper function for `f_sts_var_core`.
 
 ! ==== Declarations
   real(wp), intent(in)           :: x(:)   !! x vector (assumed size array)
-  real(wp), intent(in), optional :: ddof   !! delta degrees of freedom
-  real(wp)                       :: ddof_w !! final value for ddof
+  real(wp), intent(in), optional :: ddf    !! delta degrees of freedom
+  real(wp)                       :: ddf_w  !! final value for ddf
   real(wp)                       :: xbar   !! mean of x
   real(wp)                       :: var    !! variance
 
@@ -100,12 +100,12 @@ impure function f_sts_var(x, ddof) result(var)
 
 ! ---- handle input
 
-  ! assume ddof = 0 (population, not sample statistics)
-  ddof_w = 0.0_wp
-  if (present(ddof)) ddof_w = ddof
+  ! assume ddf = 0 (population, not sample statistics)
+  ddf_w = 0.0_wp
+  if (present(ddf)) ddf_w = ddf
 
   ! check if value is valid
-  if (ddof_w .ne. 1.0_wp .and. ddof_w .ne. 0.0_wp) then
+  if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      var = c_sentinel_r
@@ -123,55 +123,55 @@ impure function f_sts_var(x, ddof) result(var)
 ! ---- compute variance
 
   ! call pure function
-  var  = f_sts_var_core(x, ddof_w)
+  var  = f_sts_var_core(x, ddf_w)
 
 end function f_sts_var
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_var_core(x, ddof) result(var)
+pure function f_sts_var_core(x, ddf) result(var)
 
 ! ==== Description
 !! Computes (sample) variance.
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:) !! x vector (assumed size array)
-  real(wp), intent(in) :: ddof !! delta degrees of freedom
+  real(wp), intent(in) :: ddf  !! delta degrees of freedom
   real(wp)             :: xbar !! mean of x
   real(wp)             :: var  !! variance
 
 ! ==== Instructions
   xbar = f_sts_mean_core(x)
   var  = dot_product( (x - xbar), (x - xbar) ) / &
-       & (real(size(x), kind=wp) - ddof)
+       & (real(size(x), kind=wp) - ddf)
 
 end function f_sts_var_core
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_sts_std(x, ddof) result(std)
+impure function f_sts_std(x, ddf) result(std)
 
 ! ==== Description
 !! Impure wrapper function for `f_sts_std_core`.
 
 ! ==== Declarations
-  real(wp), intent(in)           :: x(:)   !! x vector (assumed size array)
-  real(wp), intent(in), optional :: ddof   !! delta degrees of freedom
-  real(wp)                       :: ddof_w !! final value for ddof
-  real(wp)                       :: std    !! standard deviation
+  real(wp), intent(in)           :: x(:)  !! x vector (assumed size array)
+  real(wp), intent(in), optional :: ddf   !! delta degrees of freedom
+  real(wp)                       :: ddf_w !! final value for ddf
+  real(wp)                       :: std   !! standard deviation
 
 ! ==== Instructions
 
 ! ---- handle input
 
-  ! assume ddof = 0 (population, not sample statistics)
-  ddof_w = 0.0_wp
-  if (present(ddof)) ddof_w = ddof
+  ! assume ddf = 0 (population, not sample statistics)
+  ddf_w = 0.0_wp
+  if (present(ddf)) ddf_w = ddf
 
   ! check if value is valid
-  if (ddof_w .ne. 1.0_wp .and. ddof_w .ne. 0.0_wp) then
+  if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      std = c_sentinel_r
@@ -189,21 +189,21 @@ impure function f_sts_std(x, ddof) result(std)
 ! ---- compute standard deviation
 
   ! call pure function
-  std = sqrt( f_sts_var_core(x, ddof_w) )
+  std = sqrt( f_sts_var_core(x, ddf_w) )
 
 end function f_sts_std
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_std_core(x, ddof) result(std)
+pure function f_sts_std_core(x, ddf) result(std)
 
 ! ==== Description
 !! Computes standard deviation.
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:) !! x vector (assumed size array)
-  real(wp), intent(in) :: ddof !! delta degrees of freedom
+  real(wp), intent(in) :: ddf  !! delta degrees of freedom
   real(wp)             :: std  !! standard deviation
 
 ! ==== Instructions
@@ -216,7 +216,7 @@ end function f_sts_std_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_sts_cov(x, y, ddof) result(cov)
+impure function f_sts_cov(x, y, ddf) result(cov)
 
 ! ==== Description
 !! Impure wrapper function for `f_sts_cov_core`.
@@ -224,8 +224,8 @@ impure function f_sts_cov(x, y, ddof) result(cov)
 ! ==== Declarations
   real(wp), intent(in)           :: x(:)   !! x vector (assumed size array)
   real(wp), intent(in)           :: y(:)   !! y vector (assumed size array)
-  real(wp), intent(in), optional :: ddof   !! delta degrees of freedom
-  real(wp)                       :: ddof_w !! final value for ddof
+  real(wp), intent(in), optional :: ddf    !! delta degrees of freedom
+  real(wp)                       :: ddf_w  !! final value for ddf
   real(wp)                       :: xbar   !! mean of x
   real(wp)                       :: ybar   !! mean of y
   real(wp)                       :: cov    !! covariance
@@ -234,12 +234,12 @@ impure function f_sts_cov(x, y, ddof) result(cov)
 
 ! ---- handle input
 
-  ! assume ddof = 0 (population, not sample statistics)
-  ddof_w = 0.0_wp
-  if (present(ddof)) ddof_w = ddof
+  ! assume ddf = 0 (population, not sample statistics)
+  ddf_w = 0.0_wp
+  if (present(ddf)) ddf_w = ddf
 
   ! check if value is valid
-  if (ddof_w .ne. 1.0_wp .and. ddof_w .ne. 0.0_wp) then
+  if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
      ! write error message and assign sentinel value if invalid
      call s_err_print(fsml_error(2))
      cov = c_sentinel_r
@@ -265,14 +265,14 @@ impure function f_sts_cov(x, y, ddof) result(cov)
 ! ---- compute covariance
 
   ! call pure function
-  cov = f_sts_cov_core(x, y, ddof_w)
+  cov = f_sts_cov_core(x, y, ddf_w)
 
 end function f_sts_cov
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_cov_core(x, y, ddof) result(cov)
+pure function f_sts_cov_core(x, y, ddf) result(cov)
 
 ! ==== Description
 !! Computes covariance.
@@ -280,7 +280,7 @@ pure function f_sts_cov_core(x, y, ddof) result(cov)
 ! ==== Declarations
   real(wp), intent(in) :: x(:) !! x vector (assumed size array)
   real(wp), intent(in) :: y(:) !! y vector (assumed size array)
-  real(wp), intent(in) :: ddof !! delta degrees of freedom
+  real(wp), intent(in) :: ddf  !! delta degrees of freedom
   real(wp)             :: xbar !! mean of x
   real(wp)             :: ybar !! mean of y
   real(wp)             :: cov  !! covariance
@@ -289,7 +289,7 @@ pure function f_sts_cov_core(x, y, ddof) result(cov)
   xbar = f_sts_mean_core(x)
   ybar = f_sts_mean_core(y)
   cov = dot_product( (x - xbar), (y - ybar) ) / &
-      & (real(size(x), kind=wp) - ddof)
+      & (real(size(x), kind=wp) - ddf)
 
 end function f_sts_cov_core
 
@@ -360,9 +360,9 @@ impure function f_sts_pcc(x, y) result(corr)
 !! Impure wrapper function for `f_sts_trend_core`.
 
 ! ==== Declarations
-  real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
-  real(wp), intent(in) :: y(:)   !! y vector (assumed size array)
-  real(wp)             :: corr   !! Pearson correlation coefficient
+  real(wp), intent(in) :: x(:) !! x vector (assumed size array)
+  real(wp), intent(in) :: y(:) !! y vector (assumed size array)
+  real(wp)             :: corr !! Pearson correlation coefficient
 
 ! ==== Instructions
 
@@ -400,9 +400,9 @@ pure function f_sts_pcc_core(x, y) result(corr)
 !! Computes Pearson correlation coefficient.
 
 ! ==== Declarations
-  real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
-  real(wp), intent(in) :: y(:)   !! y vector (assumed size array)
-  real(wp)             :: corr   !! Pearson correlation coefficient
+  real(wp), intent(in) :: x(:) !! x vector (assumed size array)
+  real(wp), intent(in) :: y(:) !! y vector (assumed size array)
+  real(wp)             :: corr !! Pearson correlation coefficient
 
 ! ==== Instructions
   corr = f_sts_cov_core(x, y, 0.0_wp) / &

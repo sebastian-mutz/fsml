@@ -21,20 +21,38 @@ program example_lin
 !! algebra.
 
 ! ==== Declarations
-  integer(i4), parameter :: m = 5, n = 3
+
+! ---- general
   integer(i4)            :: i
-  real(wp)   , parameter :: x(m,n) = reshape([ &
+
+! ---- PCA
+  integer(i4), parameter :: m = 5, n = 3
+  real(wp)   , parameter :: x1(m,n) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, &
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, &
                                      & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  &
                                      & ], shape=[5,3])
   real(wp)               ::  pc(m,n), eof(n,n), ew(n), eof_scaled(n,n), r2(n), wt(n)
 
+! ---- LDA
+  integer(i4), parameter :: nd = 5, nv = 3, nc = 2  !! no. of samples per class, 3 variables, 2 classes
+  real(wp)   , parameter :: x2(nc,nv, nd) = reshape([ &
+                                     & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! class 1, var 1
+                                     & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, & ! class 1, var 2
+                                     & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp, & ! class 1, var 3
+                                     & 1.1_wp, 1.3_wp, 1.5_wp, 1.4_wp, 1.6_wp, & ! class 2, var 1
+                                     & 1.2_wp, 1.5_wp, 1.6_wp, 1.7_wp, 1.8_wp, & ! class 2, var 2
+                                     & 1.0_wp, 1.2_wp, 1.3_wp, 1.1_wp, 1.4_wp  & ! class 2, var 3
+                                     & ], shape=[nc,nv,nd])
+  real(wp) :: score, g, mh
+  real(wp) :: sa(n)
+
+
 ! ==== Instructions
 
 ! ---- Principal Component Analysis
 
-  call fsml_pca(x, m, n, pc=pc, ev=eof, ew=ew, r2=r2)
+  call fsml_pca(x1, m, n, pc=pc, ev=eof, ew=ew, r2=r2)
   write(*,'(A)') "> principal component analysis"
   print*
   write(*,'(A)')  "  principal components:  "
@@ -73,7 +91,7 @@ program example_lin
   wt = 1.0_wp
 
   ! call eof procedure with weights of 1 and opt=0 (covariance matrix) to makes it consistent with fmsl_pca and other commona pca implementations
-  call fsml_eof(x, m, n, pc=pc, eof=eof, ew=ew, opt=0, &
+  call fsml_eof(x1, m, n, pc=pc, eof=eof, ew=ew, opt=0, &
                  wt=wt, eof_scaled=eof_scaled, r2=r2)
   write(*,'(A)') "> empirical orthogonal function analysis"
   print*
@@ -115,5 +133,17 @@ program example_lin
   !  0.21730   0.18996  -0.09325
   !  0.38435  -0.13856  -0.00861
 
+! ---- 2-Class Multivariate Linear Discriminant Analysis
+
+  call fsml_lda_2class(x2, nc, n, m, score, sa, g, mh)
+  write(*,'(A)') "> linear discriminant analysis (2-class)"
+  print*
+  write(*,'(A,F10.5)') "  classification score: ", score
+  write(*,'(A,F10.5)') "  Mahalanobis distance: ", mh
+  write(*,'(A,F10.5)') "  discriminant value g: ", g
+  print*
+  write(*,'(A)') "  standardised coefficients:"
+  write(*,'(3F10.5)') sa
+  print*
 
 end program example_lin

@@ -46,7 +46,7 @@ module fsml
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
-  public :: fsml_eof, fsml_pca
+  public :: fsml_eof, fsml_pca, fsml_lda_2class
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -683,6 +683,12 @@ interface fsml_eof
   !! eigenvalues and eigenvectors of the symmetric covariance matrix.
   module procedure s_lin_eof
 end interface
+
+! 2-Class LDA
+interface fsml_lda_2class
+  module procedure s_lin_lda_2c
+end interface
+
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
