@@ -200,7 +200,7 @@ end subroutine s_lin_pca
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_lin_lda_2c(x, nc, nv, nd, sa, g, score, mh)
+subroutine s_lin_lda_2c(x, nd, nv, nc, sa, g, score, mh)
 
 ! ==== Description
 !! 2-class multivariate Linear Discriminant Analysis (LDA)
@@ -215,24 +215,24 @@ subroutine s_lin_lda_2c(x, nc, nv, nd, sa, g, score, mh)
   integer(i4), intent(in)            :: nc              !! number of classes (must be 2)
   integer(i4), intent(in)            :: nv              !! number of variables
   integer(i4), intent(in)            :: nd              !! number of datapoints per class
-  real(wp)   , intent(in)            :: x(nc,nv,nd)     !! input data (nc classes × nv variables × nd samples)
-  real(wp)   , intent(out)           :: score           !! classification score (fraction of correct classifications)
+  real(wp)   , intent(in)            :: x(nd,nv,nc)     !! input data (nd samples × nv variables × nc classes)
+  real(wp)   , intent(out)           :: score           !! classification score
   real(wp)   , intent(out)           :: sa(nv)          !! standardised discriminant coefficients
   real(wp)   , intent(out)           :: g               !! discriminant criterion
   real(wp)   , intent(out), optional :: mh              !! Mahalanobis distance
-  real(wp)                           :: xmv(nc,nv)      !! group mean vectors
-  real(wp)                           :: s_g(nc,nv,nv)   !! group covariance matrices
-  real(wp)                           :: s_pool(nv,nv)   !! pooled covariance matrix
-  real(wp)                           :: s_pool_i(nv,nv) !! inverse of pooled covariance matrix
-  real(wp)                           :: a(nv)           !! discriminant vector
-  real(wp)                           :: d_pool(nc*nd)   !! pooled data for std calc
-  real(wp)                           :: tmpv(nd)        !! temporary vector
-  real(wp)                           :: tmp             !! temporary scalars
-  integer(i4)                        :: i, j, k         !! loop counters
-  ! eigen-decomposition helpers
-  real(wp)                           :: ew(nv)          !! eigenvalues of pooled covariance
-  real(wp)                           :: ev(nv,nv)       !! eigenvectors of pooled covariance
-  real(wp)                           :: ew_diag(nv,nv)  !! diagonal matrix of inverted eigenvalues
+
+  real(wp)                           :: xmv(nv,nc)       !! group mean vectors
+  real(wp)                           :: s_g(nv,nv,nc)    !! group covariance matrices
+  real(wp)                           :: s_pool(nv,nv)    !! pooled covariance matrix
+  real(wp)                           :: s_pool_i(nv,nv)  !! inverse of pooled covariance matrix
+  real(wp)                           :: a(nv)            !! discriminant vector
+  real(wp)                           :: d_pool(nc*nd)    !! pooled data for std calc
+  real(wp)                           :: tmpv(nd)         !! temporary vector
+  real(wp)                           :: tmp              !! temporary scalars
+  integer(i4)                        :: i, j, k          !! loop counters
+  real(wp)                           :: ew(nv)           !! eigenvalues of pooled covariance
+  real(wp)                           :: ev(nv,nv)        !! eigenvectors of pooled covariance
+  real(wp)                           :: ew_diag(nv,nv)   !! diagonal matrix of inverted eigenvalues
 
 ! ==== Instructions
 
@@ -251,25 +251,26 @@ subroutine s_lin_lda_2c(x, nc, nv, nd, sa, g, score, mh)
   s_g = 0.0_wp
   do i = 1, nc
      do j = 1, nv
-        tmpv(:) = x(i,j,:)
-        xmv(i,j) = f_sts_mean_core(tmpv)
+        tmpv(:) = x(:,j,i)
+        xmv(j,i) = f_sts_mean_core(tmpv)
      enddo
      do j = 1, nv
         do k = 1, nv
-           s_g(i,j,k) = f_sts_cov_core(x(i,j,:), x(i,k,:), ddf=0.0_wp)
+           ! get sample covariance (ddf set to 1)
+           s_g(k,j,i) = f_sts_cov_core(x(:,j,i), x(:,k,i), ddf=1.0_wp)
         enddo
      enddo
   enddo
 
-  ! ---- compute pooled covariance matrix (unweighted, equal nd)
-  s_pool = 0.5_wp * (s_g(1,:,:) + s_g(2,:,:))
+  ! ---- compute pooled covariance matrix (equal nd → unweighted average)
+  s_pool = 0.5_wp * (s_g(:,:,1) + s_g(:,:,2))
 
   ! ---- invert pooled covariance matrix using eigen-decomposition
   call eigh(s_pool, ew, vectors=ev)
 
   do i = 1, nv
      if (ew(i) .le. 0.0_wp) then
-        mh    = c_sentinel_r
+        if (present(mh)) mh = c_sentinel_r
         g     = c_sentinel_r
         sa(:) = c_sentinel_r
         score = c_sentinel_r
@@ -287,28 +288,31 @@ subroutine s_lin_lda_2c(x, nc, nv, nd, sa, g, score, mh)
   s_pool_i = matmul(ev, matmul(ew_diag, transpose(ev)))
 
   ! ---- compute discriminant vector a = S_pool⁻¹ * (μ1 - μ2)
-  a = matmul(s_pool_i, xmv(1,:) - xmv(2,:))
+  a = matmul(s_pool_i, xmv(:,1) - xmv(:,2))
 
   ! ---- standardise coefficients
   do i = 1, nv
-     d_pool(1:nd)       = x(1,i,1:nd)
-     d_pool(nd+1:nc*nd) = x(2,i,1:nd)
-     tmp  = f_sts_var_core(d_pool, ddf=0.0_wp)
+     d_pool(1:nd)       = x(1:nd,i,1)
+     d_pool(nd+1:nc*nd) = x(1:nd,i,2)
+     ! get sample variance (ddf set to 1)
+     tmp   = f_sts_var_core(d_pool, ddf=1.0_wp)
      sa(i) = a(i) * sqrt(tmp)
   enddo
 
   ! ---- compute Mahalanobis distance
-  mh = sqrt( dot_product( xmv(1,:) - xmv(2,:), &
-           & matmul( s_pool_i, xmv(1,:) - xmv(2,:) ) ) )
+  if (present(mh)) then
+     mh = sqrt( dot_product( xmv(:,1) - xmv(:,2), &
+          & matmul( s_pool_i, xmv(:,1) - xmv(:,2) ) ) )
+  endif
 
   ! ---- compute discriminant criterion g
-  g = 0.5_wp * (dot_product(a, xmv(1,:)) + dot_product(a, xmv(2,:)))
+  g = 0.5_wp * (dot_product(a, xmv(:,1)) + dot_product(a, xmv(:,2)))
 
   ! ---- re-classification and scoring
   score = 0.0_wp
   do i = 1, nd
      do j = 1, nc
-        tmp = dot_product(a, x(j,:,i))
+        tmp = dot_product(a, x(i,:,j))
         if ((tmp .ge. g .and. j .eq. 1) .or. &
          & (tmp .lt. g .and. j .eq. 2)) then
            score = score + 1.0_wp

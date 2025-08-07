@@ -36,14 +36,14 @@ program example_lin
 
 ! ---- LDA
   integer(i4), parameter :: nd = 5, nv = 3, nc = 2  !! no. of samples per class, 3 variables, 2 classes
-  real(wp)   , parameter :: x2(nc,nv, nd) = reshape([ &
+  real(wp)   , parameter :: x2(nd,nv,nc) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! class 1, var 1
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, & ! class 1, var 2
                                      & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp, & ! class 1, var 3
                                      & 1.1_wp, 1.3_wp, 1.5_wp, 1.4_wp, 1.6_wp, & ! class 2, var 1
                                      & 1.2_wp, 1.5_wp, 1.6_wp, 1.7_wp, 1.8_wp, & ! class 2, var 2
                                      & 1.0_wp, 1.2_wp, 1.3_wp, 1.1_wp, 1.4_wp  & ! class 2, var 3
-                                     & ], shape=[nc,nv,nd])
+                                     & ], shape=[nd,nv,nc])
   real(wp) :: score, g, mh
   real(wp) :: sa(n)
 
@@ -135,7 +135,7 @@ program example_lin
 
 ! ---- 2-Class Multivariate Linear Discriminant Analysis
 
-  call fsml_lda_2class(x2, nc, n, m, sa, g, score, mh)
+  call fsml_lda_2class(x2, nd, nv, nc, sa, g, score, mh)
   write(*,'(A)') "> linear discriminant analysis (2-class)"
   print*
   write(*,'(A,F10.5)') "  classification score: ", score
@@ -145,12 +145,12 @@ program example_lin
   write(*,'(A)') "  standardised coefficients:"
   write(*,'(3F10.5)') sa
   print*
-  ! classification score:    0.80000
-  ! Mahalanobis distance:    1.43391
-  ! discriminant value g:   -2.58344
+  ! classification score:    1.00000
+  ! Mahalanobis distance:    5.53247
+  ! discriminant value g:   53.34966
   !
   ! standardised coefficients:
-  ! 0.38562   1.43199  -2.13615
+  ! 2.07805   9.14221   5.42794
 
 
 end program example_lin

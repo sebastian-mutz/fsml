@@ -199,7 +199,7 @@ Each attribute variable \( X_m \) contains elements \( x_{mn} (n=1…N) \) (`x`)
 discriminant value \( y_n \) described by:
 
 $$
-Y_n = \nu_1 X_{1n} + \nu_2 X_{2n} + \dots + \nu_m X_{mn} + \dots + \nu_M X_{Mn}
+y_n = \nu_1 x_{1n} + \nu_2 x_{2n} + \dots + \nu_m x_{mn} + \dots + \nu_M x_{Mn}
 $$
 
 Geometrically, this can be visualised as elements \( y_n \) being projected on the
@@ -231,20 +231,18 @@ between the groups.
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
 eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
-@note The procedure has not been validated with other implementations yet, as most implement the LDA slightly differently. This implementation follows Wilks (2011) and Mutz and Ehlers (2019). @endnote
-
 ### Syntax
 
-`call` [[fsml(module):fsml_lda_2class(interface)]]`(x, nc, nv, nd, sa, g, score [, mh])`
+`call` [[fsml(module):fsml_lda_2class(interface)]]`(x, nd, nv, nc, sa, g, score [, mh])`
 
 ### Parameters
-`x`: A rank-3 array of type `real` with dimensions `nc`, `nv`, `nd`.
+`x`: A rank-3 array of type `real` with dimensions `nd`, `nv`, `nc`.
+
+`nd`: A scalar of type `integer`.
 
 `nc`: A scalar of type `integer`. It must be *2*.
 
 `nv`: A scalar of type `integer`.
-
-`nd`: A scalar of type `integer`.
 
 Invalid argument values will result in the return of a sentinel value.
 
