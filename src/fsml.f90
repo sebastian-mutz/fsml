@@ -46,7 +46,7 @@ module fsml
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
-  public :: fsml_eof, fsml_pca, fsml_lda_2class
+  public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -684,9 +684,100 @@ interface fsml_eof
   module procedure s_lin_eof
 end interface
 
-! 2-Class LDA
 interface fsml_lda_2class
+! 2-Class LDA
+  !! interface fsml_lda_2class
+  !! The 2-class multivariate Linear Discriminant Analysis (LDA) is a statistical
+  !! procedure for classification and the investigation and explanation of differences
+  !! between two groups (or classes) with regard to their attribute variables.
+  !! It quantifies the discriminability of the groups and the contribution of each of
+  !! the attribute variables to this discriminability.
+  !!
+  !! The procedure finds a discriminant function that best separates the two groups.
+  !! The function can be expressed as a linear combination of the attribute variables:
+  !!
+  !! $$
+  !! Y = \nu_0 + \nu_1 X_1 + \nu_2 X_2 + \dots + \nu_m X_m + \dots + \nu_M X_M
+  !! $$
+  !!
+  !! where \( Y \) is the discriminant function, \( X_m (m=1...M) \) are the attribute
+  !! variables used in evaluating the differences between the groups, \( nu_m (m=1...M) \)
+  !! are the discriminant coefficients associated with each variable, \( M \) (`nv`) is
+  !! the number of variables, and \( \nu_0 \) is the y-intercept.
+  !! (**Note**: Mathematically, it is analogous to a multivariate linear regression function.)
+  !!
+  !! Each attribute variable \( X_m \) contains elements \( x_{mn} (n=1…N) \) (`x`), where
+  !! \( N \) (`nd`) is the number of elements in each group. Each element is associated with a
+  !! discriminant value \( y_n \) described by:
+  !!
+  !! $$
+  !! y_n = \nu_1 x_{1n} + \nu_2 x_{2n} + \dots + \nu_m x_{mn} + \dots + \nu_M x_{Mn}
+  !! $$
+  !!
+  !! Geometrically, this can be visualised as elements \( y_n \) being projected on the
+  !! discriminant axis \( Y \). The optimal discriminant function is then determined by
+  !! finding an axis, on which the projected elements for the two groups are best separated.
+  !! The best separation is given by maximising the discriminant criterion \( \Gamma \) (`g`),
+  !! a signal to noise ratio, so that:
+  !!
+  !! $$
+  !! \Gamma = \frac{\text{scatter between groups }}{\text{scatter within groups }}
+  !! = \frac{(\bar{y}_{G1} - \bar{y}_{G2})^2}
+  !! {\sum_{j=1}^{n_1} (y_{G1j} - \bar{y}_{G1})^2 + \sum_{j=1}^{n_2} (y_{G2j} - \bar{y}_{G2})^2}
+  !! \rightarrow \max
+  !! $$
+  !!
+  !! where \( n_1 \) and \( n_2 \) are the number of elements in groups \( G1 \) and \( G2 \),
+  !! respectively. The procedure assumes that these are the same (`nd`) and only accepts 2 groups (`nc = 2`).
+  !!
+  !! The discriminant coefficients are then standardised (`sa`) using the standard deviations
+  !! of respective variables. The discriminant function represents a model that best seperates
+  !! the groups and can be used as a classification model. The skill of that model is determined
+  !! by forgetting the association of each element with the groups and using the model to reclassify
+  !! the elements. The score (`score`) is the fraction of correct classifications and can be
+  !! interpreted as a measure of how well the function works as a classification model.
+  !!
+  !! The procedure optionally returns the Mahalanobis distance (`mh`) as a measure of distance
+  !! between the groups.
+  !!
+  !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
   module procedure s_lin_lda_2c
+end interface
+
+! OLS
+interface fsml_ols
+  !! The multiple linear Ordinary Least Squares (OLS) regression models the relationship
+  !! or linear dependence between a dependent (predictand) variable and and one or more
+  !! independent (predictor) variables. The procedure estimates the linear regression
+  !! coefficients by minimising the sum of squared residuals.
+  !!
+  !! The estimated regression model is of the form:
+  !!
+  !! $$
+  !! y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_m x_m + \dots + \beta_M x_M
+  !! $$
+  !!
+  !! where \( y \) is the predictand variable, \( x_m \ (m = 1 \dots M) \) are the predictor variables (`x`)
+  !! with `nd` observations, \( \beta_0 \) is the y-intercept (`b0`), \( \beta_m \ (m = 1 \dots M) \) (`b`)
+  !! are the regression coefficients, and \( M \) (`nv`) is the number of predictors (excluding the intercept).
+  !!
+  !! The subroutine constructs a full matrix internally by prepending a column of ones to account for
+  !! the intercept. The regression coefficients are estimated as:
+  !!
+  !! $$
+  !! \hat{\beta} = (X^\top X)^{-1} X^\top y
+  !! $$
+  !!
+  !! where \( X \) is the extended design matrix including the intercept term.
+  !!
+  !! The coefficient of determination \( R^2 \) (`r2`) which represents the proportion of the total
+  !! variance of \( y \)  (`y`) explained by the predictors. The predicted values (`y_hat`),
+  !! standard errors (`se`) of the coefficients, and the covariance matrix of the predictors (`cov_b`)
+  !! can optionally be returned by the procedure, too.
+  !!
+  !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
+  !! **Note:** The intercept and predictor coefficients are computed separately and returned explicitly
+  module procedure s_lin_ols
 end interface
 
 

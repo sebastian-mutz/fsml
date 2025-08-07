@@ -53,5 +53,5 @@ The following procedures are currently covered and have a public-facing interfac
 | ------------------------------------------------------------------- | ----------------------------------------------- |
 | [Principal Component Analysis](./lin.html#fsml_pca)                 | Hierarchical Clustering (in progress)           |
 | [Empirical Orthogonal Functions](./lin.html#fsml_eof)               | K-Means Clustering (in progress)                |
-| Multiple Linear Regression (in progress)                            |                                                 |
 | [Linear Discriminant Analysis (2-Class)](./lin.html#fsml_lda_2class)|                                                 |
+| [Multiple Linear Regression (OLS)](./lin.html#fsml_ols)                   |                                                 |

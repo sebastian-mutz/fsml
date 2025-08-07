@@ -25,17 +25,18 @@ program example_lin
 ! ---- general
   integer(i4)            :: i
 
-! ---- PCA
-  integer(i4), parameter :: m = 5, n = 3
-  real(wp)   , parameter :: x1(m,n) = reshape([ &
+! ---- data
+
+  ! dims
+  integer(i4), parameter :: nd = 5, nv = 3, nc = 2
+
+  ! PCA/EOF
+  real(wp)   , parameter :: x1(nd,nv) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, &
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, &
                                      & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  &
                                      & ], shape=[5,3])
-  real(wp)               ::  pc(m,n), eof(n,n), ew(n), eof_scaled(n,n), r2(n), wt(n)
-
-! ---- LDA
-  integer(i4), parameter :: nd = 5, nv = 3, nc = 2  !! no. of samples per class, 3 variables, 2 classes
+  ! LDA
   real(wp)   , parameter :: x2(nd,nv,nc) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! class 1, var 1
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, & ! class 1, var 2
@@ -44,22 +45,37 @@ program example_lin
                                      & 1.2_wp, 1.5_wp, 1.6_wp, 1.7_wp, 1.8_wp, & ! class 2, var 2
                                      & 1.0_wp, 1.2_wp, 1.3_wp, 1.1_wp, 1.4_wp  & ! class 2, var 3
                                      & ], shape=[nd,nv,nc])
-  real(wp) :: score, g, mh
-  real(wp) :: sa(n)
+  ! OLS/Ridge
+real(wp), parameter :: x3(nd,nv) = reshape([ &
+                                 & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! var 1
+                                 & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp, & ! var 2
+                                 & 3.0_wp, 3.5_wp, 2.0_wp, 1.0_wp, 2.5_wp  & ! var 3
+                                 & ], shape=[nd,nv])
+  real(wp), parameter :: y(nd) = [10.0_wp, 12.0_wp, 13.0_wp, 14.0_wp, 15.0_wp]  ! target values
 
+! ---- results
+
+  ! PCA
+  real(wp) :: pc(nd,nv), eof(nv,nv), ew(nv), eof_scaled(nv,nv), r2(nv), wt(nv)
+
+  ! LDA
+  real(wp) :: score, g, mh, sa(nv)
+
+  ! OLS and Ridge
+  real(wp) :: b(nv), b0, yhat(nd), se(nv), covb(nv,nv), rsq
 
 ! ==== Instructions
 
 ! ---- Principal Component Analysis
 
-  call fsml_pca(x1, m, n, pc=pc, ev=eof, ew=ew, r2=r2)
+  call fsml_pca(x1, nd, nv, pc=pc, ev=eof, ew=ew, r2=r2)
   write(*,'(A)') "> principal component analysis"
   print*
   write(*,'(A)')  "  principal components:  "
-  write(*,'(3F10.5)')  (pc(i,:), i=1,m)
+  write(*,'(3F10.5)')  (pc(i,:), i=1,nd)
   print*
   write(*,'(A)')   "  eigenvectors:         "
-  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  write(*,'(3F10.5)')  (eof(i,:), i=1,nv)
   print*
   write(*,'(A)')   "  eigenvalues:          "
   write(*,'(3F10.5)')  ew
@@ -91,15 +107,15 @@ program example_lin
   wt = 1.0_wp
 
   ! call eof procedure with weights of 1 and opt=0 (covariance matrix) to makes it consistent with fmsl_pca and other commona pca implementations
-  call fsml_eof(x1, m, n, pc=pc, eof=eof, ew=ew, opt=0, &
+  call fsml_eof(x1, nd, nv, pc=pc, eof=eof, ew=ew, opt=0, &
                  wt=wt, eof_scaled=eof_scaled, r2=r2)
   write(*,'(A)') "> empirical orthogonal function analysis"
   print*
   write(*,'(A)')  "  principal components:  "
-  write(*,'(3F10.5)')  (pc(i,:), i=1,m)
+  write(*,'(3F10.5)')  (pc(i,:), i=1,nd)
   print*
   write(*,'(A)')   "  EOFs (eigenvectors):  "
-  write(*,'(3F10.5)')  (eof(i,:), i=1,n)
+  write(*,'(3F10.5)')  (eof(i,:), i=1,nv)
   print*
   write(*,'(A)')   "  eigenvalues:          "
   write(*,'(3F10.5)')  ew
@@ -108,7 +124,7 @@ program example_lin
   write(*,'(3F10.5)')  r2
   print*
   write(*,'(A)')   "  scaled EOFs:          "
-  write(*,'(3F10.5)')  (eof_scaled(i,:), i=1,n)
+  write(*,'(3F10.5)')  (eof_scaled(i,:), i=1,nv)
   print*
   ! principal components:
   ! -0.54693  -0.07722   0.13896
@@ -152,5 +168,32 @@ program example_lin
   ! standardised coefficients:
   ! 2.07805   9.14221   5.42794
 
+! ---- Multiple Ordinary Least Squares Regression
+
+  call fsml_ols(x3, y, nd, nv, b0, b, rsq, yhat, se, covb)
+  write(*,'(A)') "> multiple linear regression (OLS)"
+  print*
+  write(*,'(A,F10.5)') "  R²:        ", rsq
+  write(*,'(A,F10.5)') "  Intercept: ", b0
+  print*
+  write(*,'(A)') "  Coefficients:"
+  write(*,'(3F10.5)') b
+  print*
+  write(*,'(A)') "  Predicted values:"
+  write(*,'(5F10.5)') yhat
+  print*
+  write(*,'(A)') "  Standard errors:"
+  write(*,'(3F10.5)') se
+  ! R²:           0.97361
+  ! Intercept:    8.78516
+  !
+  ! Coefficients:
+  ! 1.22266   0.05078   0.09375
+  !
+  ! Predicted values:
+  ! 10.39062  11.60938  12.84375  13.92187  15.23437
+  !
+  ! Standard errors:
+  ! 0.25240   0.43454   0.60515
 
 end program example_lin

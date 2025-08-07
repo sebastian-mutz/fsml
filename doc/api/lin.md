@@ -19,12 +19,15 @@ Principal Component Analysis (PCA) is a procedure to reduce the dimensionality
 of multivariate data by identifying a set of orthogonal vectors (eigenvectores)
 that represent directions of maximum variance in the dataset.
 
+For a classic PCA, the input matrix (`x`) holds data or observations in rows (`nd`)
+and different variables in columns (`nv`).
+
 The procedure `fsml_pca` is a wrapper for `fsml_eof` and offers a simpler,
 more familiar interface for non-geoscientists. The EOF interface allows for
 more options to be passed that are irrelevant to standard applications of PCA.
 The PCA procedure calls the EOF procedures with weights (`wt`) set to *1.0*,
 and matrix options set to `opt = 0` to force the use of the covariance matrix
-to be comparable to other common implementations of a PCA (e.g., sklearn).
+to be comparable to other common implementations of a PCA (e.g., Python sklearn).
 
 The covariance matrix \( \mathbf{C} \) is computed as:
 $$
@@ -58,21 +61,21 @@ representing all principal components that explain variability in the data.
 eigenvalues and eigenvectors of the symmetric covariance matrix.
 
 ### Syntax
-`call` [[fsml(module):fsml_pca(interface)]]`(x, m, n, pc, ev, ew [, r2])`
+`call` [[fsml(module):fsml_pca(interface)]]`(x, nd, nv, pc, ev, ew [, r2])`
 
 ### Parameters
-`x`: A rank-2 array of type `real` with dimensions `m`, `n`.
+`x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
 
-`m`: A scalar of type `integer`.
+`nd`: A scalar of type `integer`.
 
-`n`: A scalar of type `integer`.
+`nv`: A scalar of type `integer`.
 
 Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-`pc`: A rank-2 array of type `real` (same type as `x`) with dimensions `m`, `n`.
+`pc`: A rank-2 array of type `real` (same type as `x`) with dimensions `nd`, `nv`.
 
-`ev`: A rank-2 array of type `real` (same type as `x`) with dimensions `n`, `n`.
+`ev`: A rank-2 array of type `real` (same type as `x`) with dimensions `nv`, `nv`.
 
 `ew`: An rank-1 array of type `real`. It stores the eigenvalues.
 
@@ -95,10 +98,10 @@ geoscience. The procedure `fsml_pca` is a wrapper for `fsml_eof` that offers a s
 more familiar interface for non-geoscientists.
 
 For a classic EOF analysis, the input matrix `x` holds data or observations that have been
-discretised in time and space. Rows (`m`) and columns (`n`) can therefore be interpreted
+discretised in time and space. Rows (`nd`) and columns (`nv`) can therefore be interpreted
 as time and space dimensions, respectively. EOF analysis allows for geographical weighting,
 which translates to column-wise weighting prior to analysis in the procedure.
-Weights can be set by bassing the rank-1 array `wt` of dimension `n`. If this optional
+Weights can be set by bassing the rank-1 array `wt` of dimension `nv`. If this optional
 argument is not passed, the procedure will default to equal weights of value \( wt=1/n \).
 It is numerically more stable than *1.0*, which is the default for many implementations of a PCA.
 
@@ -107,7 +110,7 @@ $$
 \mathbf{C} = \frac{1}{m - 1} \mathbf{X}^\top \mathbf{X}
 $$
 where \( \mathbf{X} \) is the preprocessed (centred and optionally standardised) data matrix,
-and \( m \) is the number of observations (rows in `x`).
+and \( m \) is the number of observations (rows `nd` in `x`).
 The value of the optional argument `opt` determines if the covariance matrix (`opt = 0`) or
 correlation matrix (`opt = 1`) is constructed. If the argument is not passed, the procedure will
 default to the use of the covariance matrix, as is the standard for a regular PCA.
@@ -142,14 +145,14 @@ $$
 eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
 ### Syntax
-`call` [[fsml(module):fsml_eof(interface)]]`(x, m, n, pc, eof, ew [, opt, wt, eof_scaled, r2])`
+`call` [[fsml(module):fsml_eof(interface)]]`(x, nd, nv, pc, eof, ew [, opt, wt, eof_scaled, r2])`
 
 ### Parameters
-`x`: A rank-2 array of type `real` with dimensions `m`, `n`.
+`x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
 
-`m`: A scalar of type `integer`.
+`nd`: A scalar of type `integer`.
 
-`n`: A scalar of type `integer`.
+`nv`: A scalar of type `integer`.
 
 `opt`: An optional argument and scalar of type `integer`. It must be *0* or *1*. If not passed, it will default to *0*.
 
@@ -158,15 +161,16 @@ eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
-`pc`: A rank-2 array of type `real` (same type as `x`) with dimensions `m`, `n`.
+`pc`: A rank-2 array of type `real` (same type as `x`) with dimensions `nd`, `nv`.
 
-`eof`: A rank-2 array of type `real` (same type as `x`) with dimensions `n`, `n`.
+`eof`: A rank-2 array of type `real` (same type as `x`) with dimensions `nv`, `nv`.
 
 `ew`: An rank-1 array of type `real`. It stores the eigenvalues.
 
 `r2`: An optional return and rank-1 array of type `real`.
 
-`eof_scaled`: An optional return and rank-2 array of type `real` (same type as `x`) with dimensions `n`, `n`.
+`eof_scaled`: An optional return and rank-2 array of type `real` (same type as `x`)
+with dimensions `nv`, `nv`.
 
 
 <br>
@@ -228,11 +232,9 @@ interpreted as a measure of how well the function works as a classification mode
 The procedure optionally returns the Mahalanobis distance (`mh`) as a measure of distance
 between the groups.
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
-eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
+**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
 
 ### Syntax
-
 `call` [[fsml(module):fsml_lda_2class(interface)]]`(x, nd, nv, nc, sa, g, score [, mh])`
 
 ### Parameters
@@ -240,9 +242,9 @@ eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
 `nd`: A scalar of type `integer`.
 
-`nc`: A scalar of type `integer`. It must be *2*.
-
 `nv`: A scalar of type `integer`.
+
+`nc`: A scalar of type `integer`. It must be *2*.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -254,6 +256,73 @@ Invalid argument values will result in the return of a sentinel value.
 `score`: A rank-3 array of type `real`.
 
 `mh`: An optional return and scalar of type `real`
+
+
+<br>
+# Multiple Linear Regression (OLS)
+
+## `fsml_ols`
+
+### Description
+The multiple linear Ordinary Least Squares (OLS) regression models the relationship
+or linear dependence between a dependent (predictand) variable and and one or more
+independent (predictor) variables. The procedure estimates the linear regression
+coefficients by minimising the sum of squared residuals.
+
+The estimated regression model is of the form:
+
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_m x_m + \dots + \beta_M x_M
+$$
+
+where \( y \) is the predictand variable, \( x_m \ (m = 1 \dots M) \) are the predictor variables (`x`)
+with `nd` observations, \( \beta_0 \) is the y-intercept (`b0`), \( \beta_m \ (m = 1 \dots M) \) (`b`)
+are the regression coefficients, and \( M \) (`nv`) is the number of predictors (excluding the intercept).
+
+The subroutine constructs a full matrix internally by prepending a column of ones to account for
+the intercept. The regression coefficients are estimated as:
+
+$$
+\hat{\beta} = (X^\top X)^{-1} X^\top y
+$$
+
+where \( X \) is the extended design matrix including the intercept term.
+
+The coefficient of determination \( R^2 \) (`r2`) which represents the proportion of the total
+variance of \( y \)  (`y`) explained by the predictors. The predicted values (`y_hat`),
+standard errors (`se`) of the coefficients, and the covariance matrix of the predictors (`cov_b`)
+can optionally be returned by the procedure, too.
+
+**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
+
+**Note:** The intercept and predictor coefficients are computed separately and returned explicitly
+
+### Syntax
+`call` [[fsml(module):fsml_ols(interface)]]`(x, y, nd, nv, b0, b, r2 [, y_hat, se, covb])`
+
+### Parameters
+`x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
+
+`y`: A rank-1 array of type `real` with dimension `nd`.
+
+`nd`: A scalar of type `integer`.
+
+`nv`: A scalar of type `integer`.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+`b0`: A scalar of type `real`.
+
+`b`: A rank-1 array of type `real` with dimension `nv`.
+
+`r2`: A scalar of type `real`.
+
+`y_hat` An optional return and rank-1 array of type `real` with dimension `nd`.
+
+`se` An optional return and rank-1 array of type `real` with dimension `nv`.
+
+`cov_b` An optional return and rank-2 array of type `real` with dimensions `nv`, `nv`.
 
 
 <br>
