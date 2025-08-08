@@ -47,6 +47,9 @@ module fsml_dst
   public :: f_dst_gpd_cdf, f_dst_gpd_cdf_core
   public :: f_dst_gpd_ppf, f_dst_gpd_ppf_core
 
+  ! additional core features; only exposed in fsml_dst
+  public :: f_dst_gammai_core, f_dst_betai_core
+
 contains
 
 ! ==================================================================== !
@@ -852,7 +855,7 @@ elemental function f_dst_gamma_cdf_core(x, alpha, beta, loc, tail) result(p)
      p = 0.0_wp
   else
      z = (x - loc) / beta
-     p = f_dst_gammai_core(alpha, z)
+     p = f_dst_gammai_core(z, alpha)
   endif
 
   ! tail options
@@ -1446,7 +1449,7 @@ elemental function f_dst_chi2_cdf_core(x, df, loc, scale, tail) result(p)
   if (z .le. 0.0_wp .or. df .le. 0.0_wp .or. scale .le. 0.0_wp) then
      p = 0.0_wp
   else
-     p = f_dst_gammai_core(df / 2.0_wp, z / 2.0_wp)
+     p = f_dst_gammai_core(z / 2.0_wp, df / 2.0_wp)
   endif
 
   ! tail options
@@ -2235,20 +2238,21 @@ end function f_dst_gpd_ppf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_gammai_core(a, x) result(p)
+elemental function f_dst_gammai_core(x, a) result(p)
 
 ! ==== Description
-!! Incomplete gamma function. Needed by gamma and chi-squared cdf.
+!! Incomplete gamma function (lower). Needed by gamma and chi-squared cdf.
 !! Uses Fortran 2008+ intrinsics.
 
 ! ==== Declarations
-  real(wp), intent(in)   :: a, x
-  real(wp)               :: p
+  real(wp), intent(in)   :: x                     !! integration limit
+  real(wp), intent(in)   :: a                     !! shape parameter
+  real(wp)               :: p                     !! probability
   real(wp)               :: sum, term, lngamma_a
   real(wp)               :: ap, del, b, c, d, h
-  real(wp)   , parameter :: eps = 1.0e-12_wp     !! convergence threshold
-  real(wp)   , parameter :: fpmin = 1.0e-30_wp   !! small number to prevent division by zero
-  integer(i4), parameter :: i_max = c_bisect_i          !! max. number of iterations
+  real(wp)   , parameter :: eps = 1.0e-12_wp      !! convergence threshold
+  real(wp)   , parameter :: fpmin = 1.0e-30_wp    !! small number to prevent division by zero
+  integer(i4), parameter :: i_max = c_bisect_i    !! max. number of iterations
   integer(i4)            :: i
 
 ! ==== Instructions
@@ -2369,7 +2373,7 @@ elemental function f_dst_betai_core(x, a, b) result(betai)
      real(wp)               :: aa, del, qab, qam, qap
      real(wp)   , parameter :: eps   = 1.0e-14_wp !! Convergence threshold (how close to 1 the fractional delta must be to stop iterating)
      real(wp)   , parameter :: fpmin = 1.0e-30_wp !! small number to prevent division by zero
-     integer(i4), parameter :: i_max = c_bisect_i        !! max. number of iterations
+     integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
      integer(i4)            :: i
 
      ! ==== Instructions
