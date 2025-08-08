@@ -29,5 +29,5 @@ source-dir = "app"
 main = "main.f90"
 
 [dependencies]
-stdlib = { git="https://github.com/fortran-lang/stdlib", branch="stdlib-fpm" }
-#stdlib = "*"
+#stdlib = { git="https://github.com/fortran-lang/stdlib", branch="stdlib-fpm" }
+stdlib = "*"
