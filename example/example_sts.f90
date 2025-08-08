@@ -51,6 +51,10 @@ program example_sts
   print*, "mean (x1): ", fsml_mean(x1)
   ! 1.6260000000000001
 
+  ! median of vector x1
+  print*, "median (x1): ", fsml_median(x1)
+  ! 1.4700000000000000
+
   ! variance of vector x1
   print*, "variance (x1): ", fsml_var(x1)
   ! 0.66974399999999989
@@ -80,7 +84,11 @@ program example_sts
   ! 5.2076614348168869E-002
 
   ! Pearson correlation coefficient for x1 and x2
-  print*, "correlation (x1, x2): ", fsml_pcc(x1, x2)
+  print*, "Pearson R (x1, x2): ", fsml_pcc(x1, x2)
   ! 7.2912607800353288E-002
+
+  ! Spearman rank correlation coefficient for x1 and x2
+  print*, "Spearman R (x1, x2): ", fsml_scc(x1, x2)
+  ! -0.19999999999999998
 
 end program example_sts

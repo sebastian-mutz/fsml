@@ -26,7 +26,7 @@ module fsml_lin
   private
 
   ! declare public procedures
-  public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols
+  public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
 
 contains
 
@@ -335,7 +335,11 @@ end subroutine s_lin_lda_2c
 subroutine s_lin_ols(x, y, nd, nv, b0, b, r2, y_hat, se, cov_b)
 
 ! ==== Description
-!! Multiple Linear Ordinary Least Squares (OLS) Regression with intercept
+!! Multiple Linear Ordinary Least Squares (OLS) Regression with intercept.
+!! NOTE: OLS could be wrapper for ridge (with lambda = 0 or presence checks
+!! if mande an optional argument). However, it would increase computation
+!! slightly and make code less readable. OLS is often used in teaching and
+!! therefore, an easily readable standalone is kept.
 !!
 !! Computes:
 !!  - Intercept b0 (scalar)
@@ -395,7 +399,7 @@ subroutine s_lin_ols(x, y, nd, nv, b0, b, r2, y_hat, se, cov_b)
   ! eigendecomposition of s_pool
   call eigh(xtx, ew, vectors=ev)
 
-  ! set returns to sentinel
+  ! check result and return sentinel if needed
   do i = 1, nv+1
      if (ew(i) .le. 0.0_wp) then
         b0        = c_sentinel_r
@@ -461,6 +465,172 @@ subroutine s_lin_ols(x, y, nd, nv, b0, b, r2, y_hat, se, cov_b)
   endif
 
 end subroutine s_lin_ols
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_lin_ridge(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b)
+
+! ==== Description
+!! Multiple Linear Ridge Regression (λ >= 0) with intercept.
+!!
+!! Computes:
+!!  - Intercept b0 (scalar)
+!!  - Predictor coefficients b(nv)
+!!  - Coefficient of determination R²
+!!  - Standard errors se(nv)   (ridge-adjusted)
+!!  - Covariance matrix of predictors covb(nv,nv) (ridge-adjusted)
+!!
+!! Notes:
+!!  - When lambda (λ) = 0, this reduces to ordinary least squares (OLS).
+!!  - Ridge modifies the variance-covariance formula:
+!!       cov(β) = σ² (XᵀX + λI)⁻¹ XᵀX (XᵀX + λI)⁻¹
+!!    This shrinks coefficients and affects SEs.
+
+! ==== Declarations
+  integer(i4), intent(in)            :: nd                     !! number of datapoints
+  integer(i4), intent(in)            :: nv                     !! number of predictors (excluding intercept)
+  real(wp)   , intent(in)            :: x(nd,nv)               !! predictor data matrix (no intercept column)
+  real(wp)   , intent(in)            :: y(nd)                  !! response vector
+  real(wp)   , intent(in)            :: lambda                 !! ridge penalty parameter (≥ 0, non-optional)
+  real(wp)   , intent(out)           :: b0                     !! intercept coefficient
+  real(wp)   , intent(out)           :: b(nv)                  !! predictor coefficients
+  real(wp)   , intent(out)           :: r2                     !! coefficient of determination R²
+  real(wp)   , intent(out), optional :: y_hat(nd)              !! predicted y values
+  real(wp)   , intent(out), optional :: se(nv)                 !! standard errors of predictor coefficients
+  real(wp)   , intent(out), optional :: cov_b(nv,nv)           !! covariance matrix of predictor coefficients
+  real(wp)                           :: x1(nd,nv+1)            !! matrix with intercept column
+  real(wp)                           :: xt(nv+1,nd)            !! transpose of x1
+  real(wp)                           :: xtx(nv+1,nv+1)         !! XᵀX matrix
+  real(wp)                           :: xtx_ridge(nv+1,nv+1)   !! ridge-adjusted XᵀX matrix
+  real(wp)                           :: xtx_ridge_i(nv+1,nv+1) !! inverse of ridge matrix
+  real(wp)                           :: xty(nv+1)              !! Xᵀy
+  real(wp)                           :: res(nd)                !! residuals
+  real(wp)                           :: sse                    !! sum of squared errors
+  real(wp)                           :: sst                    !! total sum of squares
+  real(wp)                           :: y_bar                  !! mean of y
+  real(wp)                           :: s2                     !! residual variance estimate
+  real(wp)                           :: ew_r(nv+1)             !! eigenvalues (ridge)
+  real(wp)                           :: ev_r(nv+1,nv+1)        !! eigenvectors (ridge)
+  real(wp)                           :: ew_diag_r(nv+1,nv+1)   !! diag matrix of 1/λ (ridge)
+  real(wp)                           :: cov(nv+1,nv+1)         !! covariance matrix including intercept
+  integer(i4)                        :: i, j                   !! loop counters
+
+! ==== Instructions
+
+  ! ---- validate input
+  if (nd .le. nv + 1) then
+     call s_err_print("[fsml error] Ridge: Number of observations must&
+                    & exceed number of predictors + intercept.")
+     error stop
+  endif
+  if (lambda .lt. 0.0_wp) then
+     call s_err_print("[fsml error] Ridge: lambda must be non-zero positive.")
+     error stop
+  endif
+
+  ! ---- construct matrix with intercept column (first column = 1.0)
+  do i = 1, nd
+     x1(i,1) = 1.0_wp
+     do j = 1, nv
+        x1(i,j+1) = x(i,j)
+     enddo
+  enddo
+
+  ! ---- eigen-decomposition for inversion of XᵗX
+
+  ! compute transposed matrix and XᵀX
+  xt   = transpose(x1)
+  xtx  = matmul(xt, x1)
+
+  ! build ridge-penalised XᵀX (lambda added to diagonal, except intercept term)
+  ! (remains unadjusted OLS matrix if lamnbda = 0)
+  xtx_ridge = xtx
+  do i = 2, nv+1
+     xtx_ridge(i,i) = xtx_ridge(i,i) + lambda
+  enddo
+
+  ! eigen-decomposition for inversion of ridge-adjusted XᵀX
+  call eigh(xtx_ridge, ew_r, vectors=ev_r)
+
+  ! check result and return sentinel if needed
+  do i = 1, nv+1
+     if (ew_r(i) .le. 0.0_wp) then
+        b0        = c_sentinel_r
+        b(:)      = c_sentinel_r
+        r2        = c_sentinel_r
+        if (present(y_hat)) y_hat = c_sentinel_r
+        if (present(se))       se = c_sentinel_r
+        if (present(cov_b)) cov_b = c_sentinel_r
+        return
+     endif
+  enddo
+
+  ! ---- construct diagonal matrix from inverted eigenvalues
+  ew_diag_r = 0.0_wp
+  do i = 1, nv+1
+     ew_diag_r(i,i) = 1.0_wp / ew_r(i)
+  enddo
+
+  ! invert ridge-adjusted XᵀX
+  xtx_ridge_i = matmul(ev_r, matmul(ew_diag_r, transpose(ev_r)))
+
+  ! ---- compute coefficients: full vector including intercept
+  xty = matmul(xt, y)
+  b0  = 0.0_wp
+  b   = 0.0_wp
+
+  ! get intercept coefficient
+  b0  = dot_product(xtx_ridge_i(1,:), xty)
+
+  ! get predictor coefficients
+  do j = 1, nv
+     b(j) = dot_product(xtx_ridge_i(j+1,:), xty)
+  enddo
+
+  ! ---- predicted values and residuals
+  if (present(y_hat)) then
+     y_hat = matmul(x1, [b0, b])
+     res   = y - y_hat
+  else
+     res   = y - matmul(x1, [b0, b])
+  endif
+
+  ! ---- R² calculation
+
+  ! sum of squared errors
+  sse   = sum(res**2)
+
+  ! mean of y
+  y_bar = f_sts_mean_core(y)
+
+  ! total sum of squares
+  sst   = sum((y - y_bar)**2)
+
+  ! R²
+  r2    = 1.0_wp - sse / sst
+
+  ! ---- covariance matrix (ridge-adjusted)
+
+  ! calculate only when needed; reduces to OLS covariance when lambda = 0.
+  if (present(cov_b) .or. present(se)) then
+     s2  = sse / real(nd - nv - 1, kind=wp)
+     cov = matmul(xtx_ridge_i, matmul(xtx, xtx_ridge_i)) * s2
+  endif
+
+  ! ---- covariance matrix of full coefficients
+  if (present(cov_b)) cov_b = cov(2:nv+1, 2:nv+1)
+
+  ! ---- standard errors for predictors (exclude intercept)
+  if (present(se)) then
+     do i = 1, nv
+        se(i) = sqrt(cov(i+1, i+1))
+     enddo
+  endif
+
+end subroutine s_lin_ridge
 
 
 end module fsml_lin

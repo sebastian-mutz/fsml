@@ -8,23 +8,24 @@ This is the API documentation for all sample statistics procedures.
 
 [TOC]
 
+
 <br>
 # Mean
 
 ## `fsml_mean`
-Computes arithmetic mean.
+
+### Description
+The procedure computes the arithmetic mean.
 $$ \bar{x} = \frac{1}{n} \cdot \sum_{i=1}^{n} x_i $$
 where \( n \) is the size of (or number of observations in) vector `x`,
 \( x_i \) are individual elements in `x`, and
 \( \bar{x} \) is the arithmetic mean of `x`.
 
-### Description
-
 ### Syntax
 `result =` [[fsml(module):fsml_mean(interface)]]`(x)`
 
 ### Parameters
-`x`: A rank-1 array of type `real`.
+`x`: A rank-1 array of type `real`. Must have a length of at least 2.
 
 Invalid argument values will result in the return of a sentinel value.
 
@@ -33,12 +34,31 @@ The result is a scalar and the same type as `x`.
 
 
 <br>
+# Median
+
+## `fsml_median`
+
+### Description
+The procedure computes median of vector `x` and handles tied ranks.
+
+### Syntax
+`result =` [[fsml(module):fsml_median(interface)]]`(x)`
+
+### Parameters
+`x`: A rank-1 array of type `real`. Must have a length of at least 2.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+The result is a scalar and the same type as `x`.
+
+<br>
 # Variance
 
 ## `fsml_var`
 
 ### Description
-Computes the population or sample variance (depending on passed arguments).
+The procedure computes the population or sample variance (depending on passed arguments).
 $$ \operatorname{var}(x) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
 where \( n \) is the size of (or number of observations in) vector `x`,
 \( x_i \) are individual elements in `x`,
@@ -66,7 +86,7 @@ The result is a scalar and the same type as `x`.
 ## `fsml_std`
 
 ### Description
-Computes the population or sample standard deviation (depending on passed arguments).
+The procedure computes the population or sample standard deviation (depending on passed arguments).
 $$ \sigma = \sqrt{\operatorname{var}(x)} = \sqrt{ \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x})^2 } $$
 where \( \operatorname{var}(x) \) is the variance of vector `x`,
 \( n \) is the size of (or number of observations in) vector `x`,
@@ -94,7 +114,7 @@ The result is a scalar and the same type as `x`.
 ## `fsml_cov`
 
 ### Description
-Computes the population or sample covariance (depending on passed arguments).
+The procedure computes the population or sample covariance (depending on passed arguments).
 $$ \operatorname{cov}(x, y) = \frac{1}{n - \nu} \cdot \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y}) $$
 where \( n \) is the size of (or number of observations in) vectors `x` and `y`,
 \( x_i \) and \( y_i \) are individual elements in `x` and `y`,
@@ -126,7 +146,7 @@ The result is a scalar and the same type as `x` and `y`.
 ## `fsml_trend`
 
 ### Description
-Computes regression coefficient/trend.
+The procedure computes the regression coefficient/trend.
 $$ m = \frac{\operatorname{cov}(x, y)}{\operatorname{var}(x)} $$
 where \( m \) is the slope of the regression line (linear trend),
 \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
@@ -154,7 +174,7 @@ The result is a scalar and the same type as `x` and `y`.
 ## `fsml_pcc`
 
 ### Description
-Computes Pearson correlation coefficient (PCC).
+The procedure computes the Pearson correlation coefficient (PCC).
 $$ \rho_{x,y} = \frac{\operatorname{cov}(x, y)}{\sigma_x \cdot \sigma_y} $$
 where \( \rho_{x,y} \) is the Pearson correlation coefficient for vectors `x` and `y`,
 \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
@@ -174,6 +194,33 @@ Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
 The result is a scalar and the same type as `x` and `y`.
+
+
+<br>
+# Spearman Rank Correlation Coefficient
+
+## `fsml_scc`
+
+### Description
+The procedure computes the Spearman rank correlation coefficient (SCC).
+The procedure gets the ranks of cectors `x` and `y`, then
+calculates the Pearson correlation coefficient on these ranks.
+
+Vectors `x` and `y` must be the same size.
+
+### Syntax
+`result =` [[fsml(module):fsml_scc(interface)]]`(x, y)`
+
+### Parameters
+`x`: A rank-1 array of type `real`. It must be the same size as `y`.
+
+`y`: A rank-1 array of type `real`. It must be the same size as `x`.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+The result is a scalar and the same type as `x` and `y`.
+
 
 
 <br>

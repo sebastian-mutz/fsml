@@ -46,11 +46,11 @@ program example_lin
                                      & 1.0_wp, 1.2_wp, 1.3_wp, 1.1_wp, 1.4_wp  & ! class 2, var 3
                                      & ], shape=[nd,nv,nc])
   ! OLS/Ridge
-real(wp), parameter :: x3(nd,nv) = reshape([ &
-                                 & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! var 1
-                                 & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp, & ! var 2
-                                 & 3.0_wp, 3.5_wp, 2.0_wp, 1.0_wp, 2.5_wp  & ! var 3
-                                 & ], shape=[nd,nv])
+  real(wp), parameter :: x3(nd,nv) = reshape([ &
+                                   & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! var 1
+                                   & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp, & ! var 2
+                                   & 3.0_wp, 3.5_wp, 2.0_wp, 1.0_wp, 2.5_wp  & ! var 3
+                                   & ], shape=[nd,nv])
   real(wp), parameter :: y(nd) = [10.0_wp, 12.0_wp, 13.0_wp, 14.0_wp, 15.0_wp]  ! target values
 
 ! ---- results
@@ -168,7 +168,7 @@ real(wp), parameter :: x3(nd,nv) = reshape([ &
   ! standardised coefficients:
   ! 2.07805   9.14221   5.42794
 
-! ---- Multiple Ordinary Least Squares Regression
+! ---- Multiple Linear Regression (Ordinary Least Squares)
 
   call fsml_ols(x3, y, nd, nv, b0, b, rsq, yhat, se, covb)
   write(*,'(A)') "> multiple linear regression (OLS)"
@@ -184,6 +184,7 @@ real(wp), parameter :: x3(nd,nv) = reshape([ &
   print*
   write(*,'(A)') "  Standard errors:"
   write(*,'(3F10.5)') se
+  print*
   ! R²:           0.97361
   ! Intercept:    8.78516
   !
@@ -195,5 +196,35 @@ real(wp), parameter :: x3(nd,nv) = reshape([ &
   !
   ! Standard errors:
   ! 0.25240   0.43454   0.60515
+
+! ---- Multiple Linear Regression (Ridge)
+
+  ! call with lambda set to 0.2
+  call fsml_ridge(x3, y, nd, nv, 0.2_wp, b0, b, rsq, yhat, se, covb)
+  write(*,'(A)') "> multiple linear regression (Ridge)"
+  print*
+  write(*,'(A,F10.5)') "  R²:        ", rsq
+  write(*,'(A,F10.5)') "  Intercept: ", b0
+  print*
+  write(*,'(A)') "  Coefficients:"
+  write(*,'(3F10.5)') b
+  print*
+  write(*,'(A)') "  Predicted values:"
+  write(*,'(5F10.5)') yhat
+  print*
+  write(*,'(A)') "  Standard errors:"
+  write(*,'(3F10.5)') se
+  print*
+  ! R²:           0.97293
+  ! Intercept:    9.11522
+  !
+  ! Coefficients:
+  ! 1.18224   0.02590   0.03162
+  !
+  ! Predicted values:
+  ! 10.44413  11.61628  12.82879  13.95351  15.15729
+  !
+  ! Standard errors:
+  ! 0.23481   0.36909   0.49025
 
 end program example_lin
