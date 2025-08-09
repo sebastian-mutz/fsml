@@ -1,7 +1,7 @@
 # Fortran Statistics and Machine Learning
 
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-![60%](https://progress-bar.xyz/60?title=Alpha)
+![80%](https://progress-bar.xyz/80?title=Alpha)
 
 
 > [!IMPORTANT]
@@ -11,8 +11,6 @@
 ## Description
 
 ![logo](doc/media/logo/FSML_small.png)
-
-
 
 `FSML` (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
