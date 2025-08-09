@@ -33,12 +33,12 @@ module fsml_err
   character(len=128), parameter :: fsml_error(4) = [ character(len=128) ::   &
                                   & "[fsml error] Argument value out of valid&
                                   & range. Returning sentinel.          ",   &
-                                  & "[fsml error] Argument value not in list &
+                                  & "[fsml error] Argument value not in list&
                                   & of valid options. Returning sentinel.",  &
-                                  & "[fsml error] Passed array has invalid   &
-                                  & dimensions.                          ",  &
-                                  & "[fsml error] Passed array has invalid   &
-                                  & size.                                "   ]
+                                  & "[fsml error] Passed array has invalid&
+                                  & dimensions. Returning sentinel.      ",  &
+                                  & "[fsml error] Passed array has invalid&
+                                  & size. Returning sentinel.            "   ]
   ! warning messages
   character(len=128), parameter :: fsml_warning(1) = [ character(len=128) :: &
                                   & "[fsml warning] Suspicious value returned.&

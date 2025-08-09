@@ -49,7 +49,7 @@ module fsml
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
-  public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge
+  public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge, fsml_mahalanobis
   ! public nonlinear procedures
   public :: fsml_hcluster, fsml_kmeans
   ! public utility procedures
@@ -844,6 +844,14 @@ interface fsml_ridge
   !!
   !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
   module procedure s_lin_ridge
+end interface
+
+! Mahalanobis distance
+interface fsml_mahalanobis
+  !! Compute Mahalanobis distance between the first two samples (rows) of data.
+  !! using covariance estimated from data or the optional covariance matrix cov(m,m).
+  !! data dims are (n, m) where each row is a sample (n samples), columns are features (m features).
+  module procedure f_lin_mahalanobis
 end interface
 
 

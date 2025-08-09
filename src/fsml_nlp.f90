@@ -292,38 +292,4 @@ subroutine s_nlp_cluster_kmeans(x, nd, nv, nc, cm_in, cm_out, cl, cc)
 end subroutine s_nlp_cluster_kmeans
 
 
-
-
-
-! ! ==================================================================== !
-! ! -------------------------------------------------------------------- !
-! pure function f_sts_mahalanobis_core(x, y, cov) result(dist)
-!
-! ! ==== Description
-! !! Computes the Mahalanobis distance between vectors x and y.
-!
-! ! ==== Declarations
-!   real(wp), intent(in)  :: x(:), y(:)    ! data vectors
-!   real(wp), intent(in)  :: cov(:,:)      ! covariance matrix
-!   real(wp)              :: dist          ! Mahalanobis distance
-!   real(wp), allocatable :: diff(:), m(:) ! temporary vectors
-!   integer(i4)           :: n             ! common vector length
-!
-! ! ==== Instructions
-!
-!   ! get sizes and allocate
-!   n = size(x)
-!   allocate(diff(n), temp(n))
-!
-!   ! calculate distance
-!   diff = x - y
-!   temp = matmul(cov, diff)
-!   dist = sqrt(dot_product(diff, temp))
-!
-!   ! deallocate
-!   deallocate(diff, temp)
-!
-! end function f_sts_mahalanobis_core
-
-
 end module fsml_nlp

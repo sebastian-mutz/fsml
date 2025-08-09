@@ -24,6 +24,8 @@ module fsml_utl
 
   ! public array operations
   public :: s_utl_rank, s_utl_sort
+  ! solvers
+  public :: s_utl_cholesky_solve
   ! public procedures for data type conversion
   public :: f_utl_r2c, f_utl_i2c, f_utl_c2r
 

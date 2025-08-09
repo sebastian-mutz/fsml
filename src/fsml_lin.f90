@@ -27,6 +27,7 @@ module fsml_lin
 
   ! declare public procedures
   public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
+  public :: f_lin_mahalanobis
 
 contains
 
@@ -631,6 +632,136 @@ subroutine s_lin_ridge(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b)
   endif
 
 end subroutine s_lin_ridge
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_lin_mahalanobis(x, y, cov) result(dist)
+
+! ==== Description
+!! Impure wrapper function for `f_lin_mahalanobis_core`.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x(:)     !! input vector 1
+  real(wp), intent(in)           :: y(:)     !! input vector 2
+  real(wp), intent(in), optional :: cov(:,:) !! covariance matrix
+  real(wp)                       :: dist     !! Mahalanobis distance
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if size is valid
+  if (size(x) .le. 1 .or. size(y) .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(4))
+     dist = c_sentinel_r
+     return
+  endif
+
+  if (present(cov)) then
+     ! check if dims match
+     if (size(cov, 1) .ne. size(x)) then
+        ! write error message and assign sentinel value if invalid
+        call s_err_print(fsml_error(3))
+        dist = c_sentinel_r
+        return
+     endif
+
+     ! check if dims match
+     if (size(cov, 1) .ne. size(cov, 1)) then
+        ! write error message and assign sentinel value if invalid
+        call s_err_print(fsml_error(3))
+        dist = c_sentinel_r
+        return
+     endif
+  endif
+
+! ---- compute Mahalanobis distance
+
+  ! call pure function
+  if (present(cov)) then
+     dist = f_lin_mahalanobis_core(x, y, cov)
+  else
+     dist = f_lin_mahalanobis_core(x, y)
+  endif
+
+end function f_lin_mahalanobis
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_lin_mahalanobis_core(x, y, cov) result(dist)
+
+! ==== Description
+!! Compute Mahalanobis distance between vectors x and y
+!! using covariance matrix cov if provided; otherwise
+!! estimate covariance from the two-sample dataset formed by x and y.
+!! NOTE: check if cov matrix is positive definite.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x(:)       !! input vector 1 (features)
+  real(wp), intent(in)           :: y(:)       !! input vector 2 (features)
+  real(wp), intent(in), optional :: cov(:,:)   !! covariance matrix (m,m)
+  real(wp)                       :: dist       !! Mahalanobis distance
+  real(wp), allocatable          :: cov_w(:,:) !! covariance matrix
+  real(wp), allocatable          :: diff(:)    !! difference vector
+  real(wp), allocatable          :: z(:)       !! solution vector
+  real(wp), allocatable          :: xy(:,:)    !! 2-sample data matrix
+  integer(i4)                    :: m          !! number of features
+  integer(i4)                    :: i, j
+
+! ==== Instructions
+
+! ---- prepare data
+
+  ! get dims and allocate
+  m = size(x)
+  allocate(diff(m))
+  allocate(z(m))
+  allocate(xy(2,m))
+
+  ! create 2-sample dataset with x and y as rows
+  xy(1,:) = x
+  xy(2,:) = y
+
+  ! compute difference vector
+  diff = x - y
+
+! ---- use cholesky-based solver and calculate distance
+
+  ! get final cov matrix and use solver
+  if (present(cov)) then
+     ! use passed covariance matrix directly (m x m)
+     z = s_utl_cholesky_solve(cov, diff, m)
+  else
+     ! estimate covariance matrix (m x m) from xy rows (samples)
+     allocate(cov_w(m,m))
+     do i = 1, m
+        do j = 1, m
+           cov_w(i,j) = f_sts_cov_core(xy(:,i), xy(:,j), ddf=1.0_wp)
+        enddo
+     enddo
+     z = s_utl_cholesky_solve(cov_w, diff, m)
+  endif
+
+  ! get distance
+  dist = sqrt( max(0.0_wp, dot_product(diff, z)) )
+
+! ---- finish
+
+  ! deallocate where needed
+  deallocate(diff)
+  deallocate(z)
+  deallocate(xy)
+  if (.not. present(cov)) deallocate(cov_w)
+
+end function f_lin_mahalanobis_core
+
 
 
 end module fsml_lin

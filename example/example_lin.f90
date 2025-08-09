@@ -23,7 +23,7 @@ program example_lin
 ! ==== Declarations
 
 ! ---- general
-  integer(i4)            :: i
+  integer(i4)            :: i, j
 
 ! ---- data
 
@@ -35,7 +35,7 @@ program example_lin
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, &
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, &
                                      & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  &
-                                     & ], shape=[5,3])
+                                     & ], shape=[nd,nv])
   ! LDA
   real(wp)   , parameter :: x2(nd,nv,nc) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! class 1, var 1
@@ -52,6 +52,9 @@ program example_lin
                                    & 3.0_wp, 3.5_wp, 2.0_wp, 1.0_wp, 2.5_wp  & ! var 3
                                    & ], shape=[nd,nv])
   real(wp), parameter :: y(nd) = [10.0_wp, 12.0_wp, 13.0_wp, 14.0_wp, 15.0_wp]  ! target values
+
+  ! Mahalanobis distance
+  real(wp) :: dist         ! distance
 
 ! ---- results
 
@@ -226,5 +229,18 @@ program example_lin
   !
   ! Standard errors:
   ! 0.23481   0.36909   0.49025
+
+! ---- Mahalanobis distance
+
+  ! call without passing covariance matrix
+  dist = fsml_mahalanobis(x3(:,1), x3(:,2))
+  write(*,'(A)') "> Mahalanobis distance"
+  print*
+  write(*,'(A,F10.5)') "  Distance:  ", dist
+  print*
+
+
+
+
 
 end program example_lin
