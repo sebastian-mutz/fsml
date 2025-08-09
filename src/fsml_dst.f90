@@ -302,7 +302,7 @@ elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
   real(wp)   , intent(in) :: mu                 !! distribution location (mean)
   real(wp)   , intent(in) :: sigma              !! distribution dispersion/scale (standard deviation)
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
-  real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
+  real(wp)   , parameter  :: tol = c_conv_tol   !! p deviation tolerance
   real(wp)                :: a, b               !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
   integer(i4)             :: i                  !! for iteration
@@ -628,7 +628,7 @@ elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
   real(wp)   , intent(in) :: mu                 !! distribution location (mean)
   real(wp)   , intent(in) :: sigma              !! distribution dispersion/scale (standard deviation)
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
-  real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
+  real(wp)   , parameter  :: tol = c_conv_tol   !! p deviation tolerance
   real(wp)                :: a, b               !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
   integer(i4)             :: i                  !! for iteration
@@ -959,7 +959,7 @@ elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
   real(wp)   , intent(in) :: beta               !! scale parameter
   real(wp)   , intent(in) :: loc                !! location parameter
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
-  real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
+  real(wp)   , parameter  :: tol = c_conv_tol   !! p deviation tolerance
   real(wp)                :: a, b               !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
   integer(i4)             :: i                  !! for iteration
@@ -1236,7 +1236,7 @@ elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
   real(wp)   , intent(in) :: loc                !! location parameter
   real(wp)   , intent(in) :: lambda             !! lambda parameter, beta(scale) = 1/lambda = mu/mean
   integer(i4), parameter  :: i_max = c_bisect_i !! max. number of iterations
-  real(wp)   , parameter  :: tol = c_bisect_tol !! p deviation tolerance
+  real(wp)   , parameter  :: tol = c_conv_tol   !! p deviation tolerance
   real(wp)                :: a, b               !! section bounds for bisection algorithm
   real(wp)                :: x_mid, p_mid       !! x and p mid points in bisection algorithm
   integer(i4)             :: i                  !! for iteration
@@ -1556,7 +1556,7 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
   real(wp), intent(in)   :: loc                !! location parameter
   real(wp), intent(in)   :: scale              !! scale parameter
   integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
-  real(wp), parameter    :: tol = c_bisect_tol !! tolerance for convergence
+  real(wp), parameter    :: tol = c_conv_tol   !! tolerance for convergence
   real(wp)               :: a, b               !! interval bounds
   real(wp)               :: x_mid, p_mid       !! midpoint and corresponding CDF value
   integer(i4)            :: i                  !! iteration counter
@@ -1919,7 +1919,7 @@ elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
   real(wp), intent(in)   :: loc                !! location parameter
   real(wp), intent(in)   :: scale              !! scale parameter
   integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
-  real(wp)   , parameter :: tol = c_bisect_tol !! tolerance for convergence
+  real(wp)   , parameter :: tol = c_conv_tol   !! tolerance for convergence
   real(wp)               :: a, b               !! search bounds
   real(wp)               :: x_mid, p_mid       !! midpoint and its CDF
   integer(i4)            :: i                  !! iteration counter

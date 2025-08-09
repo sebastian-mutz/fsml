@@ -5,7 +5,7 @@ module fsml_lin
 ! |                                                                    |
 ! | about                                                              |
 ! | -----                                                              |
-! | Module for common statistical tests.                               |
+! | Module for common linear (algebra) procedures.                     |
 ! |                                                                    |
 ! | license : MIT                                                      |
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |

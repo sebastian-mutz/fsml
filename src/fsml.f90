@@ -24,6 +24,7 @@ module fsml
   use :: fsml_dst
   use :: fsml_tst
   use :: fsml_lin
+  use :: fsml_nlp
   use :: fsml_utl
 
   ! basic options
@@ -49,6 +50,8 @@ module fsml
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
   public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge
+  ! public nonlinear procedures
+  public :: fsml_hcluster, fsml_kmeans
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -841,6 +844,28 @@ interface fsml_ridge
   !!
   !! **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
   module procedure s_lin_ridge
+end interface
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+! ---- Nonlinear Procedures
+
+! hierarchical clustering (agglomerative)
+interface fsml_hcluster
+!! Perform agglomerative hierarchical clustering using centroid linkage
+!! and the Mahalanobis distance.
+!! The resulting cluster centroids can be passed to a separate k-means
+!! procedure for refinement.
+  module procedure s_nlp_cluster_h
+end interface
+
+! kmeans clustering
+interface fsml_kmeans
+!! Perform k-means clustering using Mahalanobis distance.
+!! Starts from initial centroids (e.g. from hierarchical clustering) and iteratively
+!! reassigns samples until convergence or maximum iterations reached.
+  module procedure s_nlp_cluster_kmeans
 end interface
 
 

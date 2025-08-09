@@ -554,5 +554,4 @@ pure function f_sts_scc_core(x, y) result(corr)
 
 end function f_sts_scc_core
 
-
 end module fsml_sts
