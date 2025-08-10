@@ -1,9 +1,14 @@
 # Contributing to the Fortran Statistics and Machine Learning library (FSML)
 
 Thank you for considering contributing to FSML. Please review and follow the
-guidelines below to make the process efficient and enjoyable for all. :)
+guidelines below to make the process efficient and enjoyable for all. 
 Since this is a relatively small project, the guidelines are kept short
 and you are encouraged to simply contact sebastian@mutz.science when in doubt.
+
+> [!IMPORTANT]
+> The most helpful contributions - at the moment - is an engagement with the library and reporting what works well,
+> what doesn't work, and what needs to be done to make it work for you.
+> 
 
 If you are interested in contributing code, you certify that you own or are
 allowed to share the content of your contribution under the
