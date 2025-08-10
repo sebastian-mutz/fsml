@@ -671,7 +671,7 @@ impure function f_lin_mahalanobis(x, y, cov) result(dist)
      endif
 
      ! check if dims match
-     if (size(cov, 1) .ne. size(cov, 1)) then
+     if (size(cov, 1) .ne. size(cov, 2)) then
         ! write error message and assign sentinel value if invalid
         call s_err_print(fsml_error(3))
         dist = c_sentinel_r
