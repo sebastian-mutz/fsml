@@ -1,5 +1,5 @@
 ---
-title: NLP: Nonlinear Procedures
+title: NLP: Non-Linear Procedures
 ---
 
 # Overview
@@ -30,6 +30,9 @@ Clusters are merged iteratively until the target number of clusters is reached.
 The global mean (`gm`), cluster centroids (`cm`), membership assignments (`cl`),
 and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
 (`sigma`) used in the distance calculations are returned.
+
+**Note:** This procedure uses the pure procedure for calculating the Mahalanobis distance
+`f_lin_mahalanobis_core`, which uses`chol` from the `stdlib_linalg` module.
 
 ### Syntax
 `call` [[fsml(module):fsml_hclust(interface)]]`(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)`
@@ -81,8 +84,12 @@ Mahalanobis distance. If it is not passed, the variables are standardised before
 computing the covariance matrix on the transformed data.
 
 The global mean (`gm`), cluster centroids (`cm`), membership assignments (`cl`),
-and cluster sizes (`cc`), the covariance matrix (`cov` - either `cov_in` or internally
-calculated) and standard deviations (`sigma`) used in the distance calculations are returned.
+and cluster sizes (`cc`), the covariance matrix (`cov` - either `cov_in` if passed,
+or internally calculated if `cov_in` is not passed) and standard deviations (`sigma`)
+used in the distance calculations are returned.
+
+**Note:** This procedure uses the pure procedure for calculating the Mahalanobis distance
+`f_lin_mahalanobis_core`, which uses`chol` from the `stdlib_linalg` module.
 
 ### Syntax
 `call` [[fsml(module):fsml_kmeans(interface)]]`(x, nd, nv, nc, cm_in, gm, cm, cl, cc, cov, sigma, [cov_in])`

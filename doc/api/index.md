@@ -10,11 +10,11 @@ This is a guide to public-facing API (Application Programming Interface) of FSML
 
 The FSML procedures are categorised into several thematic modules:
 
-- `STS`: Basic (population and sample) statistics (e.g., mean, variance)
-- `TST`: Statistical hypothesis testing (e.g., ANOVA)
-- `LIN`: Statistical procedures relying heavily on linear algebra (e.g., PCA, OLS regression)
-- `NLP`: Nonlinear and algorithmic procedures (e.g., k-means clustering)
-- `DST`: Statistical distributions (e.g., Student's t distribution) probability density function (PDF), cumulative distribution function (CDF), and percent point function (PPF)
+- `STS`: Basic (sample) statistics for describing and understanding data (e.g., mean, variance, correlation)
+- `TST`: Parametric and non-parametric hypothesis tests (e.g., Mann–Whitney U , analysis of variance)
+- `LIN`: Statistical procedures relying heavily on linear algebra (e.g., principal component analysis, ridge regression, linear discriminant analysis)
+- `NLP`: Non-linear and algorithmic procedures (e.g., k-means clustering)
+- `DST`: Statistical distributions (e.g., Student's t distribution); probability density function (PDF), cumulative distribution function (CDF), and percent point function (PPF)
 
 While the public interfaces do not include these as prefixes, the handbook makes use of these
 categories to give it more structure. If you are interested in exploring the code, you will
@@ -62,9 +62,9 @@ The following procedures are currently covered and have a public-facing interfac
 
 <br>
 
-| Nonlinear Procedures (NLP)                            |
+| Non-Linear Procedures (NLP)                           |
 | ----------------------------------------------------- |
-| [Hierarchical Clustering](./nlp.html#fsml_hcluster)   |
+| [Hierarchical Clustering](./nlp.html#fsml_hclust)     |
 | [K-Means Clustering](./nlp.html#fsml_kmeans)          |
 | [Hybrid H/K-Means Clustering](./nlp.html#fsml_hkmeans)|
 
