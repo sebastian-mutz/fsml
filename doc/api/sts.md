@@ -1,10 +1,10 @@
 ---
-title: STS: Sample Statistics
+title: STS: Basic Statistics
 ---
 
 # Overview
 
-This is the API documentation for all sample statistics procedures.
+This is the API documentation for all population and sample statistics procedures.
 
 [TOC]
 
@@ -220,7 +220,6 @@ Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
 The result is a scalar and the same type as `x` and `y`.
-
 
 
 <br>

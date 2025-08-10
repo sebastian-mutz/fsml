@@ -52,6 +52,11 @@ LFortran is your choice. You can get LFortran with as follows:
 ```
 conda install -c conda-forge lfortran
 ```
+@warning
+LFortran is currently not an option, as it fails to compile `stdlib`.
+@endwarning
+
+
 ### FPM
 
 The [Fortran Package Manager (FPM)](https://fpm.fortran-lang.org/) lets you
@@ -62,6 +67,7 @@ packages. The following will install FPM with conda:
 ```
 conda install -c conda-forge fpm
 ```
+
 ### FORD (optional)
 
 [FORD (FORtran Documenter)](https://forddocs.readthedocs.io/en/stable/) is a

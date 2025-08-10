@@ -16,14 +16,15 @@ The FSML procedures are categorised into several thematic modules:
 - `NLP`: Nonlinear and algorithmic procedures (e.g., k-means clustering)
 - `DST`: Statistical distributions (e.g., Student's t distribution) probability density function (PDF), cumulative distribution function (CDF), and percent point function (PPF)
 
-While the public interfaces do not include these as prefixes, the handbook makes use of these categories to give it more structure.
-If you are interested in exploring the code, you will recognise these in module and procedure names.
+While the public interfaces do not include these as prefixes, the handbook makes use of these
+categories to give it more structure. If you are interested in exploring the code, you will
+recognise these in module and procedure names.
 
 # Coverage
 
 The following procedures are currently covered and have a public-facing interface. The links will take you directly to the documentation for the API.
 
-| Population and Sample Statistics (STS)             |
+| Basic Population and Sample Statistics (STS)       |
 | -------------------------------------------------- |
 | [Mean](./sts.html#fsml_mean)                       |
 | [Median](./sts.html#fsml_median)                   |
@@ -61,10 +62,11 @@ The following procedures are currently covered and have a public-facing interfac
 
 <br>
 
-| Nonlinear Procedures (NLP)                         |
-| -------------------------------------------------- |
-| [Hierarchical Clustering](./nlp.html#fsml_hcluster)|
-| [K-Means Clustering](./nlp.html#fsml_kmeans)       |
+| Nonlinear Procedures (NLP)                            |
+| ----------------------------------------------------- |
+| [Hierarchical Clustering](./nlp.html#fsml_hcluster)   |
+| [K-Means Clustering](./nlp.html#fsml_kmeans)          |
+| [Hybrid H/K-Means Clustering](./nlp.html#fsml_hkmeans)|
 
 <br>
 
@@ -88,6 +90,6 @@ The following procedures are currently covered and have a public-facing interfac
 | [F PDF](./dst.html#fsml_f_pdf)                    |
 | [F CDF](./dst.html#fsml_f_cdf)                    |
 | [F PPF](./dst.html#fsml_f_ppf)                    |
-| [Generalised Pareto PDF](./dst.html#fsml_gpd_pdf) |                                                                          |
+| [Generalised Pareto PDF](./dst.html#fsml_gpd_pdf) |
 | [Generalised Pareto CDF](./dst.html#fsml_gpd_cdf) |
 | [Generalised Pareto PPF](./dst.html#fsml_gpd_ppf) |

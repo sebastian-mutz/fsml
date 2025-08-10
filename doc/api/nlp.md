@@ -12,7 +12,7 @@ This is the API documentation for all nonlinear procedures.
 <br>
 # Hierarchical Clustering
 
-## `fsml_hcluster`
+## `fsml_hclust`
 
 ### Description
 The procedure is an implementation of the agglomerative hierarchical clustering method
@@ -32,7 +32,7 @@ and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
 (`sigma`) used in the distance calculations are returned.
 
 ### Syntax
-`call` [[fsml(module):s_nlp_cluster_h(interface)]]`(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)`
+`call` [[fsml(module):fsml_hclust(interface)]]`(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)`
 
 ### Parameters
 `x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
@@ -42,6 +42,8 @@ and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
 `nv`: A scalar of type `integer`.
 
 `nc`: A scalar of type `integer`.
+
+Invalid argument values will result in the return of a sentinel value.
 
 ### Returns
 `gm`: A rank-1 array of type `real` with dimension `nv`.
@@ -63,7 +65,7 @@ and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
 ## `fsml_kmeans`
 
 ### Description
-The procedure implements the K-means clustering algorithm using the Mahalanobis
+The procedure implements the k-means clustering algorithm using the Mahalanobis
 distance as the similarity measure. It accepts initial centroids (`cm_in`), refines
 them iteratively, and returns the final centroids (`cm`).
 
@@ -98,6 +100,8 @@ calculated) and standard deviations (`sigma`) used in the distance calculations 
 
 `cov_in` (optional): A rank-2 array of type `real` with dimensions `nv`, `nv`.
 
+Invalid argument values will result in the return of a sentinel value.
+
 ### Returns
 `gm`: A rank-1 array of type `real` with dimension `nv`.
 
@@ -111,6 +115,61 @@ calculated) and standard deviations (`sigma`) used in the distance calculations 
 
 `sigma`: A rank-1 array of type `real` with dimension `nv`.
 
+
+<br>
+# Hybrid Hierarchical/K-Means Clustering
+
+## `fsml_hkmeans`
+
+### Description
+The procedure implements a hybrid clustering approach combining agglomerative hierarchical
+clustering and k-means clustering, both using the Mahalanobis distance as the similarity measure.
+The hierarchical step first partitions the data into `nc` clusters by iteratively merging the most
+similar clusters. The resulting centroids from are then used as initial centroids (`cm_in`)
+for the k-means procedure, which refines them iteratively.
+
+The input matrix (`x`) holds observations in rows (`nd`) and variables in columns (`nv`).
+The number of clusters (`nc`) must be at least *1* and not greater than the number of data points.
+In the hierarchical clustering step, variables are standardised before computing the covariance matrix
+on the transformed data. The covariance matrix is passed to the k-means clustering procedure along
+with the initial cluster centroids. The k-means clustering step then assigns each observation to the
+nearest centroid, recomputes centroids from cluster memberships, and iterates until convergence or
+the iteration limit is reached. Final centroids are sorted by the first variable, and assignments
+are updated accordingly.
+
+The global mean (`gm`), final cluster centroids (`cm`), membership assignments (`cl`), and cluster
+sizes (`cc`), the covariance matrix (`cov`) and standard deviations (`sigma`) used in the distance
+calculations are returned.
+
+**Note:** This procedure uses the pure procedure for calculating the Mahalanobis distance
+`f_lin_mahalanobis_core`, which uses`chol` from the `stdlib_linalg` module.
+
+### Syntax
+`call` [[fsml(module):fsml_hkmeans(interface)]]`(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)`
+
+### Parameters
+`x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
+
+`nd`: A scalar of type `integer`. It must be at least *1*.
+
+`nv`: A scalar of type `integer`. It must be at least *1*.
+
+`nc`: A scalar of type `integer`. It must be at least *1* and not greater than `nd`.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+`gm`: A rank-1 array of type `real` with dimension `nv`.
+
+`cm`: A rank-2 array of type `real` with dimensions `nv`, `nc`.
+
+`cl`: A rank-1 array of type `integer` with dimension `nd`.
+
+`cc`: A rank-1 array of type `integer` with dimension `nc`.
+
+`cov`: A rank-2 array of type `real` with dimensions `nv`, `nv`.
+
+`sigma`: A rank-1 array of type `real` with dimension `nv`.
 
 <br>
 # Examples

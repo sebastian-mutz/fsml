@@ -57,7 +57,7 @@ $$
 where \( j \) is the PC index, and \( k \) spans all retained eigenvalues,
 representing all principal components that explain variability in the data.
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+**Note:** This procedure uses `eigh` from the `stdlib_linalg` module to compute
 eigenvalues and eigenvectors of the symmetric covariance matrix.
 
 @note
@@ -146,7 +146,7 @@ $$
 \text{EOF}_{\text{scaled}} = \text{EOF} \cdot \sqrt{\lambda_j}
 $$
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
+**Note:** This procedure uses `eigh` from the `stdlib_linalg` module to compute
 eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
 @note
@@ -242,7 +242,7 @@ interpreted as a measure of how well the function works as a classification mode
 The procedure optionally returns the Mahalanobis distance (`mh`) as a measure of distance
 between the groups.
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
+**Note:** This procedure uses `eigh` from the `stdlib_linalg` module.
 
 @note
 The procesure has no pure equivalent, because it relies on an
@@ -308,7 +308,7 @@ variance of \( y \)  (`y`) explained by the predictors. The predicted values (`y
 standard errors (`se`) of the coefficients, and the covariance matrix of the predictors (`cov_b`)
 can optionally be returned by the procedure, too.
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
+**Note:** This procedure uses `eigh` from the `stdlib_linalg` module.
 
 **Note:** The intercept and predictor coefficients are computed separately and returned explicitly.
 
@@ -389,7 +389,7 @@ $$
 
 where \( \sigma^2 \) is the residual variance estimate.
 
-**Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
+**Note:** This procedure uses `eigh` from the `stdlib_linalg` module.
 
 @note
 The procesure has no pure equivalent, because it relies on an
@@ -450,9 +450,7 @@ the Cholesky decomposition for numerical stability.
 **Note:** If passed, the covariance matrix (`cov`) must be positive definite
 for the factorisation to succeed.
 
-@note
-The procesure is experimental and still requires more testing.
-@endnote
+**Note:** This procedure uses `chol` from the `stdlib_linalg` module.
 
 ### Syntax
 `dist =` [[fsml(module):fsml_mahalanobis(interface)]]`(x, y [, cov])`

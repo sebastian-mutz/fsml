@@ -27,17 +27,18 @@ module fsml_nlp
   private
 
   ! declare public procedures
-  public :: s_nlp_cluster_h, s_nlp_cluster_h_core
-  public :: s_nlp_cluster_kmeans, s_nlp_cluster_kmeans_core
+  public :: s_nlp_hclust, s_nlp_hclust_core
+  public :: s_nlp_kmeans, s_nlp_kmeans_core
+  public :: s_nlp_hkmeans, s_nlp_hkmeans_core
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure subroutine s_nlp_cluster_h(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+impure subroutine s_nlp_hclust(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
 ! ==== Description
-!! Impure wrapper procedure for `s_nlp_cluster_h_core`.
+!! Impure wrapper procedure for `s_nlp_hclust_core`.
 
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(nd, nv)  !! input data matrix (samples, variables)
@@ -115,19 +116,19 @@ impure subroutine s_nlp_cluster_h(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
      return
   endif
 
-! ---- compute Mahalanobis distance
+! ---- compute clusters
 
   ! call pure procedure
-  call s_nlp_cluster_h_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+  call s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
-end subroutine s_nlp_cluster_h
+end subroutine s_nlp_hclust
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_nlp_cluster_h_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
 ! ==== Description
 !! Perform agglomerative hierarchical clustering using centroid linkage
@@ -263,18 +264,18 @@ pure subroutine s_nlp_cluster_h_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
      enddo
   enddo
 
-end subroutine s_nlp_cluster_h_core
+end subroutine s_nlp_hclust_core
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure subroutine s_nlp_cluster_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
-                                    & cov, sigma, cov_in)
+impure subroutine s_nlp_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
+                             & cov, sigma, cov_in)
 
 ! ==== Description
-!! Impure wrapper procedure for `s_nlp_cluster_h_core`.
+!! Impure wrapper procedure for `s_nlp_kmeans_core`.
 
 ! ==== Declarations
   real(wp)   , intent(in)            :: x(nd, nv)      !! raw data (samples, variables)
@@ -354,26 +355,24 @@ impure subroutine s_nlp_cluster_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
      return
   endif
 
-! ---- compute Mahalanobis distance
+! ---- compute clusters
 
   ! call pure procedure
-  call s_nlp_cluster_kmeans_core(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
-                               & cov, sigma, cov_in)
+  call s_nlp_kmeans_core(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
+                       & cov, sigma, cov_in=cov_in)
 
-end subroutine s_nlp_cluster_kmeans
+end subroutine s_nlp_kmeans
 
 
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure subroutine s_nlp_cluster_kmeans_core(x, nd, nv, nc, cm_in, gm, &
-                                        & cm, cl, cc, cov, sigma, cov_in)
+pure subroutine s_nlp_kmeans_core(x, nd, nv, nc, cm_in, gm, &
+                                & cm, cl, cc, cov, sigma, cov_in)
 
 ! ==== Description
 !! K-means clustering using Mahalanobis distance.
-!! Accepts initial centroids (cm_in), refines them, and returns final centroids (cm_out).
-!! Uses standardisation and covariance computation identical to s_nlp_cluster_h.
 !! NOTE: think about only accepting standardised data to avoid redundant computation
 !! in successive calls of procedure. This and repeated Cholesky fractionisation are
 !! potential performance bottlenecks.
@@ -510,6 +509,136 @@ pure subroutine s_nlp_cluster_kmeans_core(x, nd, nv, nc, cm_in, gm, &
      enddo
   enddo
 
-end subroutine s_nlp_cluster_kmeans_core
+end subroutine s_nlp_kmeans_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure subroutine s_nlp_hkmeans(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+
+! ==== Description
+!! Impure wrapper procedure for `s_nlp_hkmeans_core`.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(nd, nv)     !! input data matrix (samples, variables)
+  integer(i4), intent(in)  :: nd            !! number of data points
+  integer(i4), intent(in)  :: nv            !! number of variables
+  integer(i4), intent(in)  :: nc            !! number of clusters (target)
+  real(wp)   , intent(out) :: gm(nv)        !! global means for each variable
+  real(wp)   , intent(out) :: cm(nv,nc)     !! cluster centroids
+  integer(i4), intent(out) :: cl(nd)        !! cluster assignments for each data point
+  integer(i4), intent(out) :: cc(nc)        !! cluster sizes
+  real(wp)   , intent(out) :: cov(nv,nv)    !! covariance matrix
+  real(wp)   , intent(out) :: sigma(nv)     !! standard deviation per variable
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if argument values are valid - data points
+  if (nd .le. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     gm    = c_sentinel_r
+     cm    = c_sentinel_r
+     cov   = c_sentinel_r
+     sigma = c_sentinel_r
+     cl    = c_sentinel_i
+     cc    = c_sentinel_i
+     return
+  endif
+
+  ! issue warning for small datasets
+  if (nd .le. 15) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_warn("[fsml warning] hkmeans: small datasets can create&
+                    & problems with Cholesky fractionisation.")
+  endif
+
+  ! check if argument values are valid - variable/feature number
+  if (nv .lt. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     gm    = c_sentinel_r
+     cm    = c_sentinel_r
+     cov   = c_sentinel_r
+     sigma = c_sentinel_r
+     cl    = c_sentinel_i
+     cc    = c_sentinel_i
+     return
+  endif
+
+  ! check if argument values are valid - cluster number
+  if (nc .lt. 1) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print(fsml_error(1))
+     gm    = c_sentinel_r
+     cm    = c_sentinel_r
+     cov   = c_sentinel_r
+     sigma = c_sentinel_r
+     cl    = c_sentinel_i
+     cc    = c_sentinel_i
+     return
+  endif
+
+  ! check if argument values are valid - cluster number must be smaller than data points
+  if (nc .gt. nd) then
+     ! write error message and assign sentinel value if invalid
+     call s_err_print("[fsml error] hkmeans: cluster number must be&
+                    & equal or less than number of data points.")
+     gm    = c_sentinel_r
+     cm    = c_sentinel_r
+     cov   = c_sentinel_r
+     sigma = c_sentinel_r
+     cl    = c_sentinel_i
+     cc    = c_sentinel_i
+     return
+  endif
+
+! ---- compute clusters
+
+  ! call pure procedure
+  call s_nlp_hkmeans_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+
+end subroutine s_nlp_hkmeans
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_nlp_hkmeans_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
+
+! ==== Description
+!! Perform agglomerative hierarchical clustering using centroid linkage
+!! and the Mahalanobis distance, then passes cluster centroids and
+!! covariance matrix to kmeans cluster procedure for refinement.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(nd, nv)     !! input data matrix (samples, variables)
+  integer(i4), intent(in)  :: nd            !! number of data points
+  integer(i4), intent(in)  :: nv            !! number of variables
+  integer(i4), intent(in)  :: nc            !! number of clusters (target)
+  real(wp)   , intent(out) :: gm(nv)        !! global means for each variable
+  real(wp)   , intent(out) :: cm(nv,nc)     !! cluster centroids
+  integer(i4), intent(out) :: cl(nd)        !! cluster assignments for each data point
+  integer(i4), intent(out) :: cc(nc)        !! cluster sizes
+  real(wp)   , intent(out) :: cov(nv,nv)    !! covariance matrix
+  real(wp)   , intent(out) :: sigma(nv)     !! standard deviation per variable
+  real(wp)                 :: cm_h(nv,nc)   !! cluster centroids passed from hclust to kmeans
+  real(wp)                 :: cov_h(nv,nv)  !! covariance matrix passed from hclust to kmeans
+
+! ==== Instructions
+
+  ! hierarchical clustering
+  call s_nlp_hclust_core(x, nd, nv, nc, gm, cm_h, cl, cc, cov_h, sigma)
+
+  ! kmeans refinement
+  call s_nlp_kmeans_core(x, nd, nv, nc, cm_h, gm, cm, cl, cc, &
+                       & cov, sigma, cov_in=cov_h)
+
+end subroutine s_nlp_hkmeans_core
 
 end module fsml_nlp

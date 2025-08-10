@@ -11,8 +11,6 @@ module fsml
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
-! TODO: copy module (to fsml_core), but expose pure core routines with same api. Allows devs to use either core routines or safe ones, depending on needs.
-
 ! FORD
 !! FSML interface module.
 
@@ -51,7 +49,7 @@ module fsml
   ! public linear (algebra) procedures
   public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge, fsml_mahalanobis
   ! public nonlinear procedures
-  public :: fsml_hcluster, fsml_kmeans
+  public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures
   public :: fsml_rank
   ! public data/io procedures
@@ -874,20 +872,72 @@ end interface
 ! ---- Nonlinear Procedures
 
 ! hierarchical clustering (agglomerative)
-interface fsml_hcluster
-!! Perform agglomerative hierarchical clustering using centroid linkage
-!! and the Mahalanobis distance.
-!! The resulting cluster centroids can be passed to a separate k-means
-!! procedure for refinement.
-  module procedure s_nlp_cluster_h
+interface fsml_hclust
+  !! The procedure is an implementation of the agglomerative hierarchical clustering method
+  !! that groups data points into clusters by iteratively merging the most similar clusters.
+  !! The procedure uses centroid linkage and the Mahalanobis distance as a measure of similarity.
+  !!
+  !! The input matrix (`x`) holds observations in rows (`nd`) and variables in columns (`nv`).
+  !! The target number of clusters (`nc`) must be at least *1* and not greater than the number
+  !! of data points.
+  !!
+  !! The variables are standardised before computing the covariance matrix on the transformed
+  !! data. The matrix is used for calculating the Mahalanobis distance.
+  !!
+  !! Clusters are merged iteratively until the target number of clusters is reached.
+  !! The global mean (`gm`), cluster centroids (`cm`), membership assignments (`cl`),
+  !! and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
+  !! (`sigma`) used in the distance calculations are returned.
+  module procedure s_nlp_hclust
 end interface
 
-! kmeans clustering
+! k-means clustering
 interface fsml_kmeans
-!! Perform k-means clustering using Mahalanobis distance.
-!! Starts from initial centroids (e.g. from hierarchical clustering) and iteratively
-!! reassigns samples until convergence or maximum iterations reached.
-  module procedure s_nlp_cluster_kmeans
+  !! The procedure implements the K-means clustering algorithm using the Mahalanobis
+  !! distance as the similarity measure. It accepts initial centroids (`cm_in`), refines
+  !! them iteratively, and returns the final centroids (`cm`).
+  !!
+  !! The input matrix (`x`) holds observations in rows (`nd`) and variables in columns (`nv`).
+  !! The number of clusters (`nc`) must be at least *1* and not greater than the number of
+  !! data points. The procedure assigns each observation to the nearest centroid using the
+  !! Mahalanobis distance, recomputes centroids from cluster memberships, and iterates until
+  !! convergence or the iteration limit is reached. Final centroids are sorted by the first
+  !! variable, and assignments are updated accordingly.
+  !!
+  !! If the covariance matrix (`cov_in`) is passed, it will be used to calculate the
+  !! Mahalanobis distance. If it is not passed, the variables are standardised before
+  !! computing the covariance matrix on the transformed data.
+  !!
+  !! The global mean (`gm`), cluster centroids (`cm`), membership assignments (`cl`),
+  !! and cluster sizes (`cc`), the covariance matrix (`cov` - either `cov_in` or internally
+  !! calculated) and standard deviations (`sigma`) used in the distance calculations are returned.
+  module procedure s_nlp_kmeans
+end interface
+
+! hierarchical clustering with k-means corrections
+interface fsml_hkmeans
+  !! The procedure implements a hybrid clustering approach combining agglomerative hierarchical
+  !! clustering and k-means clustering, both using the Mahalanobis distance as the similarity measure.
+  !! The hierarchical step first partitions the data into `nc` clusters by iteratively merging the most
+  !! similar clusters. The resulting centroids from are then used as initial centroids (`cm_in`)
+  !! for the k-means procedure, which refines them iteratively.
+  !!
+  !! The input matrix (`x`) holds observations in rows (`nd`) and variables in columns (`nv`).
+  !! The number of clusters (`nc`) must be at least *1* and not greater than the number of data points.
+  !! In the hierarchical clustering step, variables are standardised before computing the covariance matrix
+  !! on the transformed data. The covariance matrix is passed to the k-means clustering procedure along
+  !! with the initial cluster centroids. The k-means clustering step then assigns each observation to the
+  !! nearest centroid, recomputes centroids from cluster memberships, and iterates until convergence or
+  !! the iteration limit is reached. Final centroids are sorted by the first variable, and assignments
+  !! are updated accordingly.
+  !!
+  !! The global mean (`gm`), final cluster centroids (`cm`), membership assignments (`cl`), and cluster
+  !! sizes (`cc`), the covariance matrix (`cov`) and standard deviations (`sigma`) used in the distance
+  !! calculations are returned.
+  !!
+  !! **Note:** This procedure uses the pure procedure for calculating the Mahalanobis distance
+  !! `f_lin_mahalanobis_core`, which uses`chol` from the `stdlib_linalg` module.
+  module procedure s_nlp_hkmeans
 end interface
 
 
