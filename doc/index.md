@@ -12,7 +12,7 @@ A complete list of public-facing procedures can be found [here](./api/index.html
 
 # Contributing
 
-If you're interested in contributing to the project, please read the contributor guidelines [here](./contributor.html).
+If you're interested in contributing to the project, please read the contributor guidelines [here](./contributing.html).
 
 # Licence
 

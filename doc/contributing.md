@@ -10,3 +10,4 @@ comments and suggestions, or [e-mail me](mailto:sebastian@mutz.science) if you
 think the GitHub issue format is not suitable for what you'd like to dicuss.
 @endnote
 
+{!CONTRIBUTING.md!}

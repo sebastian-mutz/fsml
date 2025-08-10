@@ -1,22 +1,16 @@
 # Contributing to the Fortran Statistics and Machine Learning library (FSML)
 
-Thank you for considering contributing to FSML. Please review and follow the
-guidelines below to make the process efficient and enjoyable for all. 
-Since this is a relatively small project, the guidelines are kept short
-and you are encouraged to simply contact sebastian@mutz.science when in doubt.
+Thank you for considering contributing to FSML. Please review and follow the guidelines below to make the process
+efficient and enjoyable for all. Since this is a relatively small project, the guidelines are kept short and you
+are encouraged to simply contact [sebastian@mutz.science](mailto:sebastian@mutz.science) when in doubt.
 
-> [!IMPORTANT]
-> The most helpful contributions - at the moment - is an engagement with the library and reporting what works well,
-> what doesn't work, and what needs to be done to make it work for you.
-> 
-
-If you are interested in contributing code, you certify that you own or are
-allowed to share the content of your contribution under the
-[fsml license](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENCE).
+If you are interested in contributing code, you certify that you own or are allowed to share the content of your
+contribution under the [fsml license](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENCE).
 
 ## Style
 
-A consistent style improves the readability and maintainability of software. 
+A consistent style improves the readability and maintainability of software. The best way to get a sense for it
+is to study the existing code. Some of the conventions for the project are highlighted below:
 
 ### Use modern standard Fortran and keep it simple!
 
