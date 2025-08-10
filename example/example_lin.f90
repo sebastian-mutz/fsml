@@ -36,6 +36,7 @@ program example_lin
                                      & 2.4_wp, 2.8_wp, 2.6_wp, 3.2_wp, 2.9_wp, &
                                      & 2.0_wp, 2.8_wp, 2.1_wp, 2.3_wp, 2.9_wp  &
                                      & ], shape=[nd,nv])
+
   ! LDA
   real(wp)   , parameter :: x2(nd,nv,nc) = reshape([ &
                                      & 2.1_wp, 2.5_wp, 1.9_wp, 2.3_wp, 2.0_wp, & ! class 1, var 1
@@ -45,6 +46,7 @@ program example_lin
                                      & 1.2_wp, 1.5_wp, 1.6_wp, 1.7_wp, 1.8_wp, & ! class 2, var 2
                                      & 1.0_wp, 1.2_wp, 1.3_wp, 1.1_wp, 1.4_wp  & ! class 2, var 3
                                      & ], shape=[nd,nv,nc])
+
   ! OLS/Ridge
   real(wp), parameter :: x3(nd,nv) = reshape([ &
                                    & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! var 1

@@ -116,7 +116,7 @@ end subroutine s_utl_rank
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_utl_sort(a_in, n, mode, idx_in, a_out, idx_out)
+pure subroutine s_utl_sort(a_in, n, mode, idx_in, a_out, idx_out)
 
 ! ==== Description
 !! Sort real array in ascending (mode=1) or descending (mode=2) order.

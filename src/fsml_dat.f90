@@ -38,9 +38,9 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
 ! ==== Declarations
   character(len=*) , intent(in)           :: infile      !! read csv file
   type(fsml_typ_df), intent(inout)        :: df          !! dataframe
-  logical          , optional, intent(in) :: labelcol    !! true if first column contains row labels
-  logical          , optional, intent(in) :: labelrow    !! true if first row contains column lavels
-  character(len=1) , optional, intent(in) :: delimiter   !! single char delimiter
+  logical          , intent(in), optional :: labelcol    !! true if first column contains row labels
+  logical          , intent(in), optional :: labelrow    !! true if first row contains column lavels
+  character(len=1) , intent(in), optional :: delimiter   !! single char delimiter
   logical                                 :: w_labelcol  !! final value of labelcol
   logical                                 :: w_labelrow  !! final value of labeleow
   character(len=1)                        :: w_delimiter !! final value of delimiter

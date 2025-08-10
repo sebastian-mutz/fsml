@@ -27,7 +27,7 @@ module fsml_lin
 
   ! declare public procedures
   public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
-  public :: f_lin_mahalanobis
+  public :: f_lin_mahalanobis, f_lin_mahalanobis_core
 
 contains
 
