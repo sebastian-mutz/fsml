@@ -7,7 +7,7 @@ and you are encouraged to simply contact sebastian@mutz.science when in doubt.
 
 If you are interested in contributing code, you certify that you own or are
 allowed to share the content of your contribution under the
-[fsml license](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENSE).
+[fsml license](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENCE).
 
 ## Style
 
