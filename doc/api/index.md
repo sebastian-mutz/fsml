@@ -57,13 +57,14 @@ The following procedures are currently covered and have a public-facing interfac
 | [Linear Discriminant Analysis (2-Class)](./lin.html#fsml_lda_2class)|
 | [Ordinary Least Squares Regression](./lin.html#fsml_ols)            |
 | [Ridge Regression](./lin.html#fsml_ridge)                           |
+| [Mahalanobis Distance](./lin.html#fsml_mahalanobis)                 |
 
 <br>
 
-| Nonlinear Procedures (NLP)                      |
-| ----------------------------------------------- |
-| Hierarchical Clustering (in progress)           |
-| K-Means Clustering (in progress)                |
+| Nonlinear Procedures (NLP)                         |
+| -------------------------------------------------- |
+| [Hierarchical Clustering](./nlp.html#fsml_hcluster)|
+| [K-Means Clustering](./nlp.html#fsml_kmeans)       |
 
 <br>
 

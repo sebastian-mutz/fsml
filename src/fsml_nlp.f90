@@ -27,7 +27,8 @@ module fsml_nlp
   private
 
   ! declare public procedures
-  public :: s_nlp_cluster_h, s_nlp_cluster_kmeans
+  public :: s_nlp_cluster_h, s_nlp_cluster_h_core
+  public :: s_nlp_cluster_kmeans, s_nlp_cluster_kmeans_core
 
 contains
 

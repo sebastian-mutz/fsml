@@ -848,9 +848,23 @@ end interface
 
 ! Mahalanobis distance
 interface fsml_mahalanobis
-  !! Compute Mahalanobis distance between the first two samples (rows) of data.
-  !! using covariance estimated from data or the optional covariance matrix cov(m,m).
-  !! data dims are (n, m) where each row is a sample (n samples), columns are features (m features).
+  !! Computes the Mahalanobis distance between two input feature vectors `x` and `y`.
+  !! If a covariance matrix `cov` is provided, it is used directly in the calculation.
+  !! Otherwise, the procedure estimates the covariance matrix from the two-sample dataset
+  !! formed by `x` and `y`. A Cholesky-based solver is used to perform the distance
+  !! calculation.
+  !!
+  !! The Mahalanobis distance is defined as:
+  !!
+  !! $$
+  !! D_M(x, y) = \sqrt{ (x - y)^\top \Sigma^{-1} (x - y) }
+  !! $$
+  !!
+  !! where \( \Sigma \) is the covariance matrix. The inverse is applied via
+  !! the Cholesky decomposition for numerical stability.
+  !!
+  !! **Note:** If passed, the covariance matrix (`cov`) must be positive definite
+  !! for the factorisation to succeed.
   module procedure f_lin_mahalanobis
 end interface
 

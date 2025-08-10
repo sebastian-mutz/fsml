@@ -93,8 +93,8 @@ impure function f_sts_median(x) result(median)
 !! Impure wrapper function for `f_sts_median_core`.
 
 ! ==== Declarations
-  real(wp), intent(in)  :: x(:)   !! x vector (assumed size array)
-  real(wp)              :: median !! median
+  real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
+  real(wp)             :: median !! median
 
 ! ==== Instructions
 

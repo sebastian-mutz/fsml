@@ -60,6 +60,11 @@ representing all principal components that explain variability in the data.
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
 eigenvalues and eigenvectors of the symmetric covariance matrix.
 
+@note
+The procesure has no pure equivalent, because it relies on an
+impure procedure for eigen-decomposition (`eigh`).
+@endnote
+
 ### Syntax
 `call` [[fsml(module):fsml_pca(interface)]]`(x, nd, nv, pc, ev, ew [, r2])`
 
@@ -144,8 +149,13 @@ $$
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module to compute
 eigenvalues and eigenvectors of the symmetric covariance or correlation matrix.
 
+@note
+The procesure has no pure equivalent, because it relies on an
+impure procedure for eigen-decomposition (`eigh`).
+@endnote
+
 ### Syntax
-`call` [[fsml(module):fsml_eof(interface)]]`(x, nd, nv, pc, eof, ew [, opt, wt, eof_scaled, r2])`
+`call` [[fsml(module):fsml_eof(interface)]]`(x, nd, nv, pc, eof, ew [, opt, wt, r2, eof_scaled])`
 
 ### Parameters
 `x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
@@ -234,6 +244,11 @@ between the groups.
 
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
 
+@note
+The procesure has no pure equivalent, because it relies on an
+impure procedure for eigen-decomposition (`eigh`).
+@endnote
+
 ### Syntax
 `call` [[fsml(module):fsml_lda_2class(interface)]]`(x, nd, nv, nc, sa, g, score [, mh])`
 
@@ -296,6 +311,11 @@ can optionally be returned by the procedure, too.
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
 
 **Note:** The intercept and predictor coefficients are computed separately and returned explicitly.
+
+@note
+The procesure has no pure equivalent, because it relies on an
+impure procedure for eigen-decomposition (`eigh`).
+@endnote
 
 ### Syntax
 `call` [[fsml(module):fsml_ols(interface)]]`(x, y, nd, nv, b0, b, r2 [, y_hat, se, covb])`
@@ -371,6 +391,11 @@ where \( \sigma^2 \) is the residual variance estimate.
 
 **Note:** This subroutine uses `eigh` from the `stdlib_linalg` module.
 
+@note
+The procesure has no pure equivalent, because it relies on an
+impure procedure for eigen-decomposition (`eigh`).
+@endnote
+
 ### Syntax
 `call` [[fsml(module):fsml_ridge(interface)]]`(x, y, nd, nv, lambda, b0, b, r2 [, y_hat, se, covb])`
 
@@ -399,6 +424,48 @@ Invalid argument values will result in the return of a sentinel value.
 `se`: An optional return and rank-1 array of type `real` with dimension `nv`.
 
 `cov_b`: An optional return and rank-2 array of type `real` with dimensions `nv`, `nv`.
+
+
+<br>
+# Mahalanobis Distance
+
+## `fsml_mahalanobis`
+
+### Description
+Computes the Mahalanobis distance between two input feature vectors `x` and `y`.
+If a covariance matrix `cov` is provided, it is used directly in the calculation.
+Otherwise, the procedure estimates the covariance matrix from the two-sample dataset
+formed by `x` and `y`. A Cholesky-based solver is used to perform the distance
+calculation.
+
+The Mahalanobis distance is defined as:
+
+$$
+D_M(x, y) = \sqrt{ (x - y)^\top \Sigma^{-1} (x - y) }
+$$
+
+where \( \Sigma \) is the covariance matrix. The inverse is applied via
+the Cholesky decomposition for numerical stability.
+
+**Note:** If passed, the covariance matrix (`cov`) must be positive definite
+for the factorisation to succeed.
+
+@note
+The procesure is experimental and still requires more testing.
+@endnote
+
+### Syntax
+`dist =` [[fsml(module):fsml_mahalanobis(interface)]]`(x, y [, cov])`
+
+### Parameters
+`x`: A rank-1 array of type `real` with dimension `m`.
+
+`y`: A rank-1 array of type `real` with dimension `m`.
+
+`cov`: An optional rank-2 array of type `real` with dimensions `m`, `m`.
+
+### Returns
+`dist`: A scalar of type `real`.
 
 
 <br>

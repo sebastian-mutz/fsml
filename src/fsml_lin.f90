@@ -33,7 +33,7 @@ contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_lin_eof(x, nd, nv, pc, eof, ew, opt, wt, eof_scaled, r2)
+subroutine s_lin_eof(x, nd, nv, pc, eof, ew, opt, wt, r2, eof_scaled)
 
 ! ==== Description
 !! Empirical Orthogonal Function (EOF) analysis
@@ -194,7 +194,11 @@ subroutine s_lin_pca(x, nd, nv, pc, ev, ew, r2)
   wt = 1.0_wp
 
   ! call EOF procedure with simple weights and specify use of covariance matrix (opt=0)
-  call s_lin_eof(x, nd, nv, pc=pc, eof=ev, ew=ew, opt=0, wt=wt, r2=r2)
+  if (present(r2)) then
+     call s_lin_eof(x, nd, nv, pc=pc, eof=ev, ew=ew, opt=0, wt=wt, r2=r2)
+  else
+     call s_lin_eof(x, nd, nv, pc=pc, eof=ev, ew=ew, opt=0, wt=wt)
+  endif
 
 end subroutine s_lin_pca
 

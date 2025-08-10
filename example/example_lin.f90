@@ -113,7 +113,7 @@ program example_lin
 
   ! call eof procedure with weights of 1 and opt=0 (covariance matrix) to makes it consistent with fmsl_pca and other commona pca implementations
   call fsml_eof(x1, nd, nv, pc=pc, eof=eof, ew=ew, opt=0, &
-                 wt=wt, eof_scaled=eof_scaled, r2=r2)
+                 wt=wt, r2=r2, eof_scaled=eof_scaled)
   write(*,'(A)') "> empirical orthogonal function analysis"
   print*
   write(*,'(A)')  "  principal components:  "
@@ -240,6 +240,7 @@ program example_lin
   print*
   write(*,'(A,F10.5)') "  Distance:  ", dist
   print*
+  ! Distance:     1.41421
 
 
 
