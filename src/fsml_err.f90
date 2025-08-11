@@ -31,17 +31,17 @@ module fsml_err
 
   ! error messages
   character(len=128), parameter :: fsml_error(4) = [ character(len=128) ::   &
-                                  & "[fsml error] Argument value out of valid&
-                                  & range. Returning sentinel.          ",   &
-                                  & "[fsml error] Argument value not in list&
-                                  & of valid options. Returning sentinel.",  &
-                                  & "[fsml error] Passed array has invalid&
-                                  & dimensions. Returning sentinel.      ",  &
-                                  & "[fsml error] Passed array has invalid&
-                                  & size. Returning sentinel.            "   ]
+                                  & "Argument value out of valid&
+                                  & range. Returning sentinel.",&
+                                  & "Argument value not in list&
+                                  & of valid options. Returning sentinel.",&
+                                  & "Passed array has invalid&
+                                  & dimensions. Returning sentinel.",&
+                                  & "Passed array has invalid&
+                                  & size. Returning sentinel."]
   ! warning messages
   character(len=128), parameter :: fsml_warning(1) = [ character(len=128) :: &
-                                  & "[fsml warning] Suspicious value returned.&
+                                  & "Suspicious value returned.&
                                   & Convergence may not have been reached in&
                                   & bisection iterations." ]
 
@@ -56,13 +56,14 @@ subroutine s_err_print(error)
 
 ! ==== Declarations
   character(len=*), intent(in) :: error
-  character(len=128)           :: fstring
+  character(len=256)           :: fstring
 
 ! ==== Instructions
-  fstring = trim(error) // " (" // trim(f_utl_r2c(c_sentinel_r)) // ")"
-!  fstring = txt_error // trim(error) // txt_info // &
-!          & " (" // trim(f_utl_r2c(c_sentinel_r)) // ")" // txt_reset
-  write(std_e, '(A)') fstring
+!  fstring = trim(error) // " (" // trim(f_utl_r2c(c_sentinel_r)) // ")"
+  fstring = fg_color_magenta // "[fsml error] " //  style_reset // &
+            trim(error) // fg_color_blue //  " (" //&
+          & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
+  write(std_e, '(A)') trim(fstring)
 
 end subroutine s_err_print
 
@@ -75,12 +76,14 @@ subroutine s_err_warn(warning)
 
 ! ==== Declarations
   character(len=*), intent(in) :: warning
-  character(len=128)           :: fstring
+  character(len=256)           :: fstring
 
 ! ==== Instructions
   fstring = warning
-!  fstring = txt_warn // trim(warning) // txt_reset
-  write(std_e, '(A)') fstring
+  fstring = fg_color_magenta // "[fsml warning] " //  style_reset // &
+            trim(warning) // fg_color_blue //  " (" //&
+          & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
+  write(std_e, '(A)') trim(fstring)
 
 end subroutine s_err_warn
 

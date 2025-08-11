@@ -5,7 +5,7 @@ module fsml_dat
 ! |                                                                    |
 ! | about                                                              |
 ! | -----                                                              |
-! | Module for data handling, file i/o, parsing.                       |
+! | Module for data handling (processing), file i/o, parsing.          |
 ! |                                                                    |
 ! | license : MIT                                                      |
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |

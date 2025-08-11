@@ -15,11 +15,11 @@ module fsml_ini
 !! Initialisation module, includes kinds FSML works with.
 
   ! load modules
-  use :: iso_fortran_env, only: int32, int64, real32, real64, real128 &
-                            &, input_unit, output_unit, error_unit
+  use :: iso_fortran_env, only: int32, int64, real32, real64, real128, &
+                              & input_unit, output_unit, error_unit
   ! load stdlib procedures for ansi terminal colours
-!  use :: stdlib_ansi, only: fg_color_blue, fg_color_cyan, fg_color_magenta&
-!                            &, ansi_code, style_bold, style_reset, operator(//)
+  use :: stdlib_ansi, only: fg_color_cyan, fg_color_blue, fg_color_magenta, &
+                          & ansi_code, style_reset, operator(//)
   ! load stblib procedures for linear algebra
   use :: stdlib_linalg, only: eigh, chol
 
@@ -31,7 +31,8 @@ module fsml_ini
   public :: hp, qp, dp, sp, wp, i4, i8
   public :: std_i, std_o, std_e, std_rw
   public :: eigh, chol
-!  public :: txt_info, txt_error, txt_warn, txt_bold, txt_reset, ansi_code, operator(//)
+  public :: fg_color_cyan, fg_color_blue, fg_color_magenta, &
+          & ansi_code, style_reset, operator(//)
 
 ! ==== Declarations
 
@@ -49,12 +50,5 @@ module fsml_ini
   integer, parameter :: std_o  = output_unit
   integer, parameter :: std_e  = error_unit
   integer, parameter :: std_rw = 21
-
-  ! text colours
-!   type(ansi_code), parameter :: txt_info  = fg_color_blue
-!   type(ansi_code), parameter :: txt_error = fg_color_magenta
-!   type(ansi_code), parameter :: txt_warn  = fg_color_cyan
-!   type(ansi_code), parameter :: txt_bold  = style_bold
-!   type(ansi_code), parameter :: txt_reset = style_reset
 
 end module fsml_ini
