@@ -41,7 +41,7 @@ is to study the existing code. Some of the conventions for the project are highl
 * All `real` should use the working precision (`real(wp)`), and integers should be `integer(i4)`, unless
   there is a good reason to deviate from it.
 * Always specify the `intent` for arguments. The `optional` attribute should follow the `intent`.
-* Don't use the `dimension` attribute. Instead, use  `real, allocatable :: x(:)`
+* Don't use the `dimension` attribute. Instead, use  `real, allocatable :: x(:)`.
 
 ### Documentation
 
