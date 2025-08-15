@@ -47,7 +47,7 @@ is to study the existing code. Some of the conventions for the project are highl
 
 * FORD documentation strings should be provided for all public modules, procedures, arguments, and internal variables.
 * Documentation for every new procedure should immediately be added to the modules respective documentation file
-  (see files in `doc/api`)
+  (see files in `doc/api`).
 
 
 ## Opening an Issue (Bug Reports and Suggestions)
