@@ -52,9 +52,9 @@ LFortran is your choice. You can get LFortran with as follows:
 ```
 conda install -c conda-forge lfortran
 ```
-@warning
+@note
 LFortran is currently not an option, as it fails to compile `stdlib`.
-@endwarning
+@endnote
 
 
 ### FPM
