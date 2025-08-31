@@ -1,4 +1,4 @@
-program test_dst
+program test_sts
 
 ! |--------------------------------------------------------------------|
 ! | fsml - fortran statistics and machine learning library             |
@@ -130,6 +130,7 @@ function test_dispersion(tol) result(status)
 
 ! ==== Instructions
   j=0
+  status = .true.
   do i = 1, n
      j=j+1
      res = fsml_var( x(:,i) )
@@ -184,6 +185,7 @@ function test_relationship(tol) result(status)
 
 ! ==== Instructions
   j=0
+  status = .true.
   do i = 1, n
      j=j+1
      res = fsml_cov( x(:,i), y(:,i), ddf=1.0_wp)

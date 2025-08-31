@@ -1,4 +1,4 @@
-program test_dst
+program test_tst
 
 ! |--------------------------------------------------------------------|
 ! | fsml - fortran statistics and machine learning library             |
@@ -123,6 +123,7 @@ function test_ttests(tol) result(status)
 ! ==== Instructions
 
   j=0
+  status = .true.
 
   ! 1-sample t-test
   j=j+1
@@ -207,6 +208,7 @@ function test_ranktests(tol) result(status)
 ! ==== Instructions
 
   j=0
+  status = .true.
 
   ! 1-sample Wilcoxon signed rank test
   j=j+1
@@ -253,6 +255,8 @@ function test_anova(tol) result(status)
 
 ! ==== Instructions
 
+  status = .true.
+
   ! ANOVA
   call fsml_anova_1way(x2d, res_t, res_df1, res_df2, res_p)
   if (abs( res_t - ans_t ) .gt. tol) status = .false.
@@ -285,6 +289,8 @@ function test_kw(tol) result(status)
   real(wp), parameter :: ans_df = 2.0000000000000000_wp
 
 ! ==== Instructions
+
+  status = .true.
 
   ! Kruskal Wallis H test
   call fsml_kruskalwallis(x2d, res_t, res_df, res_p)
