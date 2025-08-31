@@ -354,9 +354,9 @@ The procedure takes into consideration tied ranks.
 `call ` [[fsml(module):fsml_ranksum(interface)]]`(x1, x2, u, p [,h1])`
 
 ### Parameters
-`x1`: A rank-1 array of type `real`. It must be the same size as `x2`.
+`x1`: A rank-1 array of type `real`.
 
-`x2`: A rank-1 array of type `real`. It must be the same size as `x1`.
+`x2`: A rank-1 array of type `real`.
 
 `h1`: An optional argument and `character` string. If passed, it must be one of the following: *"lt"*, *"gt"*, or *"two"*. If not passed, it will default to *"two"*.
 

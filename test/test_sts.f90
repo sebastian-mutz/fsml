@@ -20,15 +20,18 @@ program test_dst
 
 ! ==== Instructions
 
-  print*, "> testing centre metrics (mean, median)"
+  print*
+  print*, "STS tests"
+
+  print*, "> sts: testing centre metrics (mean, median)"
   status = test_centre(tol)
   call handle_status(status)
 
-  print*, "> testing dispersion metrics (variance, std. dev.)"
+  print*, "> sts: testing dispersion metrics (variance, std. dev.)"
   status = test_dispersion(tol)
   call handle_status(status)
 
-  print*, "> testing basic statistical relationships (cov., trend, Pearson- and Spearman corr.)"
+  print*, "> sts: testing basic statistical relationships (cov., trend, Pearson- and Spearman corr.)"
   status = test_relationship(tol)
   call handle_status(status)
 

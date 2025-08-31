@@ -20,34 +20,36 @@ program test_dst
 
 ! ==== Instructions
 
-  print*, "> testing all normal distribution functions (pdf, cdf, ppf)"
+  print*
+  print*, "DST tests"
+
+  print*, "> dst: testing all normal distribution functions (pdf, cdf, ppf)"
   status = test_norm(tol)
   call handle_status(status)
 
-  print*, "> testing all t distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all t distribution functions (pdf, cdf, ppf)"
   status = test_t(tol)
   call handle_status(status)
 
-  print*, "> testing all gamma distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all gamma distribution functions (pdf, cdf, ppf)"
   status = test_gamma(tol)
   call handle_status(status)
 
-  print*, "> testing all exponential distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all exponential distribution functions (pdf, cdf, ppf)"
   status = test_exp(tol)
   call handle_status(status)
 
-  print*, "> testing all chi-squared distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all chi-squared distribution functions (pdf, cdf, ppf)"
   status = test_chi2(tol)
   call handle_status(status)
 
-  print*, "> testing all f distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all f distribution functions (pdf, cdf, ppf)"
   status = test_f(tol)
   call handle_status(status)
 
-  print*, "> testing all generalised pareto distribution functions (pdf, cdf, ppf)"
+  print*, "> dst: testing all generalised pareto distribution functions (pdf, cdf, ppf)"
   status = test_gpd(tol)
   call handle_status(status)
-
 
 contains
 
