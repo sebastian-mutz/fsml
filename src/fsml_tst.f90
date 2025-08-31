@@ -301,16 +301,6 @@ impure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
      return
   endif
 
-  ! check if x1 and x2 have same size
-  if (size(x1) .ne. size(x2)) then
-     ! write error message and assign sentinel value if invalid
-     call s_err_print(fsml_error(4))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
-     return
-  endif
-
 ! ---- conduct test
 
   ! call pure procedure

@@ -140,9 +140,9 @@ $$ \nu = n_1 + n_2 - 2 $$
 `call ` [[fsml(module):fsml_ttest_2sample(interface)]]`(x1, x2, t, df, p [, eq_var, h1])`
 
 ### Parameters
-`x1`: A rank-1 array of type `real`. It must be the same size as `x2`.
+`x1`: A rank-1 array of type `real`.
 
-`x2`: A rank-1 array of type `real`. It must be the same size as `x1`.
+`x2`: A rank-1 array of type `real`.
 
 `eq_var`: An optional argument of type `logical`. If not passed, it will default to *false*.
 
