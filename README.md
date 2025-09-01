@@ -42,16 +42,4 @@ The published research below uses some of the to-be-reworked code and demonstrat
 
 ### Progress
 
-Currently covered are procedures for sample statistics (STS), statistical distributions (DST) and statistical tests (TST). See the full list [here](http://fsml.mutz.science/page/api/index.html). Additionally planned are procedures that rely heavily on linear algebra (e.g., PCA), nonlinear algorithmic procedures (e.g., k-means clustering), and machine learning framework extensions (e.g., cross-validation).
-
-### Alpha
-
-I will consider the library to be in "alpha" once `FSML` covers all of the originally planned functionality.
-
-### Beta
-
-This stage is reached once `FSML`:
-
-- has undergone substantial testing (incl. comparisons to other libs).
-- has proper documentation.
-- fully works with GFortran and LFortran compilers.
+Currently covered are procedures for sample statistics (STS), statistical distributions (DST), statistical tests (TST), procedures that rely heavily on linear algebra (LIN), and non-linear algorithmic procedures (NLP). See the full list [here](http://fsml.mutz.science/page/api/index.html). Additionally planned are machine learning framework extensions (e.g., cross-validation) and further additions to the NLP module.
