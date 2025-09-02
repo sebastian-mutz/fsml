@@ -470,6 +470,6 @@ for the factorisation to succeed.
 # Examples
 
 ```fortran
-{!example/example_lin.f90!}
+{!example/modules/example_lin.f90!}
 ```
 

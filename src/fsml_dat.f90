@@ -186,11 +186,6 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
   ! deallocate
   deallocate(cells)
 
-  ! summary
-  write(std_o, '(a18,i5)') "number of rows:   ", nrow
-  write(std_o, '(a18,i5)') "number of columns:", ncol
-  write(std_o, *)
-
 ! ---- conatined procedures
   contains
 

@@ -133,6 +133,8 @@ pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 ! ==== Description
 !! Perform agglomerative hierarchical clustering using centroid linkage
 !! and the Mahalanobis distance.
+!! NOTE: The procedure is exact, but slow for large nd. For most pracitcal purposes,
+!! using Lance–Williams algorithm and other distance measures would suffice.
 
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(nd, nv)       !! input data matrix (samples, variables)
@@ -147,91 +149,79 @@ pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
   real(wp)   , intent(out) :: sigma(nv)       !! standard deviation per variable
   real(wp)                 :: x1(nd,nv)       !! working matrix (standardised data, mutable)
   real(wp)                 :: x2(nd,nv)       !! working matrix (standardised data, preserved)
-  real(wp)                 :: vec(nd)         !! temp vectors
+  real(wp)                 :: vec(nd)
   real(wp)                 :: tmp_r1, tmp_r2
-  real(wp)                 :: mini, total     !! minima and totals
-  integer(i4)              :: cluster(nd, nd) !! membership table
-  integer(i4)              :: nde(nd)         !! number of members per cluster
-  integer(i4)              :: new(nd)         !! updated member counts
-  logical                  :: remain(nd)      !! flag for active clusters
+  real(wp)                 :: mini, total
+  integer(i4)              :: cluster(nd, nd), nde(nd), new(nd)
+  logical                  :: remain(nd)
   integer(i4)              :: cl1, cl2, gone
-  integer(i4)              :: idx, i, j, k, l, s
+  integer(i4)              :: idx, i, j, k, s
   integer(i4)              :: re_row(nc)
   real(wp)                 :: pre_vec(nc), post_vec(nc)
   integer(i4)              :: cidx(nc)
+  real(wp)                 :: cluster_sum(nv, nd) !! running sum for centroids
 
 ! ==== Instructions
 
-  ! ----standardise variables and compute correlation matrix
+  ! ---- standardise variables and compute covariance matrix
   x1 = x
   x2 = x
-
-  ! standardise
   do i = 1, nv
      vec = x1(:, i)
-     ! mean
      tmp_r1 = f_sts_mean_core(vec)
      gm(i)  = tmp_r1
-     ! standard deviation
-     tmp_r2   = sqrt(f_sts_var_core(vec, ddf=1.0_wp))
+     tmp_r2 = sqrt(f_sts_var_core(vec, ddf=1.0_wp))
      sigma(i) = tmp_r2
-     ! standardise
      x1(:, i) = (x1(:, i) - tmp_r1) / tmp_r2
      x2(:, i) = (x2(:, i) - tmp_r1) / tmp_r2
   enddo
 
-  ! covariance matrix on standardised data
   do i = 1, nv
      do j = 1, nv
-        cov(i, j) = f_sts_cov_core(x1(:, i), x1(:, j), ddf=1.0_wp)
+        cov(i,j) = f_sts_cov_core(x1(:,i), x1(:,j), ddf=1.0_wp)
      enddo
   enddo
 
-  ! ---- initialise cluster membership
+  ! ---- initialise cluster membership and running sums
   do j = 1, nd
-     remain(j)       = .true.
-     cluster(j,1)    = j
-     nde(j)          = 1
+     remain(j) = .true.
+     cluster(j,1) = j
+     nde(j) = 1
      cluster(j,2:nd) = 0
+     cluster_sum(:, j) = x1(j, :)
   enddo
 
   ! ---- agglomerative merging
   do s = 1, nd - nc
      mini = huge(1.0_wp)
      do j = 2, nd
-        do k = 1, j - 1
-           if (remain(j) .and. remain(k)) then
-              ! compute Mahalanobis distance via provided function using covariance matrix
-              total = f_lin_mahalanobis_core(x1(j, :), x1(k, :), cov)
+        if (.not. remain(j)) cycle       ! skip inactive clusters early
+        do k = 1, j-1
+           if (remain(k)) then
+              ! compute Mahalanobis distance between centroids only
+              total = f_lin_mahalanobis_core(cluster_sum(:,j)/real(nde(j),wp), &
+                                             cluster_sum(:,k)/real(nde(k),wp), cov)
               if (total .le. mini) then
                  mini = total
-                 cl1  = j
-                 cl2  = k
+                 cl1 = j
+                 cl2 = k
               endif
            endif
         enddo
      enddo
 
-     idx  = min(cl1, cl2)
+     idx = min(cl1, cl2)
      gone = max(cl1, cl2)
      remain(gone) = .false.
 
-     ! update centroid
-     do i = 1, nv
-        total = 0.0_wp
-        do j = 1, nde(idx)
-           total = total + x2(cluster(idx, j), i)
-        enddo
-        do j = 1, nde(gone)
-           total = total + x2(cluster(gone, j), i)
-        enddo
-        x1(idx, i) = total / real(nde(idx) + nde(gone), wp)
-     enddo
+     ! update centroid using running sum
+     cluster_sum(:, idx) = cluster_sum(:, idx) + cluster_sum(:, gone)
+     nde(idx) = nde(idx) + nde(gone)
+     x1(idx, :) = cluster_sum(:, idx) / real(nde(idx), wp)
 
      ! merge membership lists
-     new(idx) = nde(idx) + nde(gone)
-     cluster(idx, nde(idx) + 1:new(idx)) = cluster(gone, 1:nde(gone))
-     nde(idx) = new(idx)
+     new(idx) = nde(idx)
+     cluster(idx, nde(idx)-nde(gone)+1:new(idx)) = cluster(gone, 1:nde(gone))
   enddo
 
   ! ---- sort clusters by first variable
@@ -243,21 +233,16 @@ pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
         re_row(k) = j
      endif
   enddo
-
-  ! sort in descending order (2 = descending)
   call s_utl_sort(pre_vec, nc, 2, re_row, post_vec, cidx)
 
+  ! ---- assign centroids and memberships
   do i = 1, nc
      cm(:,i) = x1(re_row(i),:)
   enddo
 
-  ! get cluster membership and sizes (cl, cc)
   cc = 0
-
-  ! for each cluster in sorted order re_row(i),
-  ! assign all points in cluster to cluster index i
   do i = 1, nc
-     idx   = re_row(i)
+     idx = re_row(i)
      cc(i) = nde(idx)
      do j = 1, nde(idx)
         cl(cluster(idx,j)) = i

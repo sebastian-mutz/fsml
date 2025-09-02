@@ -34,6 +34,10 @@ and cluster sizes (`cc`), the covariance matrix (`cov`) and standard deviations
 **Note:** This procedure uses the pure procedure for calculating the Mahalanobis distance
 `f_lin_mahalanobis_core`, which uses`chol` from the `stdlib_linalg` module.
 
+@note
+The current implementation of the procedure is exact, but very slow for large `nd`.
+@endnote
+
 ### Syntax
 `call` [[fsml(module):fsml_hclust(interface)]]`(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)`
 
@@ -182,6 +186,6 @@ Invalid argument values will result in the return of a sentinel value.
 # Examples
 
 ```fortran
-{!example/example_nlp.f90!}
+{!example/modules/example_nlp.f90!}
 ```
 

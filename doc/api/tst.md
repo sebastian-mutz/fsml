@@ -427,5 +427,5 @@ Invalid argument values will result in the return of a sentinel value.
 # Examples
 
 ```fortran
-{!example/example_tst.f90!}
+{!example/modules/example_tst.f90!}
 ```

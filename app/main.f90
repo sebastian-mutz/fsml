@@ -21,7 +21,7 @@ program main
   integer            :: i
   real(wp)           :: r
 
-  infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
+  infile = "./example/research/data/Mutz_et_al_2021/DMC_Mutz2021_Antofagasta.csv"
 
   call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
 
