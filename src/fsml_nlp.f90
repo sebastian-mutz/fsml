@@ -133,8 +133,9 @@ pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 ! ==== Description
 !! Perform agglomerative hierarchical clustering using centroid linkage
 !! and the Mahalanobis distance.
-!! NOTE: The procedure is exact, but slow for large nd. For most pracitcal purposes,
-!! using Lance–Williams algorithm and other distance measures would suffice.
+!! NOTE: The procedure is exact, but slow for large nd. For most pracitcal
+!! purposes, using Lance–Williams algorithm and other distances is advised.
+!! TODO: Implement distance switch and L-W algorithm + approx. distance updates.
 
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(nd, nv)       !! input data matrix (samples, variables)
