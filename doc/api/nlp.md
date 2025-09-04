@@ -186,6 +186,6 @@ Invalid argument values will result in the return of a sentinel value.
 # Examples
 
 ```fortran
-{!example/modules/example_nlp.f90!}
+{!example/example_nlp.f90!}
 ```
 

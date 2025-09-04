@@ -226,6 +226,6 @@ The result is a scalar and the same type as `x` and `y`.
 # Examples
 
 ```fortran
-{!example/modules/example_sts.f90!}
+{!example/example_sts.f90!}
 ```
 

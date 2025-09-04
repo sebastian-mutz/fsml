@@ -645,5 +645,5 @@ The result is a scalar of the same type as `p`.
 # Examples
 
 ```fortran
-{!example/modules/example_dst.f90!}
+{!example/example_dst.f90!}
 ```

@@ -21,25 +21,25 @@ program main
   integer            :: i
   real(wp)           :: r
 
-  infile = "./example/research/data/Mutz_et_al_2021/DMC_Mutz2021_Antofagasta.csv"
-
-  call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
-
-  ! print column id and names
-  print*, "dataframe columns"
-  do i = 1, size(df%col_id)
-     print*, df%col_id(i), df%col_nm(i)
-  enddo
-  print*
-
-  ! mean of first variable (msl - mean sea level pressure)
-  print*, "mean: ", fsml_mean(df%data(:,1))
-
-  ! variance of second variable (t2m - 2m air temperature)
-  print*, "variance: ", fsml_var(df%data(:,2))
-
-  ! correlation of msl and t2m
-  print*, "pearson correlation coefficent: ", fsml_pcc(df%data(:,1), df%data(:,2))
+!   infile = "./example/research/data/Mutz_et_al_2021/DMC_Mutz2021_Antofagasta.csv"
+!
+!   call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
+!
+!   ! print column id and names
+!   print*, "dataframe columns"
+!   do i = 1, size(df%col_id)
+!      print*, df%col_id(i), df%col_nm(i)
+!   enddo
+!   print*
+!
+!   ! mean of first variable (msl - mean sea level pressure)
+!   print*, "mean: ", fsml_mean(df%data(:,1))
+!
+!   ! variance of second variable (t2m - 2m air temperature)
+!   print*, "variance: ", fsml_var(df%data(:,2))
+!
+!   ! correlation of msl and t2m
+!   print*, "pearson correlation coefficent: ", fsml_pcc(df%data(:,1), df%data(:,2))
 
   ! exponential pdf (x=0.8, lambda=0.5)
   print*, fsml_exp_pdf(0.8_wp, lambda=0.5_wp)
