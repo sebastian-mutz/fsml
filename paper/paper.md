@@ -108,7 +108,7 @@ API demonstration for hypothesis tests:
 ```
 
 
-# Past and Ongoing Projects Using FSML
+# Past and Ongoing FSML Projects
 
 The FSML procedures for clustering and linear discriminant analysis were reworked from the code used for climate pattern detection and explanation [@mutz2018, @mutz2019]. FSML's empirical orthogonal functions and analysis of variance were used in [@mutz2025]. FSML's distribution function are currently used for modelling climate extremes in a parallel GPU computing environment.
 
@@ -118,7 +118,7 @@ The priority for future development is 1) an increase in scope (e.g., more regre
 
 # Acknowledgements
 
-I gratefully acknowledge the Fortran-lang community efforts that this project benefits from (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on Fortran-lang  discourse and GitHub. I also extend my gratitude to Herbert Peck.
+I gratefully acknowledge the fortran-lang community efforts that this project integrates (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on fortran-lang discourse and GitHub. I also extend my gratitude to Herbert Peck.
 
 
 # References
