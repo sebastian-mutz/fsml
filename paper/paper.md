@@ -100,10 +100,10 @@ API demonstration for multiple linear regression with regularisation (ridge regr
 API demonstration for hypothesis tests:
 
 ```fortran
-  ! 2-sample t-test for unequal variances (Welch's t-test)
+  ! two-sample t-test for unequal variances (Welch's t-test)
   call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1="two")
 
-  ! 1-way ANOVA
+  ! one-way ANOVA
   call fsml_anova_1way(x2d, t, df1, df2, p)
 ```
 
