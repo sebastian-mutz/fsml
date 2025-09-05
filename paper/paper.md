@@ -59,7 +59,7 @@ The FSML handbook that is hosted on [fsml.mutz.science](http://fsml.mutz.science
 # Example
 
 
-API dmonstration for statistical distribution functions:
+API demonstration for statistical distribution functions:
 
 ```fortran
 
@@ -73,7 +73,7 @@ API dmonstration for statistical distribution functions:
   print*, fsml_gpd_cdf(1.9_wp, xi=1.2_wp, mu=0.6_wp, sigma=2.2_wp, tail="left")
 ```
 
-API dmonstration for sample statistics and dependency measures:
+API demonstration for sample statistics and dependency measures:
 
 ```fortran
 
@@ -90,14 +90,14 @@ API dmonstration for sample statistics and dependency measures:
   print*, "Spearman R (x1, x2): ", fsml_scc(x1, x2)
 ```
 
-API dmonstration for multiple linear regression with regularisation (ridge regression):
+API demonstration for multiple linear regression with regularisation (ridge regression):
 
 ```fortran
-  ! call with lambda set to 0.2
-  call fsml_ridge(x3, y, nd, nv, 0.2_wp, b0, b, rsq, yhat, se, covb)
+  ! conduct ridge regression on x and y with nv variables and lambda set to 0.2
+  call fsml_ridge(x, y, nd, nv, 0.2_wp, b0, b, rsq, yhat, se, covb)
 ```
 
-API dmonstration for hypothesis tests:
+API demonstration for hypothesis tests:
 
 ```fortran
   ! 2-sample t-test for unequal variances (Welch's t-test)
