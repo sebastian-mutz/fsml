@@ -24,7 +24,7 @@ is to study the existing code. Some of the conventions for the project are highl
 * A line should not exceed **80 characters**; use line breakers for long expressions.
 * Use **spaces**, not tabs for indentation.
 * Use **3 spaces of indentation** for `if`, `do`, etc..
-* Use **`dot operators** only (e.g., `.or.`, `.eq.`, `.lt.`)
+* Use **dot operators** only (e.g., `.or.`, `.eq.`, `.lt.`)
 
 ### Variable and procedure names
 
