@@ -61,7 +61,7 @@ The FSML handbook that is hosted on [fsml.mutz.science](http://fsml.mutz.science
 
 API dmonstration for statistical distribution functions:
 
-``` Fortran
+```fortran
 
   ! exponential pdf (x=0.8, lambda=0.5)
   print*, fsml_exp_pdf(0.8_wp, lambda=0.5_wp)
@@ -71,12 +71,11 @@ API dmonstration for statistical distribution functions:
 
   ! genrealised pareto distribution cdf
   print*, fsml_gpd_cdf(1.9_wp, xi=1.2_wp, mu=0.6_wp, sigma=2.2_wp, tail="left")
-
 ```
 
 API dmonstration for sample statistics and dependency measures:
 
-``` Fortran
+```fortran
 
   ! mean of vector x1
   print*, "mean (x1): ", fsml_mean(x1)
@@ -89,29 +88,24 @@ API dmonstration for sample statistics and dependency measures:
 
   ! Spearman rank correlation coefficient for x1 and x2
   print*, "Spearman R (x1, x2): ", fsml_scc(x1, x2)
-
 ```
 
 API dmonstration for multiple linear regression with regularisation (ridge regression):
 
-``` Fortran
-
+```fortran
   ! call with lambda set to 0.2
   call fsml_ridge(x3, y, nd, nv, 0.2_wp, b0, b, rsq, yhat, se, covb)
 ```
 
 API dmonstration for hypothesis tests:
 
-``` Fortran
-
+```fortran
   ! 2-sample t-test for unequal variances (Welch's t-test)
   call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1="two")
 
   ! 1-way ANOVA
   call fsml_anova_1way(x2d, t, df1, df2, p)
-
 ```
-
 
 
 # Past and Ongoing Projects Using FSML
