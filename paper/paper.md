@@ -35,7 +35,7 @@ Fortran is a well-established general purpose programming language that is commo
 
 ## Scope
 
-FSML is a scientific toolkit consisting statistical and machine learning procedure that are frequently needed for common research problems (see examples). These procedures are categorised into five thematic modules:
+FSML is a scientific toolkit consisting statistical and machine learning procedure that are often needed in research (see examples and projects). These procedures are categorised into five thematic modules:
 
 - STS: Basic (sample) statistics for describing and understanding data (e.g., mean, variance, correlation)
 - TST: Parametric and non-parametric hypothesis tests (e.g., Mann–Whitney U , analysis of variance)
@@ -49,7 +49,7 @@ FSML is a scientific toolkit consisting statistical and machine learning procedu
 
 1. Minimal and modern: FSML has minimal requirements. It uses Fortran 2008+ intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy and quick building and distribution. This faciliates easier adoption and encourages transition to a modern, community-driven ecosystem.
 
-2. Modular and intuitive: FSML’s structure is modular, but only to the extend that does not compromise readability. Called procedures are not abstract, but correspond to clearly defined, mostly mathematical procedures (e.g., cdf of a distribution, calling covariance function to construct a covariance matrix, etc.).
+2. Modular and intuitive: FSML’s structure is modular, but only to the extend that does not compromise readability. Called procedures correspond to clearly defined, mostly mathematical methods (e.g., cdf of a distribution, calling covariance function to construct a covariance matrix, etc.).
 
 
 ## Documentation
@@ -57,7 +57,6 @@ FSML is a scientific toolkit consisting statistical and machine learning procedu
 The FSML handbook that is hosted on [fsml.mutz.science](http://fsml.mutz.science/). It includes detailed, example-rich documentation of covered procedures, as well as installation instructions and information for contributors.
 
 # Example
-
 
 API demonstration for statistical distribution functions:
 
