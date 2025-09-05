@@ -18,12 +18,13 @@ is to study the existing code. Some of the conventions for the project are highl
 * Do not use vendor extensions or non-standard syntax like `real*8`.
 * Use basic constructs if they solve the problem. Keeping it simple makes the code more readable and maintainable.
 
-### Indentation, spaces, and line length
+### Indentation, spaces, operators, and line length
 
 * The body of every Fortran construct should be indented by **two spaces**.
 * A line should not exceed **80 characters**; use line breakers for long expressions.
 * Use **spaces**, not tabs for indentation.
 * Use **3 spaces of indentation** for `if`, `do`, etc..
+* Use **`dot operators** only (e.g., `.or.`, `.eq.`, `.lt.`)
 
 ### Variable and procedure names
 

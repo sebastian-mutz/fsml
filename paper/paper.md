@@ -109,7 +109,7 @@ API demonstration for hypothesis tests:
 
 # Past and Ongoing FSML Projects
 
-The FSML procedures for clustering and linear discriminant analysis were reworked from the code used for climate pattern detection and explanation [@mutz2018, @mutz2019]. FSML's empirical orthogonal functions and analysis of variance were used in [@mutz2025]. FSML's distribution function are currently used for modelling climate extremes in a parallel GPU computing environment.
+The FSML procedures for clustering and linear discriminant analysis were reworked from the code used for climate pattern detection and explanation [@mutz2018, @mutz2019]. FSML's empirical orthogonal functions and analysis of variance were used in [@mutz2025]. FSML's distribution functions are currently used for modelling climate extremes in a parallel GPU computing environment.
 
 # Future Development
 
