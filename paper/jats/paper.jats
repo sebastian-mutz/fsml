@@ -96,11 +96,11 @@ a Creative Commons Attribution 4.0 International License (CC BY
   programming languages
   (<xref alt="Pereira et al., 2021" rid="ref-pereiraU003A2021" ref-type="bibr">Pereira
   et al., 2021</xref>), which is another factor to consider as the
-  widespread adoption of computationally demanding ML techniques also
+  widespread adoption of computationally demanding ML techniques
   increases electricity consumption
   (<xref alt="Jia, 2024" rid="ref-jiaU003A2024" ref-type="bibr">Jia,
   2024</xref>), adds more stress on Earth’s climate and environments,
-  and creates new challenges (e.g.,
+  and creates new challenges as a consequence (e.g.,
   <xref alt="Dodge et al., 2022" rid="ref-dodgeU003A2022" ref-type="bibr">Dodge
   et al., 2022</xref>;
   <xref alt="Freitag et al., 2021" rid="ref-freitagU003A2021" ref-type="bibr">Freitag
@@ -112,7 +112,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   et al., 2022</xref>;
   <xref alt="Tomassetti et al., 2009" rid="ref-tomasettiU003A2009" ref-type="bibr">Tomassetti
   et al., 2009</xref>), it has not been as widely adopted in these
-  fields as other languages and lacks ,well documented, accessible
+  fields as other languages and lacks well documented, accessible
   toolkits for statistics and classic ML. While projects like
   Neural-Fortran(<xref alt="Curcic, 2019" rid="ref-curcicU003A2019" ref-type="bibr">Curcic,
   2019</xref>),
@@ -120,42 +120,41 @@ a Creative Commons Attribution 4.0 International License (CC BY
   2024</xref>), and
   <ext-link ext-link-type="uri" xlink:href="https://github.com/jchristopherson/fstats">FStats</ext-link>
   cover some important procedures for deep-learning and classic
-  statistics, the Fortran ecosystem in this discipline remains
-  relatively small. This potentially deters from the use of Fortran,
-  which is already perceived as less accessible than other popular
-  languages due to 1) the lack of familiarity with modern Fortran
-  features, which is exacerbated by stagnating adoption of Fortran at
-  universities, and 2) shortcomings that are currently being addressed
-  by Fortran-lang community
+  statistics, the Fortran statistics and ML ecosystem remains relatively
+  small. This potentially deters from the use of Fortran, which is
+  already perceived as less accessible than other popular languages due
+  to 1) the lack of familiarity with modern Fortran features, which is
+  exacerbated by stagnating adoption of Fortran at universities, and 2)
+  shortcomings that are currently being addressed by the Fortran-lang
+  community efforts
   (<xref alt="Kedward et al., 2022" rid="ref-kedwardU003A2022" ref-type="bibr">Kedward
   et al., 2022</xref>).</p>
   <p><monospace>FSML</monospace> (Fortran Statistics and Machine
-  Learning) purposefully integrates Fortran-lang community efforts
+  Learning) purposefully integrates these Fortran-lang efforts
   (<xref alt="Kedward et al., 2022" rid="ref-kedwardU003A2022" ref-type="bibr">Kedward
-  et al., 2022</xref>): It only relies on
-  <ext-link ext-link-type="uri" xlink:href="https://github.com/fortran-lang/stdlib">stdlib</ext-link>’s
-  interfaces for linear algebra, uses
+  et al., 2022</xref>): It uses
+  <ext-link ext-link-type="uri" xlink:href="https://github.com/fortran-lang/stdlib">stdlib</ext-link>
+  for linear algebra, leverages
   <ext-link ext-link-type="uri" xlink:href="https://github.com/fortran-lang/fpm">fpm</ext-link>
   for easier building and distribution, and is developed to support
   compilation with the community-maintained
   <ext-link ext-link-type="uri" xlink:href="https://github.com/lfortran/lfortran">LFortran</ext-link>
-  in addition to GFortran. As such, it builds on recent community
-  efforts and addresses two gaps:</p>
+  compiler in addition to GFortran. As such, it builds on recent
+  community efforts and addresses two needs:</p>
   <list list-type="order">
     <list-item>
       <p>It adds to the modern Fortran statistics and ML software
-      ecosytem. A richer ecosystem makes Fortran a more attractive
+      ecosytem - a richer ecosystem makes Fortran a more attractive
       choice as a robust, high-performance, energy-efficient option for
       these applications.</p>
     </list-item>
     <list-item>
       <p>The use of fpm, the support of free open-source compilers, the
-      extensive user-facing documentation (fsml.mutz.science), and its
-      permissive license (MIT) faciliate its early adoption and
-      integration into various statistics and ML projects by
-      (university) students, early career researchers, and teachers. It
-      can thus help counter the stagnating adoption of Fortran and
-      prevent language monoculture.</p>
+      extensive documentation, and its permissive license (MIT)
+      faciliate its early adoption and integration into various
+      statistics and ML projects by students, early career researchers,
+      and teachers. It can thus help counter the stagnating adoption of
+      Fortran and prevent language monoculture.</p>
     </list-item>
   </list>
 </sec>
@@ -164,31 +163,31 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <sec id="scope">
     <title>Scope</title>
     <p>FSML consists of a set of accessible and well-documented
-    statistics and ML procedures suitable for many contemporary research
-    problems and teaching. These procedures are categorised into five
-    thematic modules:</p>
+    statistics and ML procedures, suitable for many contemporary
+    research problems and teaching. These procedures are categorised
+    into five thematic modules:</p>
     <list list-type="bullet">
       <list-item>
-        <p>DST: Statistical distributions (e.g., Student’s t,
-        generalised Pareto); probability density function, cumulative
-        distribution function, and percent point function</p>
+        <p>DST: Probability density functions, cumulative distribution
+        functions, and percent point functions for statistical
+        distributions (e.g., Student’s t, generalised Pareto).</p>
       </list-item>
       <list-item>
         <p>STS: Basic statistics for describing and understanding data
-        (e.g., mean, variance, correlation)</p>
+        (e.g., mean, variance, correlation).</p>
       </list-item>
       <list-item>
         <p>TST: Parametric and non-parametric hypothesis tests (e.g.,
-        Mann–Whitney U , analysis of variance)</p>
+        Mann–Whitney U, analysis of variance).</p>
       </list-item>
       <list-item>
         <p>LIN: Statistical procedures relying heavily on linear algebra
         (e.g., principal component analysis, ridge regression, linear
-        discriminant analysis)</p>
+        discriminant analysis).</p>
       </list-item>
       <list-item>
         <p>NLP: Non-linear and algorithmic procedures (e.g., k-means
-        clustering)</p>
+        clustering).</p>
       </list-item>
     </list>
     <fig>
@@ -198,10 +197,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <styled-content id="figU003Afig1"></styled-content></p></caption>
       <graphic mimetype="image" mime-subtype="png" xlink:href="modules.png" />
     </fig>
-    <p>FSML’s requirements are minimal. It uses Fortran 2008 intrinsics,
-    Fortran-lang stdlib for linear algebra, and fpm for easy and quick
-    building and distribution. This faciliates easier adoption and
-    encourages transition to a community-driven modern Fortran
+    <p>FSML’s requirements are minimal. It uses Fortran (2008)
+    intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy
+    and quick building and distribution. This faciliates easier adoption
+    and encourages transition to a community-driven modern Fortran
     ecosystem.</p>
   </sec>
   <sec id="documentation">
@@ -215,34 +214,34 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="examples">
   <title>Examples</title>
-  <p>Demonstration for statistical distribution functions (DST
-  module):</p>
+  <p>Demonstration for statistical distribution functions (DST module)
+  using double precision (dp):</p>
   <preformat>  ! exponential distribution PDF with x=0.8 and lambda=0.5
-  fx = fsml_exp_pdf(0.8_wp, lambda=0.5_wp)
+  fx = fsml_exp_pdf(0.8_dp, lambda=0.5_dp)
   ! genrealised Pareto CDF with specified parameters
-  fx = fsml_gpd_cdf(1.9_wp, xi=1.2_wp, mu=0.6_wp, sigma=2.2_wp, tail=&quot;left&quot;)</preformat>
+  fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail=&quot;left&quot;)</preformat>
   <p>Demonstration for sample statistics and dependency measures (STS
   module):</p>
   <preformat>  ! mean of vector x
   mean = fsml_mean(x)
   ! sample standard deviation of vector x
-  std = fsml_std(x, ddf=1.0_wp)
+  std = fsml_std(x, ddf=1.0_dp)
   ! Pearson correlation coefficient for x1 and x2
   pcc = fsml_pcc(x1, x2)
   ! Spearman rank correlation coefficient for x1 and x2
   scc = fsml_scc(x1, x2)</preformat>
   <p>Demonstration for hypothesis tests (TST module):</p>
   <preformat>  ! two-sample t-test for unequal variances (Welch t-test);
-  ! returns test statistic (t), degrees of freedom, and p-value
+  ! returns test statistic (t), degrees of freedom (df), and p
   call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1=&quot;two&quot;)
   ! one-way ANOVA on a rank-2 array (x2d);
-  ! returns f-statistic, degrees of freedom and p-value
+  ! returns f-statistic, degrees of freedom and p
   call fsml_anova_1way(x2d, f, df1, df2, p)</preformat>
   <p>Demonstration for multiple linear ridge regression (LIN
   module):</p>
   <preformat>  ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
   ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
-  call fsml_ridge(x, y, 100, 5, 0.2_wp, b0, b, rsq)</preformat>
+  call fsml_ridge(x, y, 100, 5, 0.2_dp, b0, b, rsq)</preformat>
 </sec>
 <sec id="past-and-ongoing-fsml-projects">
   <title>Past and Ongoing FSML Projects</title>
