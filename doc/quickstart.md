@@ -157,36 +157,6 @@ real(real64) :: my_variable
 <br>
 # Examples
 
-
-### Reading and Basic Statistics
-
-The example below loads data from a CSV file directly into a simple Fortran dataframe using *fsml_read_csv*. The file stores data for different variables in separate columns. *fsml_mean* and *fsml_var* calculate the mean and variance of a passed vector, respectively. *fsml_pcc* computes the Pearson correlation coefficient from the vectors of column 1 and 2.
-
-```fortran
-program fsml_statistics
-  use fsml
-  use iso_fortran_env, dp => real64
-  implicit none
-
-  type(fsml_typ_df)  :: df     ! use fsml dataframe
-  character(len=128) :: infile
-
-  infile = "./example/data/DMC_Mutz2021_Antofagasta.csv"
-
-  call fsml_read_csv(infile, df, labelcol=.true., labelrow=.true., delimiter=",")
-
-  ! mean of first variable (msl - mean sea level pressure)
-  print*, "mean: ", fsml_mean(df%data(:,1))
-
-  ! variance of second variable (t2m - 2m air temperature)
-  print*, "variance: ", fsml_var(df%data(:,2))
-
-  ! correlation of msl and t2m
-  print*, "pearson correlation coefficent: ", fsml_pcc(df%data(:,1), df%data(:,2))
-
-end program fsml_statistics
-```
-
 ### Statistical Distribution Functions
 
 The example below demonstrates the use of pdf (probability density function), cdf (cumulative distribution function), and ppf (percent point function/quantile function) procedures for different statistical distributions.
