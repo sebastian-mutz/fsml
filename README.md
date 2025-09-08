@@ -4,10 +4,6 @@
 ![95%](https://progress-bar.xyz/95?title=Alpha)
 
 
-> [!IMPORTANT]
-> FSML is in a pre-alpha state. Existing procedures and API may change significantly.
->
-
 ## Description
 
 ![logo](doc/media/logo/FSML_small.png)
