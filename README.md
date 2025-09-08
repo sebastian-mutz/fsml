@@ -19,7 +19,7 @@
 
 **Modules:**
 
-![FSML modules. \label{fig:fig1}](doc/media/fig/modules.png){ width=40% }
+![FSML modules. \label{fig:fig1}](doc/media/fig/modules.png)
 
 FSML has five thematic modules: Basic statistics (STS), hypothesis tests (TST), linear procedures (LIN), non-linear procedures (NLP), and statistical distribution functions (DST).
 
