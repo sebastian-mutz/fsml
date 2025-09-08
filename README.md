@@ -1,7 +1,7 @@
 # Fortran Statistics and Machine Learning
 
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-![95%](https://progress-bar.xyz/95?title=Alpha)
+<!--![95%](https://progress-bar.xyz/95?title=Alpha)-->
 
 
 ## Description
