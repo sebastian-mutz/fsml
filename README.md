@@ -6,22 +6,22 @@
 
 ## Description
 
-![logo](doc/media/logo/FSML_small.png)
+<!-- ![logo](doc/media/logo/FSML_small.png) -->
 
 `FSML` (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
-**Key features:**
+## Key features
 
  - Common statistics and machine learning techniques (as used in modern research).
  - Familiar/intuitive interface (similarities to popular Python or R libs).
  - Core procedures are kept pure (to simplify parallelisation and testing), while impure wrappers handle optional arguments and errors for safe conventional use.
  - Minimal requirements/dependencies (Fortran 2008 or later, and stdlib).
 
-**Modules:**
-
-![FSML modules. \label{fig:fig1}](doc/media/fig/modules.png)
+## Modules
 
 FSML has five thematic modules: Basic statistics (STS), hypothesis tests (TST), linear procedures (LIN), non-linear procedures (NLP), and statistical distribution functions (DST).
+
+![FSML modules. \label{fig:fig1}](doc/media/fig/modules.png)
 
 # Handbook
 
