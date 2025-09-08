@@ -43,3 +43,7 @@ The published research below uses some of the to-be-reworked code and demonstrat
 ### Progress
 
 Currently covered are procedures for sample statistics (STS), statistical distributions (DST), statistical tests (TST), procedures that rely heavily on linear algebra (LIN), and non-linear algorithmic procedures (NLP). See the full list [here](http://fsml.mutz.science/page/api/index.html). Additionally planned are machine learning framework extensions (e.g., cross-validation) and further additions to the NLP module.
+
+# Distributions
+
+`FSML` is offered as an [FPM](https://fpm.fortran-lang.org/) package with examples and tests.
