@@ -8,7 +8,7 @@
 
 ![logo](doc/media/logo/FSML_small.png)
 
-`FSML` (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic descriptive statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
+`FSML` (Fortran Statistics and Machine Learning) is a scientific toolkit consisting of common statistical and machine learning procedures, including basic statistics (e.g., mean, variance, correlation), common statistical tests (e.g., t-test, Mann–Whitney U), linear parametric methods and models (e.g., multiple OLS regression, discriminant analysis), and non-linear statistical and machine learning procedures (e.g., k-means clustering).
 
 **Key features:**
 
@@ -38,7 +38,7 @@ The published research below uses some of the to-be-reworked code and demonstrat
 
 ### Progress
 
-Currently covered are procedures for sample statistics (STS), statistical distributions (DST), statistical tests (TST), procedures that rely heavily on linear algebra (LIN), and non-linear algorithmic procedures (NLP). See the full list [here](http://fsml.mutz.science/page/api/index.html). Additionally planned are machine learning framework extensions (e.g., cross-validation) and further additions to the NLP module.
+Currently covered are procedures for basic statistics (STS), statistical distributions (DST), statistical tests (TST), procedures that rely heavily on linear algebra (LIN), and non-linear algorithmic procedures (NLP). See the full list [here](http://fsml.mutz.science/page/api/index.html). Additionally planned are machine learning framework extensions (e.g., cross-validation) and further additions to the NLP module.
 
 # Distributions
 
