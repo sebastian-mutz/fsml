@@ -126,7 +126,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   to 1) the lack of familiarity with modern Fortran features, which is
   exacerbated by stagnating adoption of Fortran at universities, and 2)
   shortcomings that are currently being addressed by the Fortran-lang
-  community efforts
+  community
   (<xref alt="Kedward et al., 2022" rid="ref-kedwardU003A2022" ref-type="bibr">Kedward
   et al., 2022</xref>).</p>
   <p><monospace>FSML</monospace> (Fortran Statistics and Machine
@@ -145,8 +145,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <list-item>
       <p>It adds to the modern Fortran statistics and ML software
       ecosytem - a richer ecosystem makes Fortran a more attractive
-      choice as a robust, high-performance, energy-efficient option for
-      these applications.</p>
+      choice as a robust, high-performance, energy-efficient option.</p>
     </list-item>
     <list-item>
       <p>The use of fpm, the support of free open-source compilers, the
@@ -154,7 +153,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       faciliate its early adoption and integration into various
       statistics and ML projects by students, early career researchers,
       and teachers. It can thus help counter the stagnating adoption of
-      Fortran and prevent language monoculture.</p>
+      Fortran.</p>
     </list-item>
   </list>
 </sec>
@@ -199,9 +198,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     </fig>
     <p>FSML’s requirements are minimal. It uses Fortran (2008)
     intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy
-    and quick building and distribution. This faciliates easier adoption
-    and encourages transition to a community-driven modern Fortran
-    ecosystem.</p>
+    and quick building and distribution.</p>
   </sec>
   <sec id="documentation">
     <title>Documentation</title>
@@ -214,14 +211,13 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="examples">
   <title>Examples</title>
-  <p>Demonstration for statistical distribution functions (DST module)
-  using double precision (dp):</p>
+  <p>Demonstration for statistical distribution functions using double
+  precision (dp):</p>
   <preformat>  ! exponential distribution PDF with x=0.8 and lambda=0.5
   fx = fsml_exp_pdf(0.8_dp, lambda=0.5_dp)
   ! genrealised Pareto CDF with specified parameters
   fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail=&quot;left&quot;)</preformat>
-  <p>Demonstration for sample statistics and dependency measures (STS
-  module):</p>
+  <p>Demonstration for sample statistics and dependency measures:</p>
   <preformat>  ! mean of vector x
   mean = fsml_mean(x)
   ! sample standard deviation of vector x
@@ -230,15 +226,14 @@ a Creative Commons Attribution 4.0 International License (CC BY
   pcc = fsml_pcc(x1, x2)
   ! Spearman rank correlation coefficient for x1 and x2
   scc = fsml_scc(x1, x2)</preformat>
-  <p>Demonstration for hypothesis tests (TST module):</p>
+  <p>Demonstration for hypothesis tests:</p>
   <preformat>  ! two-sample t-test for unequal variances (Welch t-test);
   ! returns test statistic (t), degrees of freedom (df), and p
   call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1=&quot;two&quot;)
   ! one-way ANOVA on a rank-2 array (x2d);
   ! returns f-statistic, degrees of freedom and p
   call fsml_anova_1way(x2d, f, df1, df2, p)</preformat>
-  <p>Demonstration for multiple linear ridge regression (LIN
-  module):</p>
+  <p>Demonstration for multiple linear ridge regression:</p>
   <preformat>  ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
   ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
   call fsml_ridge(x, y, 100, 5, 0.2_dp, b0, b, rsq)</preformat>
@@ -293,6 +288,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <article-title>AIFS-ECMWF’s data-driven forecasting system</article-title>
       <source>arXiv preprint arXiv:2406.01465</source>
       <year iso-8601-date="2024">2024</year>
+      <pub-id pub-id-type="doi">10.48550/arXiv.2406.01465</pub-id>
     </element-citation>
   </ref>
   <ref id="ref-boatengU003A2023">
@@ -369,7 +365,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <issue>9</issue>
       <issn>2666-3899</issn>
       <uri>https://www.sciencedirect.com/science/article/pii/S2666389921001884</uri>
-      <pub-id pub-id-type="doi">https://doi.org/10.1016/j.patter.2021.100340</pub-id>
+      <pub-id pub-id-type="doi">10.1016/j.patter.2021.100340</pub-id>
       <fpage>100340</fpage>
       <lpage></lpage>
     </element-citation>
@@ -407,7 +403,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <volume>10</volume>
       <issue>7</issue>
       <uri>https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2017MS001242</uri>
-      <pub-id pub-id-type="doi">https://doi.org/10.1029/2017MS001242</pub-id>
+      <pub-id pub-id-type="doi">10.1029/2017MS001242</pub-id>
       <fpage>1613</fpage>
       <lpage>1637</lpage>
     </element-citation>
@@ -429,7 +425,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <volume>205</volume>
       <issn>0167-6423</issn>
       <uri>https://www.sciencedirect.com/science/article/pii/S0167642321000022</uri>
-      <pub-id pub-id-type="doi">https://doi.org/10.1016/j.scico.2021.102609</pub-id>
+      <pub-id pub-id-type="doi">10.1016/j.scico.2021.102609</pub-id>
       <fpage>102609</fpage>
       <lpage></lpage>
     </element-citation>
@@ -520,7 +516,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <issue>1</issue>
       <issn>0022-1694</issn>
       <uri>https://www.sciencedirect.com/science/article/pii/S0022169408006355</uri>
-      <pub-id pub-id-type="doi">https://doi.org/10.1016/j.jhydrol.2008.12.017</pub-id>
+      <pub-id pub-id-type="doi">10.1016/j.jhydrol.2008.12.017</pub-id>
       <fpage>14</fpage>
       <lpage>26</lpage>
     </element-citation>
@@ -534,7 +530,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <source>EGU General Assembly 2025, Vienna, Austria, 27 Apr–2 May 2025</source>
       <year iso-8601-date="2025">2025</year>
       <volume>EGU25-7283</volume>
-      <pub-id pub-id-type="doi">https://doi.org/10.5194/egusphere-egu25-7283</pub-id>
+      <pub-id pub-id-type="doi">10.5194/egusphere-egu25-7283</pub-id>
     </element-citation>
   </ref>
   <ref id="ref-mutzU003A2018">

@@ -22,14 +22,14 @@ bibliography: refs.bib
 
 The advances in computing technology over the past two decades have expanded the practical scope of statistics and allowed the widespread use of machine learning (ML). This also transformed research practices and enhanced predictive modelling across many disciplines, including Earth sciences [@tomasetti:2009; @boateng:2023], operational weather forecasting [@lang:2024], and more.
 
-Fortran is a well-established general purpose programming language that is commonly adopted in science due to its stability, reliability, performance, and array functionality. It is widely used for parallelised high-performance computing and numerical modelling [e.g., @giorgetta:2018]. The same strenghts make it suitable for computationally demanding ML procedures and data-driven predictions. Furthermore, it is more energy-efficient than other high-level programming languages [@pereira:2021], which is another factor to consider as the widespread adoption of computationally demanding ML techniques increases electricity consumption [@jia:2024], adds more stress on Earth’s climate and environments, and creates new challenges as a consequence [e.g., @dodge:2022; @freitag:2021]. Despite Fortran’s long history in data-driven prediction and ML [e.g., @breiman:2001; @tomasetti:2009; @gutmann:2022], it has not been as widely adopted in these fields as other languages and lacks well documented, accessible toolkits for statistics and classic ML. While projects like Neural-Fortran[@curcic:2019], ATHENA[@taylor:2024], and [FStats](https://github.com/jchristopherson/fstats) cover some important procedures for deep-learning and classic statistics, the Fortran statistics and ML ecosystem remains relatively small. This potentially deters from the use of Fortran, which is already perceived as less accessible than other popular languages due to 1) the lack of familiarity with modern Fortran features, which is exacerbated by stagnating adoption of Fortran at universities, and 2) shortcomings that are currently being addressed by the Fortran-lang community efforts [@kedward:2022].
+Fortran is a well-established general purpose programming language that is commonly adopted in science due to its stability, reliability, performance, and array functionality. It is widely used for parallelised high-performance computing and numerical modelling [e.g., @giorgetta:2018]. The same strenghts make it suitable for computationally demanding ML procedures and data-driven predictions. Furthermore, it is more energy-efficient than other high-level programming languages [@pereira:2021], which is another factor to consider as the widespread adoption of computationally demanding ML techniques increases electricity consumption [@jia:2024], adds more stress on Earth’s climate and environments, and creates new challenges as a consequence [e.g., @dodge:2022; @freitag:2021]. Despite Fortran’s long history in data-driven prediction and ML [e.g., @breiman:2001; @tomasetti:2009; @gutmann:2022], it has not been as widely adopted in these fields as other languages and lacks well documented, accessible toolkits for statistics and classic ML. While projects like Neural-Fortran[@curcic:2019], ATHENA[@taylor:2024], and [FStats](https://github.com/jchristopherson/fstats) cover some important procedures for deep-learning and classic statistics, the Fortran statistics and ML ecosystem remains relatively small. This potentially deters from the use of Fortran, which is already perceived as less accessible than other popular languages due to 1) the lack of familiarity with modern Fortran features, which is exacerbated by stagnating adoption of Fortran at universities, and 2) shortcomings that are currently being addressed by the Fortran-lang community [@kedward:2022].
 
 
 `FSML` (Fortran Statistics and Machine Learning) purposefully integrates these Fortran-lang efforts [@kedward:2022]: It uses [stdlib](https://github.com/fortran-lang/stdlib) for linear algebra, leverages [fpm](https://github.com/fortran-lang/fpm) for easier building and distribution, and is developed to support compilation with the community-maintained [LFortran](https://github.com/lfortran/lfortran) compiler in addition to GFortran. As such, it builds on recent community efforts and addresses two needs:
 
-1. It adds to the modern Fortran statistics and ML software ecosytem  - a richer ecosystem makes Fortran a more attractive choice as a robust, high-performance, energy-efficient option for these applications.
+1. It adds to the modern Fortran statistics and ML software ecosytem  - a richer ecosystem makes Fortran a more attractive choice as a robust, high-performance, energy-efficient option.
 
-2. The use of fpm, the support of free open-source compilers, the extensive documentation, and its permissive license (MIT) faciliate its early adoption and integration into various statistics and ML projects by students, early career researchers, and teachers. It can thus help counter the stagnating adoption of Fortran and prevent language monoculture.
+2. The use of fpm, the support of free open-source compilers, the extensive documentation, and its permissive license (MIT) faciliate its early adoption and integration into various statistics and ML projects by students, early career researchers, and teachers. It can thus help counter the stagnating adoption of Fortran.
 
 
 # Software Description
@@ -46,7 +46,7 @@ FSML consists of a set of accessible and well-documented statistics and ML proce
 
 ![FSML has five thematic modules: Basic statistics (STS), hypothesis tests (TST), linear procedures (LIN), non-linear procedures (NLP), and statistical distribution functions (DST). \label{fig:fig1}](figs/modules.png){ width=50% }
 
-FSML's requirements are minimal. It uses Fortran (2008) intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy and quick building and distribution. This faciliates easier adoption and encourages transition to a community-driven modern Fortran ecosystem.
+FSML's requirements are minimal. It uses Fortran (2008) intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy and quick building and distribution.
 
 ## Documentation
 
@@ -54,7 +54,7 @@ The FSML handbook is hosted on [fsml.mutz.science](http://fsml.mutz.science/) an
 
 # Examples
 
-Demonstration for statistical distribution functions (DST module) using double precision (dp):
+Demonstration for statistical distribution functions using double precision (dp):
 
 ```fortran
   ! exponential distribution PDF with x=0.8 and lambda=0.5
@@ -63,7 +63,7 @@ Demonstration for statistical distribution functions (DST module) using double p
   fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail="left")
 ```
 
-Demonstration for sample statistics and dependency measures  (STS module):
+Demonstration for sample statistics and dependency measures:
 
 ```fortran
   ! mean of vector x
@@ -76,7 +76,7 @@ Demonstration for sample statistics and dependency measures  (STS module):
   scc = fsml_scc(x1, x2)
 ```
 
-Demonstration for hypothesis tests  (TST module):
+Demonstration for hypothesis tests:
 
 ```fortran
   ! two-sample t-test for unequal variances (Welch t-test);
@@ -87,7 +87,7 @@ Demonstration for hypothesis tests  (TST module):
   call fsml_anova_1way(x2d, f, df1, df2, p)
 ```
 
-Demonstration for multiple linear ridge regression (LIN module):
+Demonstration for multiple linear ridge regression:
 ```fortran
   ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
   ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
