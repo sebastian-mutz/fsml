@@ -24,16 +24,16 @@ is to study the existing code. Some of the conventions for the project are highl
 * A line should not exceed **80 characters**; use line breakers for long expressions.
 * Use **spaces**, not tabs for indentation.
 * Use **3 spaces of indentation** for `if`, `do`, etc..
-* Use **dot operators** only (e.g., `.or.`, `.eq.`, `.lt.`)
+* Use **dot operators** for comparisons (e.g., `.eq.`, `.lt.`)
 
 ### Variable and procedure names
 
 * Variable names should be made up understandable lowercase words or abbreviations linked by underscore
   (e.g., `eof_analysis`).
-* Function and subroutine should follow the naming conventions `f_[module_name]_[function_descriptor]`
+* Functions and subroutines should follow the naming conventions `f_[module_name]_[function_descriptor]`
   and `s_[module_name]_[function_descriptor]`, respectively. Pure procedures that have impure wrappers
-  should append `_core`. For example, `f_nlp_kmeans_core`. Public-facing interfaces should simplify this
-  to `fsml_kmeans`.
+  should append `_core`. For example, `s_nlp_kmeans_core` is the pure procedure with impure wrapper `s_nlp_kmeans`.
+  Public interfaces are declared in `fsml.f90` and should simplify procedure names like `s_nlp_kmeans` to `fsml_kmeans`.
 * Append the `program`, `module`, `function` or `subroutine` names in their end statement.
   For example, `end subroutine f_nlp_kmeans_core`.
   
