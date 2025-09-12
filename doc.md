@@ -33,7 +33,9 @@ sort: permission-alpha
 dbg: true
 ---
 
-![logo](media/logo/FSML_small.png)
+<!--![logo](media/logo/FSML_small.png)-->
+
+<br>
 
 # Description
 
