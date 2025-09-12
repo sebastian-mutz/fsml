@@ -80,9 +80,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   and enhanced predictive modelling across many disciplines, including
   Earth sciences
   (<xref alt="Boateng &amp; Mutz, 2023" rid="ref-boatengU003A2023" ref-type="bibr">Boateng
-  &amp; Mutz, 2023</xref>;
-  <xref alt="Tomassetti et al., 2009" rid="ref-tomasettiU003A2009" ref-type="bibr">Tomassetti
-  et al., 2009</xref>), operational weather forecasting
+  &amp; Mutz, 2023</xref>), operational weather forecasting
   (<xref alt="Lang et al., 2024" rid="ref-langU003A2024" ref-type="bibr">Lang
   et al., 2024</xref>), and more.</p>
   <p>Fortran is a well-established general purpose programming language
@@ -125,26 +123,24 @@ a Creative Commons Attribution 4.0 International License (CC BY
   already perceived as less accessible than other popular languages due
   to 1) the lack of familiarity with modern Fortran features, which is
   exacerbated by stagnating adoption of Fortran at universities, and 2)
-  shortcomings that are currently being addressed by the Fortran-lang
-  community
+  shortcomings that are currently being addressed by Fortran-lang
+  community projects
   (<xref alt="Kedward et al., 2022" rid="ref-kedwardU003A2022" ref-type="bibr">Kedward
   et al., 2022</xref>).</p>
   <p><monospace>FSML</monospace> (Fortran Statistics and Machine
-  Learning) purposefully integrates these Fortran-lang efforts
-  (<xref alt="Kedward et al., 2022" rid="ref-kedwardU003A2022" ref-type="bibr">Kedward
-  et al., 2022</xref>): It uses
+  Learning) purposefully integrates these projects: It uses
   <ext-link ext-link-type="uri" xlink:href="https://github.com/fortran-lang/stdlib">stdlib</ext-link>
   for linear algebra, leverages
   <ext-link ext-link-type="uri" xlink:href="https://github.com/fortran-lang/fpm">fpm</ext-link>
   for easier building and distribution, and is developed to support
-  compilation with the community-maintained
+  compilation with the interactive
   <ext-link ext-link-type="uri" xlink:href="https://github.com/lfortran/lfortran">LFortran</ext-link>
   compiler in addition to GFortran. As such, it builds on recent
   community efforts and addresses two needs:</p>
   <list list-type="order">
     <list-item>
       <p>It adds to the modern Fortran statistics and ML software
-      ecosytem - a richer ecosystem makes Fortran a more attractive
+      ecosytem; a richer ecosystem makes Fortran a more attractive
       choice as a robust, high-performance, energy-efficient option.</p>
     </list-item>
     <list-item>
@@ -167,9 +163,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
     into five thematic modules:</p>
     <list list-type="bullet">
       <list-item>
-        <p>DST: Probability density functions, cumulative distribution
-        functions, and percent point functions for statistical
-        distributions (e.g., Student’s t, generalised Pareto).</p>
+        <p>DST: Statistical distribution functions (e.g., the
+        probability density, cumulative distribution, and quantile
+        functions of the Student’s t and generalised Pareto
+        distributions).</p>
       </list-item>
       <list-item>
         <p>STS: Basic statistics for describing and understanding data
@@ -177,7 +174,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       </list-item>
       <list-item>
         <p>TST: Parametric and non-parametric hypothesis tests (e.g.,
-        Mann–Whitney U, analysis of variance).</p>
+        analysis of variance, Mann–Whitney U).</p>
       </list-item>
       <list-item>
         <p>LIN: Statistical procedures relying heavily on linear algebra
@@ -196,47 +193,67 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <styled-content id="figU003Afig1"></styled-content></p></caption>
       <graphic mimetype="image" mime-subtype="png" xlink:href="modules.png" />
     </fig>
-    <p>FSML’s requirements are minimal. It uses Fortran (2008)
-    intrinsics, Fortran-lang stdlib for linear algebra, and fpm for easy
-    and quick building and distribution.</p>
+    <p>FSML has minimal requirements. It uses Fortran 2008 features,
+    Fortran-lang stdlib for linear algebra, and fpm for easy building
+    and distribution.</p>
   </sec>
   <sec id="documentation">
     <title>Documentation</title>
     <p>The FSML handbook is hosted on
     <ext-link ext-link-type="uri" xlink:href="http://fsml.mutz.science/">fsml.mutz.science</ext-link>
-    and can also be re-generated from its source files. It includes
-    detailed, example-rich documentation of covered procedures, as well
-    as installation instructions and information for contributors.</p>
+    and can be re-generated from its source files. It includes a
+    detailed, example-rich documentation of the covered procedures, as
+    well as installation instructions and information for
+    contributors.</p>
   </sec>
 </sec>
 <sec id="examples">
   <title>Examples</title>
-  <p>Demonstration for statistical distribution functions using double
-  precision (dp):</p>
-  <preformat>  ! exponential distribution PDF with x=0.8 and lambda=0.5
+  <p>The examples below demonstrate the use of FSML interfaces, using
+  double precision (dp):</p>
+  <list list-type="bullet">
+    <list-item>
+      <p>statistical distribution functions:</p>
+    </list-item>
+  </list>
+  <preformat>  ! exponential distribution probability density function
+  ! with x=0.8 and lambda=0.5
   fx = fsml_exp_pdf(0.8_dp, lambda=0.5_dp)
-  ! genrealised Pareto CDF with specified parameters
-  fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp, sigma=2.2_dp, tail=&quot;left&quot;)</preformat>
-  <p>Demonstration for sample statistics and dependency measures:</p>
+  ! generalised Pareto cumulative distribution function
+  ! with modified shape (xi) and location (mu) parameters
+  fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp)</preformat>
+  <list list-type="bullet">
+    <list-item>
+      <p>sample statistics and dependency measures:</p>
+    </list-item>
+  </list>
   <preformat>  ! mean of vector x
   mean = fsml_mean(x)
   ! sample standard deviation of vector x
   std = fsml_std(x, ddf=1.0_dp)
-  ! Pearson correlation coefficient for x1 and x2
-  pcc = fsml_pcc(x1, x2)
-  ! Spearman rank correlation coefficient for x1 and x2
-  scc = fsml_scc(x1, x2)</preformat>
-  <p>Demonstration for hypothesis tests:</p>
-  <preformat>  ! two-sample t-test for unequal variances (Welch t-test);
+  ! Pearson correlation coefficient for vectors x1 and x2
+  pcc = fsml_pcc(x1, x2)</preformat>
+  <list list-type="bullet">
+    <list-item>
+      <p>hypothesis tests:</p>
+    </list-item>
+  </list>
+  <preformat>  ! two-sample t-test for unequal variances (Welch's t-test);
   ! returns test statistic (t), degrees of freedom (df), and p
-  call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false., h1=&quot;two&quot;)
+  call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false.)
   ! one-way ANOVA on a rank-2 array (x2d);
-  ! returns f-statistic, degrees of freedom and p
+  ! returns f-statistic (f), degrees of freedom (df1, df2) and p
   call fsml_anova_1way(x2d, f, df1, df2, p)</preformat>
-  <p>Demonstration for multiple linear ridge regression:</p>
+  <list list-type="bullet">
+    <list-item>
+      <p>multiple linear ridge regression:</p>
+    </list-item>
+  </list>
   <preformat>  ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
   ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
   call fsml_ridge(x, y, 100, 5, 0.2_dp, b0, b, rsq)</preformat>
+  <p><monospace>FSML</monospace>’s repository and handbook includes
+  examples for every public interface.</p>
 </sec>
 <sec id="past-and-ongoing-fsml-projects">
   <title>Past and Ongoing FSML Projects</title>
@@ -247,24 +264,19 @@ a Creative Commons Attribution 4.0 International License (CC BY
   et al., 2018</xref>;
   <xref alt="Mutz &amp; Ehlers, 2019" rid="ref-mutzU003A2019" ref-type="bibr">Mutz
   &amp; Ehlers, 2019</xref>). FSML’s empirical orthogonal functions and
-  analysis of variance were used in
-  (<xref alt="Mutz, 2025" rid="ref-mutzU003A2025" ref-type="bibr">Mutz,
-  2025</xref>). FSML’s distribution functions are currently used for
-  modelling climate extremes.</p>
-</sec>
-<sec id="future-development">
-  <title>Future Development</title>
-  <p>The priorities for future development are 1) an increase in scope
-  (e.g., more regressors and distance measures), 2) the addition of
-  helper procedures (reading, data transformation), 3) performance
-  optimisations, and 4) the creation of more accessible tutorials.</p>
+  analysis of variance were used in Mutz
+  (<xref alt="2025" rid="ref-mutzU003A2025" ref-type="bibr">2025</xref>).
+  FSML’s distribution functions are currently used for modelling climate
+  extremes.</p>
 </sec>
 <sec id="acknowledgements">
   <title>Acknowledgements</title>
   <p>I gratefully acknowledge the Fortran-lang community efforts that
   this project integrates (fpm, stdlib, and LFortran), as well as the
-  always helpful discussions the with the same community on Fortran-lang
-  discourse and GitHub. I also extend my gratitude to Herbert Peck.</p>
+  always helpful discussions the with the same community on
+  <ext-link ext-link-type="uri" xlink:href="https://fortran-lang.discourse.group/">Fortran-lang
+  discourse</ext-link> and GitHub. I also extend my gratitude to Herbert
+  Peck.</p>
 </sec>
 </body>
 <back>
