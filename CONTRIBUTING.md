@@ -5,7 +5,9 @@ efficient and enjoyable for all. Since this is a relatively small project, the g
 are encouraged to simply contact [sebastian@mutz.science](mailto:sebastian@mutz.science) when in doubt.
 
 If you are interested in contributing code, you certify that you own or are allowed to share the content of your
-contribution under the [fsml license](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENCE).
+contribution under [fsml's licence](https://github.com/sebastian-mutz/fsml/blob/HEAD/LICENCE).
+
+**Note**: This contributing guide was modified from the contributing and style guides of [fortran-lang](https://github.com/fortran-lang) projects.
 
 ## Style
 

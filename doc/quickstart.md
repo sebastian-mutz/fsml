@@ -38,14 +38,14 @@ likely also compile with Intel and other compilers (no compiler specific
 extensions are used).
 
 **GFortran** is a very mature and well-established compiler. Consequently, if
-you're just looking for battle-tested compiler and smooth experience, GFortran
+you're just looking for a smooth experience, GFortran
 is your choice. You can install GFortran with conda as follows:
 
 ```
 conda install -c conda-forge gfortran
 ```
 **LFortran** is a new, interactive compiler that is still under heavy
-development. If you're looking to use `FSML` in a jupyter notebook and you're
+development. If you're looking to use `FSML` interactively and you're
 comfortable with the occasional tinkering (and bug reporting to help improve LFortran!),
 LFortran is your choice. You can get LFortran with as follows:
 
