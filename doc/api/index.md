@@ -4,7 +4,7 @@ title: API Reference
 
 # API Reference
 
-This is a guide to public-facing API (Application Programming Interface) of FSML!
+This is a guide to FSML's API (Application Programming Interface).
 
 # Structure
 
@@ -25,7 +25,7 @@ recognise these in module and procedure names.
 
 # Coverage
 
-The following procedures are currently covered and have a public-facing interface. The links will take you directly to the documentation for the API.
+The following procedures are currently covered and have a public interface. The links will take you directly to the documentation for the API.
 
 | Basic Statistics (STS)                             |
 | -------------------------------------------------- |
