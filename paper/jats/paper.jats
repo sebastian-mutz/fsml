@@ -209,7 +209,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="examples">
   <title>Examples</title>
-  <p>The examples below demonstrate the use of FSML interfaces, using
+  <p>The examples below demonstrate the use of zFSML interfaces, using
   double precision (dp):</p>
   <list list-type="bullet">
     <list-item>

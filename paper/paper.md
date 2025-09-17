@@ -54,7 +54,7 @@ The FSML handbook is hosted on [fsml.mutz.science](http://fsml.mutz.science/) an
 
 # Examples
 
-The examples below demonstrate the use of FSML interfaces, using double precision (dp):
+The examples below demonstrate the use of zFSML interfaces, using double precision (dp):
 
 * statistical distribution functions:
 ```fortran

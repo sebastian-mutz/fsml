@@ -12,7 +12,7 @@ The FSML procedures are categorised into several thematic modules:
 
 ![FSML has five thematic modules: Basic statistics (STS), hypothesis tests (TST), linear procedures (LIN), non-linear procedures (NLP), and statistical distribution functions (DST). \label{fig:fig1}](../../media/fig/modules.png){ width=40% }
 
-- `STS`: Basic (sample) statistics for describing and understanding data (e.g., mean, variance, correlation)
+- `STS`: Basic statistics for describing and understanding data (e.g., mean, variance, correlation)
 - `TST`: Parametric and non-parametric hypothesis tests (e.g., Mann–Whitney U , analysis of variance)
 - `LIN`: Statistical procedures relying heavily on linear algebra (e.g., principal component analysis, ridge regression, linear discriminant analysis)
 - `NLP`: Non-linear and algorithmic procedures (e.g., k-means clustering)
@@ -27,7 +27,7 @@ recognise these in module and procedure names.
 
 The following procedures are currently covered and have a public-facing interface. The links will take you directly to the documentation for the API.
 
-| Basic Population and Sample Statistics (STS)       |
+| Basic Statistics (STS)                             |
 | -------------------------------------------------- |
 | [Mean](./sts.html#fsml_mean)                       |
 | [Median](./sts.html#fsml_median)                   |
