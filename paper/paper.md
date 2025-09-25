@@ -50,7 +50,7 @@ FSML has minimal requirements. It uses Fortran 2008 features, Fortran-lang stdli
 
 ## Documentation
 
-The FSML handbook is hosted on [fsml.mutz.science](http://fsml.mutz.science/) and can be re-generated from its source files. It includes a detailed, example-rich documentation of the covered procedures, as well as installation instructions and information for contributors.
+The FSML handbook is hosted on [fsml.mutz.science](https://fsml.mutz.science/) and can be re-generated from its source files. It includes a detailed, example-rich documentation of the covered procedures, as well as installation instructions and information for contributors.
 
 # Examples
 
