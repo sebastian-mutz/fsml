@@ -1,5 +1,5 @@
 ---
-title: FSML Licence (MIT)
+title: Licence (MIT)
 ---
 
 {!LICENCE!}

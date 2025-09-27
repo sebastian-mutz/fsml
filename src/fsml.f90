@@ -13,6 +13,7 @@ module fsml
 
 ! FORD
 !! FSML interface module.
+!! Only the interfaces of this module are part of the public API.
 
   ! load modules
   use :: fsml_ini

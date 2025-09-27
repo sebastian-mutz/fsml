@@ -4,7 +4,8 @@ title: API Reference
 
 # API Reference
 
-This is a guide to FSML's API (Application Programming Interface).
+This is a guide to FSML's public API (Application Programming Interface).
+
 
 # Structure
 
@@ -21,6 +22,10 @@ The FSML procedures are categorised into several thematic modules:
 While the public interfaces do not include these as prefixes, the handbook makes use of these
 categories to give it more structure. If you are interested in exploring the code, you will
 recognise these in module and procedure names.
+
+@note
+Interfaces with the prefix `fsml_` are part of the public API and provided through the [[fsml(module)]] module.
+@endnote
 
 
 # Coverage
