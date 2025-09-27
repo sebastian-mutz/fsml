@@ -88,7 +88,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   performance, and array functionality. It is widely used for
   parallelised high-performance computing and numerical modelling (e.g.,
   <xref alt="Giorgetta et al., 2018" rid="ref-giorgettaU003A2018" ref-type="bibr">Giorgetta
-  et al., 2018</xref>). The same strenghts make it suitable for
+  et al., 2018</xref>). The same strengths make it suitable for
   computationally demanding ML procedures and data-driven predictions.
   Furthermore, it is more energy-efficient than other high-level
   programming languages
@@ -102,19 +102,20 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <xref alt="Dodge et al., 2022" rid="ref-dodgeU003A2022" ref-type="bibr">Dodge
   et al., 2022</xref>;
   <xref alt="Freitag et al., 2021" rid="ref-freitagU003A2021" ref-type="bibr">Freitag
-  et al., 2021</xref>). Despite Fortran’s long history in data-driven
-  prediction and ML (e.g.,
+  et al., 2021</xref>). <bold>Despite Fortran’s long history in
+  data-driven prediction and ML</bold> (e.g.,
   <xref alt="Breiman, 2001" rid="ref-breimanU003A2001" ref-type="bibr">Breiman,
   2001</xref>;
   <xref alt="Gutmann et al., 2022" rid="ref-gutmannU003A2022" ref-type="bibr">Gutmann
   et al., 2022</xref>;
   <xref alt="Tomassetti et al., 2009" rid="ref-tomasettiU003A2009" ref-type="bibr">Tomassetti
-  et al., 2009</xref>), it has not been as widely adopted in these
+  et al., 2009</xref>), <bold>it has not been as widely adopted in these
   fields as other languages and lacks well documented, accessible
-  toolkits for statistics and classic ML. While projects like
-  Neural-Fortran(<xref alt="Curcic, 2019" rid="ref-curcicU003A2019" ref-type="bibr">Curcic,
-  2019</xref>),
-  ATHENA(<xref alt="Taylor, 2024" rid="ref-taylorU003A2024" ref-type="bibr">Taylor,
+  toolkits for statistics and classic ML.</bold></p>
+  <p>Although projects like Neural-Fortran
+  (<xref alt="Curcic, 2019" rid="ref-curcicU003A2019" ref-type="bibr">Curcic,
+  2019</xref>), ATHENA
+  (<xref alt="Taylor, 2024" rid="ref-taylorU003A2024" ref-type="bibr">Taylor,
   2024</xref>), and
   <ext-link ext-link-type="uri" xlink:href="https://github.com/jchristopherson/fstats">FStats</ext-link>
   cover some important procedures for deep-learning and classic
@@ -146,10 +147,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <list-item>
       <p>The use of fpm, the support of free open-source compilers, the
       extensive documentation, and its permissive license (MIT)
-      faciliate its early adoption and integration into various
+      facilitate its early adoption and integration into various
       statistics and ML projects by students, early career researchers,
-      and teachers. It can thus help counter the stagnating adoption of
-      Fortran.</p>
+      and teachers. It can thus promote the adoption of Fortran.</p>
     </list-item>
   </list>
 </sec>
@@ -159,8 +159,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <title>Scope</title>
     <p>FSML consists of a set of accessible and well-documented
     statistics and ML procedures, suitable for many contemporary
-    research problems and teaching. These procedures are categorised
-    into five thematic modules:</p>
+    research problems and teaching. These procedures are subdivided into
+    five categories:</p>
     <list list-type="bullet">
       <list-item>
         <p>DST: Statistical distribution functions (e.g., the
@@ -200,7 +200,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <sec id="documentation">
     <title>Documentation</title>
     <p>The FSML handbook is hosted on
-    <ext-link ext-link-type="uri" xlink:href="http://fsml.mutz.science/">fsml.mutz.science</ext-link>
+    <ext-link ext-link-type="uri" xlink:href="https://fsml.mutz.science/">fsml.mutz.science</ext-link>
     and can be re-generated from its source files. It includes a
     detailed, example-rich documentation of the covered procedures, as
     well as installation instructions and information for
@@ -209,49 +209,49 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="examples">
   <title>Examples</title>
-  <p>The examples below demonstrate the use of zFSML interfaces, using
+  <p>The examples below demonstrate the use of FSML interfaces, using
   double precision (dp):</p>
   <list list-type="bullet">
     <list-item>
       <p>statistical distribution functions:</p>
     </list-item>
   </list>
-  <preformat>  ! exponential distribution probability density function
-  ! with x=0.8 and lambda=0.5
-  fx = fsml_exp_pdf(0.8_dp, lambda=0.5_dp)
-  ! generalised Pareto cumulative distribution function
-  ! with modified shape (xi) and location (mu) parameters
-  fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp)</preformat>
+  <preformat>       ! exponential distribution probability density function
+       ! with x=0.8 and lambda=0.5
+       fx = fsml_exp_pdf(0.8_dp, lambda=0.5_dp)
+       ! generalised Pareto cumulative distribution function
+       ! with modified shape (xi) and location (mu) parameters
+       fx = fsml_gpd_cdf(1.9_dp, xi=1.2_dp, mu=0.6_dp)</preformat>
   <list list-type="bullet">
     <list-item>
       <p>sample statistics and dependency measures:</p>
     </list-item>
   </list>
-  <preformat>  ! mean of vector x
-  mean = fsml_mean(x)
-  ! sample standard deviation of vector x
-  std = fsml_std(x, ddf=1.0_dp)
-  ! Pearson correlation coefficient for vectors x1 and x2
-  pcc = fsml_pcc(x1, x2)</preformat>
+  <preformat>       ! mean of vector x
+       mean = fsml_mean(x)
+       ! sample standard deviation of vector x
+       std = fsml_std(x, ddf=1.0_dp)
+       ! Pearson correlation coefficient for vectors x1 and x2
+       pcc = fsml_pcc(x1, x2)</preformat>
   <list list-type="bullet">
     <list-item>
       <p>hypothesis tests:</p>
     </list-item>
   </list>
-  <preformat>  ! two-sample t-test for unequal variances (Welch's t-test);
-  ! returns test statistic (t), degrees of freedom (df), and p
-  call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false.)
-  ! one-way ANOVA on a rank-2 array (x2d);
-  ! returns f-statistic (f), degrees of freedom (df1, df2) and p
-  call fsml_anova_1way(x2d, f, df1, df2, p)</preformat>
+  <preformat>       ! two-sample t-test for unequal variances (Welch's t-test);
+       ! returns test statistic (t), degrees of freedom (df), and p
+       call fsml_ttest_2sample(x1, x2, t, df, p, eq_var=.false.)
+       ! one-way ANOVA on a rank-2 array (x2d);
+       ! returns f-statistic (f), degrees of freedom (df1, df2) and p
+       call fsml_anova_1way(x2d, f, df1, df2, p)</preformat>
   <list list-type="bullet">
     <list-item>
       <p>multiple linear ridge regression:</p>
     </list-item>
   </list>
-  <preformat>  ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
-  ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
-  call fsml_ridge(x, y, 100, 5, 0.2_dp, b0, b, rsq)</preformat>
+  <preformat>       ! ridge regression for 100 data points, 5 variables, and lambda=0.2;
+       ! returns y intercept (b0), regression coefficients (b), and R^2 (rsq)
+       call fsml_ridge(x, y, 100, 5, 0.2_dp, b0, b, rsq)</preformat>
   <p><monospace>FSML</monospace>’s repository and handbook includes
   examples for every public interface.</p>
 </sec>
