@@ -7,13 +7,13 @@ copyright = "Copyright 2025, Sebastian G. Mutz"
 description = "Fortran Statistics and Machine Learning Library"
 
 [build]
-auto-executables = true
+auto-executables = false
 auto-tests = true
 auto-examples = true
 module-naming = false
 
 [install]
-library = false
+library = true
 
 [fortran]
 implicit-typing = false
