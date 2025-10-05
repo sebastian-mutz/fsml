@@ -120,6 +120,7 @@ In your fpm project toml file, add the following lines:
 
 ```toml
 [dependencies]
+stdlib = "*"
 fsml = { git = "https://github.com/sebastian-mutz/fsml.git" }
 ```
 
