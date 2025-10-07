@@ -37,7 +37,7 @@ The aim is to create an easy-to-use library for modern Fortran applications that
 
 `FSML` started as an effort to rewrite, re-structure, clean-up, and enhance old Fortran code I've written in the past 15 years, and to bundle and publish it as a well organised and well documented library.
 
-The published research below uses some of the to-be-reworked code and demonstrates some applications of the above-mentioned methods:
+The published research below uses some of the code that was reworked and included in fsml.:
 
 - [Mutz and Ehlers (2019)](https://doi.org/10.5194/esurf-7-663-2019) (k-means and hierarchical clustering, and discriminant analysis).
 - [Mutz et al. (2015)](https://doi.org/10.1007/s00382-015-2663-5) (multiple regression in cross validation and bootstrap setting, principal component analysis, and Bayesian classifier).
