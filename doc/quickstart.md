@@ -146,14 +146,23 @@ This will compile fsml alongside your own project and execure the programme! By 
 fpm run --compiler lfortran
 ```
 
-### Watch your precision!
+# Caveats
 
-`FSML` uses double precision (real64) by default, but can be switched project-wide by changing the working precision (wp) in the `fsml_ini` module. The data type in your `FSML` application should match this. If you are happy using real64 (recommended), make sure you import it and declare your reals accordingly:
+## Precision: `real` kinds
+
+`FSML` uses double precision (real64) by default. It is written to allow the user to change `real` precision project-wide by changing the working precision (wp) in the `fsml_ini` module. However, since it uses `stdlib`'s linear algebra procedures that are are currently only available for double precision, `FSML` is limited to the same kind. The data type in your `FSML` application should match this. Make sure you import it and declare your reals accordingly:
 
 ```Fortran
 use iso_fortran_env, only: real64
 real(real64) :: my_variable
 ```
+## Precision: use of intrinsics
+
+`FSML` uses the intrinsic `sum` function, which uses the naive summation method. While this is perfectly suitable for most research applications, it is more prone to accumulating rounding errors than Kahan summation, for example. For specific applications and data types, it can create problems. Caution is advised.
+
+## LFortran support
+
+`FSML` is developed to support compilation with the LFortran compiler. However, `FSML` uses several `stdlib` procedures, so the successful compilation of `FSML` is conditional on the successful compilation of `stdlib`. Since both are still under heavy development, this may fail at times. If reliability is a priority for your project, it is recommended that you use `gfortran` instead (for now).
 
 <br>
 # Examples
