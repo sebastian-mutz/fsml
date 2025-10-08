@@ -59,10 +59,11 @@ subroutine s_err_print(error)
   character(len=256)           :: fstring
 
 ! ==== Instructions
-!  fstring = trim(error) // " (" // trim(f_utl_r2c(c_sentinel_r)) // ")"
-  fstring = fg_color_magenta // "[fsml error] " //  style_reset // &
-            trim(error) // fg_color_blue //  " (" //&
-          & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
+  fstring = "[fsml error] " // trim(error) // " (" //&
+          & trim(f_utl_r2c(c_sentinel_r)) // ")"
+!   fstring = fg_color_magenta // "[fsml error] " //  style_reset // &
+!             trim(error) // fg_color_blue //  " (" //&
+!           & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
   write(std_e, '(A)') trim(fstring)
 
 end subroutine s_err_print
@@ -79,10 +80,11 @@ subroutine s_err_warn(warning)
   character(len=256)           :: fstring
 
 ! ==== Instructions
-  fstring = warning
-  fstring = fg_color_magenta // "[fsml warning] " //  style_reset // &
-            trim(warning) // fg_color_blue //  " (" //&
-          & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
+  fstring = "[fsml warning] " // trim(warning) // " (" //&
+          & trim(f_utl_r2c(c_sentinel_r)) // ")"
+!   fstring = fg_color_magenta // "[fsml warning] " //  style_reset // &
+!             trim(warning) // fg_color_blue //  " (" //&
+!           & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
   write(std_e, '(A)') trim(fstring)
 
 end subroutine s_err_warn

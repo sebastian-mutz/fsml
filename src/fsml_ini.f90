@@ -17,11 +17,15 @@ module fsml_ini
   ! load modules
   use :: iso_fortran_env, only: int32, int64, real32, real64, real128, &
                               & input_unit, output_unit, error_unit
+  ! load module for handling NaNs
+  use, intrinsic :: ieee_arithmetic
   ! load stdlib procedures for ansi terminal colours
-  use :: stdlib_ansi, only: fg_color_cyan, fg_color_blue, fg_color_magenta, &
-                          & ansi_code, style_reset, operator(//)
+!   use :: stdlib_ansi, only: fg_color_cyan, fg_color_blue, fg_color_magenta, &
+!                           & ansi_code, style_reset, operator(//)
   ! load stblib procedures for linear algebra
   use :: stdlib_linalg, only: eigh, chol
+
+
 
   ! basic options
   implicit none
@@ -29,10 +33,11 @@ module fsml_ini
 
   ! declare public
   public :: hp, qp, dp, sp, wp, i4, i8
+  public :: ieee_value, ieee_quiet_nan
   public :: std_i, std_o, std_e, std_rw
   public :: eigh, chol
-  public :: fg_color_cyan, fg_color_blue, fg_color_magenta, &
-          & ansi_code, style_reset, operator(//)
+!   public :: fg_color_cyan, fg_color_blue, fg_color_magenta, &
+!           & ansi_code, style_reset, operator(//)
 
 ! ==== Declarations
 
