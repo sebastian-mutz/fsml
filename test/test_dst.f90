@@ -13,6 +13,7 @@ program test_dst
 
   use :: fsml
   use :: fsml_ini
+  use :: fsml_utl
 
 ! ==== Declarations
   logical             :: status        !! status (test passed = true)
@@ -51,6 +52,10 @@ program test_dst
   status = test_gpd(tol)
   call handle_status(status)
 
+  print*, "> dst: testing results of invalid arguments (and print messages)"
+  status = test_invalid()
+  call handle_status(status)
+
 contains
 
 
@@ -66,9 +71,9 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, fg_color_cyan // "  passed" // style_reset
+     print*, "  passed"
   else
-     print*,  fg_color_magenta // "  > error: one or more failed" // style_reset
+     print*, "  [error] one or more failed"
      stop
   endif
 
@@ -524,7 +529,7 @@ end function test_f
 function test_gpd(tol) result(status)
 
 ! ==== Description
-!! Tests Generalized Pareto distribution pdf, cdf, and ppf and checks against answers.
+!! Tests Generalised Pareto distribution pdf, cdf, and ppf and checks against answers.
 !! If answers deviate, return test (passed) status as false.
 
 ! ==== Declarations
@@ -600,6 +605,44 @@ function test_gpd(tol) result(status)
   end do
 
 end function test_gpd
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_invalid() result(status)
+
+! ==== Description
+!! Tests on a subset of functions if invalid arguments return NaN values.
+
+! ==== Declarations
+  logical  :: status     !! status (test passed = true)
+  real(wp) :: res        !! result
+
+! ==== Instructions
+
+  status = .true.
+
+  ! invalid sigma for normal pdf
+  res = fsml_norm_pdf(0.5_wp, 0.5_wp, -0.1_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! invalid p for normal ppf
+  res = fsml_norm_ppf(1.1_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! invalid df for t pdf
+  res = fsml_t_pdf(0.5_wp, -0.5_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! invalid tail for t cdf
+  res = fsml_t_cdf(0.2_wp, 10.2_wp, tail="wrong")
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! invalid alpha for gamma pdf
+  res = fsml_gamma_pdf(0.2_wp, alpha=-0.001_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! invalid scale for chi2 cdf
+  res = fsml_chi2_cdf(0.9_wp, 20.0_wp, scale=-2.3_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+
+end function test_invalid
 
 
 end program test_dst

@@ -42,9 +42,9 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, fg_color_cyan // "  passed" // style_reset
+     print*, "  passed"
   else
-     print*,  fg_color_magenta // "  > error: one or more failed" // style_reset
+     print*, "  [error] one or more failed"
      stop
   endif
 

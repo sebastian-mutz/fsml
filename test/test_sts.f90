@@ -13,6 +13,7 @@ program test_sts
 
   use :: fsml
   use :: fsml_ini
+  use :: fsml_utl
 
 ! ==== Declarations
   logical             :: status        !! status (test passed = true)
@@ -35,6 +36,10 @@ program test_sts
   status = test_relationship(tol)
   call handle_status(status)
 
+  print*, "> sts: testing results of invalid arguments (and print messages)"
+  status = test_invalid()
+  call handle_status(status)
+
 contains
 
 
@@ -50,9 +55,9 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, fg_color_cyan // "  passed" // style_reset
+     print*, "  passed"
   else
-     print*,  fg_color_magenta // "  > error: one or more failed" // style_reset
+     print*, "  [error] one or more failed"
      stop
   endif
 
@@ -209,6 +214,39 @@ function test_relationship(tol) result(status)
 
 end function test_relationship
 
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_invalid() result(status)
+
+! ==== Description
+!! Tests on a subset of functions if invalid arguments return NaN values.
+
+! ==== Declarations
+  logical             :: status     !! status (test passed = true)
+  real(wp)            :: res        !! result
+  real(wp), parameter :: x1(5) = [0.02_wp, -0.25_wp, 0.5_wp, 0.75_wp, 0.99_wp]
+  real(wp), parameter :: x2(1) = [0.02_wp]
+
+! ==== Instructions
+
+  status = .true.
+
+  ! mean of array wth invalid dimensions
+  res = fsml_mean(x2)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! median of array wth invalid dimensions
+  res = fsml_median(x2)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! variance with infalid ddf
+  res = fsml_var(x1, 0.5_wp)
+  if (.not. f_utl_is_nan(res)) status = .false.
+  ! covariance of unequal length vectors
+  res = fsml_cov(x1, x1(2:5))
+  if (.not. f_utl_is_nan(res)) status = .false.
+
+end function test_invalid
 
 
 end program
