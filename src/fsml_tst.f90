@@ -60,21 +60,21 @@ impure subroutine s_tst_ttest_1s(x, mu0, t, df, p, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -186,31 +186,31 @@ impure subroutine s_tst_ttest_paired(x1, x2, t, df, p, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x1) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if x1 and x2 have same size
   if (size(x1) .ne. size(x2)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -279,11 +279,11 @@ impure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -293,11 +293,11 @@ impure subroutine s_tst_ttest_2s(x1, x2, t, df, p, eq_var, h1)
 
   ! check if size is valid
   if (size(x1) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     t  = c_sentinel_r
-     df = c_sentinel_r
-     p  = c_sentinel_r
+     t  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -460,12 +460,12 @@ impure subroutine s_tst_anova_1w(x, f, df_b, df_w, p)
 
   ! check that no. of elements and groups (must both be 2 or higher)
   if (size(x, 1) .le. 1 .or. size(x, 2) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     f    = c_sentinel_r
-     p    = c_sentinel_r
-     df_b = c_sentinel_r
-     df_w = c_sentinel_r
+     f    = f_utl_assign_nan()
+     p    = f_utl_assign_nan()
+     df_b = f_utl_assign_nan()
+     df_w = f_utl_assign_nan()
      return
   endif
 
@@ -566,19 +566,19 @@ impure subroutine s_tst_signedrank_1s(x, mu0, w, p, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     w  = c_sentinel_r
-     p  = c_sentinel_r
+     w  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     w  = c_sentinel_r
-     p  = c_sentinel_r
+     w  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -725,28 +725,28 @@ impure subroutine s_tst_signedrank_2s(x1, x2, w, p, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     w  = c_sentinel_r
-     p  = c_sentinel_r
+     w  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x1) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     w  = c_sentinel_r
-     p  = c_sentinel_r
+     w  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if x1 and x2 have same size
   if (size(x1) .ne. size(x2)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     w  = c_sentinel_r
-     p  = c_sentinel_r
+     w  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -819,19 +819,19 @@ impure subroutine s_tst_ranksum(x1, x2, u, p, h1)
 
   ! check if h1 (tail) options are valid
   if (h1_w .ne. "lt" .and. h1_w .ne. "gt" .and. h1_w .ne. "two") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     u  = c_sentinel_r
-     p  = c_sentinel_r
+     u  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x1) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     u  = c_sentinel_r
-     p  = c_sentinel_r
+     u  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
      return
   endif
 
@@ -945,11 +945,11 @@ impure subroutine s_tst_kruskalwallis(x, h, df, p)
 
   ! check that no. of elements and groups (must both be 2 or higher)
   if (size(x, 1) .le. 1 .or. size(x, 2) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     h  = c_sentinel_r
-     p  = c_sentinel_r
-     df = c_sentinel_r
+     h  = f_utl_assign_nan()
+     p  = f_utl_assign_nan()
+     df = f_utl_assign_nan()
      return
   endif
 

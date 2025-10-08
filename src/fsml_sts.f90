@@ -54,9 +54,9 @@ impure function f_sts_mean(x) result(mean)
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     mean = c_sentinel_r
+     mean = f_utl_assign_nan()
      return
   endif
 
@@ -102,9 +102,9 @@ impure function f_sts_median(x) result(median)
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     median = c_sentinel_r
+     median = f_utl_assign_nan()
      return
   endif
 
@@ -178,17 +178,17 @@ impure function f_sts_var(x, ddf) result(var)
 
   ! check if value is valid
   if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     var = c_sentinel_r
+     var = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     var = c_sentinel_r
+     var = f_utl_assign_nan()
      return
   endif
 
@@ -244,17 +244,17 @@ impure function f_sts_std(x, ddf) result(std)
 
   ! check if value is valid
   if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     std = c_sentinel_r
+     std = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     std = c_sentinel_r
+     std = f_utl_assign_nan()
      return
   endif
 
@@ -312,25 +312,25 @@ impure function f_sts_cov(x, y, ddf) result(cov)
 
   ! check if value is valid
   if (ddf_w .ne. 1.0_wp .and. ddf_w .ne. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     cov = c_sentinel_r
+     cov = f_utl_assign_nan()
      return
   endif
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     cov = c_sentinel_r
+     cov = f_utl_assign_nan()
      return
   endif
 
   ! check if x and y have same size
   if (size(x) .ne. size(y)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     cov = c_sentinel_r
+     cov = f_utl_assign_nan()
      return
   endif
 
@@ -384,17 +384,17 @@ impure function f_sts_trend(x, y) result(trend)
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     trend = c_sentinel_r
+     trend = f_utl_assign_nan()
      return
   endif
 
   ! check if x and y have same size
   if (size(x) .ne. size(y)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     trend = c_sentinel_r
+     trend = f_utl_assign_nan()
      return
   endif
 
@@ -442,17 +442,17 @@ impure function f_sts_pcc(x, y) result(corr)
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     corr = c_sentinel_r
+     corr = f_utl_assign_nan()
      return
   endif
 
   ! check if x and y have same size
   if (size(x) .ne. size(y)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     corr = c_sentinel_r
+     corr = f_utl_assign_nan()
      return
   endif
 
@@ -501,17 +501,17 @@ impure function f_sts_scc(x, y) result(corr)
 
   ! check if size is valid
   if (size(x) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     corr = c_sentinel_r
+     corr = f_utl_assign_nan()
      return
   endif
 
   ! check if x and y have same size
   if (size(x) .ne. size(y)) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     corr = c_sentinel_r
+     corr = f_utl_assign_nan()
      return
   endif
 

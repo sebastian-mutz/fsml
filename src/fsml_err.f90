@@ -32,18 +32,17 @@ module fsml_err
   ! error messages
   character(len=128), parameter :: fsml_error(4) = [ character(len=128) ::   &
                                   & "Argument value out of valid&
-                                  & range. Returning sentinel.",&
+                                  & range. Returning NaN.",&
                                   & "Argument value not in list&
-                                  & of valid options. Returning sentinel.",&
+                                  & of valid options. Returning NaN.",&
                                   & "Passed array has invalid&
-                                  & dimensions. Returning sentinel.",&
+                                  & dimensions. Returning NaN.",&
                                   & "Passed array has invalid&
-                                  & size. Returning sentinel."]
+                                  & size. Returning NaN."]
   ! warning messages
   character(len=128), parameter :: fsml_warning(1) = [ character(len=128) :: &
-                                  & "Suspicious value returned.&
-                                  & Convergence may not have been reached in&
-                                  & bisection iterations." ]
+                                  & "NaN returned. Convergence may not have been &
+                                  & reached in bisection iterations." ]
 
 contains
 
@@ -59,8 +58,7 @@ subroutine s_err_print(error)
   character(len=256)           :: fstring
 
 ! ==== Instructions
-  fstring = "[fsml error] " // trim(error) // " (" //&
-          & trim(f_utl_r2c(c_sentinel_r)) // ")"
+  fstring = "[fsml error] " // trim(error)
 !   fstring = fg_color_magenta // "[fsml error] " //  style_reset // &
 !             trim(error) // fg_color_blue //  " (" //&
 !           & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset
@@ -80,8 +78,7 @@ subroutine s_err_warn(warning)
   character(len=256)           :: fstring
 
 ! ==== Instructions
-  fstring = "[fsml warning] " // trim(warning) // " (" //&
-          & trim(f_utl_r2c(c_sentinel_r)) // ")"
+  fstring = "[fsml warning] " // trim(warning)
 !   fstring = fg_color_magenta // "[fsml warning] " //  style_reset // &
 !             trim(warning) // fg_color_blue //  " (" //&
 !           & trim(f_utl_r2c(c_sentinel_r)) // ")" // style_reset

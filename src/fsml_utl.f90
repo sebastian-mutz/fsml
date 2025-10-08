@@ -28,6 +28,8 @@ module fsml_utl
   public :: s_utl_cholesky_solve
   ! public procedures for data type conversion
   public :: f_utl_r2c, f_utl_i2c, f_utl_c2r
+  ! NaN handling
+  public :: f_utl_assign_nan, f_utl_is_nan
 
 contains
 
@@ -170,7 +172,7 @@ pure subroutine s_utl_sort(a_in, n, mode, idx_in, a_out, idx_out)
      enddo
   ! invalid option returns sentinel
   case default
-     a_out = c_sentinel_r
+     a_out = f_utl_assign_nan()
   end select
 
 end subroutine s_utl_sort
@@ -277,6 +279,39 @@ function f_utl_c2r(c) result(r)
   read(c, *) r
 
 end function f_utl_c2r
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure elemental function f_utl_assign_nan() result(x)
+
+! ==== Description
+!! Return quiet NaN.
+
+! ==== Declarations
+  real(wp) :: x
+
+! ==== Instructions
+  x = ieee_value(0.0_wp, ieee_quiet_nan)
+
+end function f_utl_assign_nan
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_utl_is_nan(x) result(res)
+
+! ==== Description
+!! Returns true if is NaN.
+
+! ==== Declarations
+  real(wp), intent(in) :: x
+  logical              :: res
+
+! ==== Instructions
+  res = ieee_is_nan(x)
+
+end function f_utl_is_nan
 
 
 

@@ -18,6 +18,7 @@ module fsml_dst
   ! load modules
   use :: fsml_ini
   use :: fsml_con
+  use :: fsml_utl
   use :: fsml_err
 
   ! basic options
@@ -82,9 +83,9 @@ impure function f_dst_norm_pdf(x, mu, sigma) result(fx)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -159,18 +160,18 @@ impure function f_dst_norm_cdf(x, mu, sigma, tail) result(p)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -265,17 +266,17 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -285,7 +286,7 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
   x = f_dst_norm_ppf_core(p, mu_w, sigma_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_norm_ppf
 
@@ -333,8 +334,8 @@ elemental function f_dst_norm_ppf_core(p, mu, sigma) result(x)
      endif
   enddo
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_norm_ppf_core
 
@@ -370,17 +371,17 @@ impure function f_dst_t_pdf(x, df, mu, sigma) result(fx)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -456,26 +457,26 @@ impure function f_dst_t_cdf(x, df, mu, sigma, tail) result(p)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -582,25 +583,25 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -610,7 +611,7 @@ impure function f_dst_t_ppf(p, df, mu, sigma) result(x)
   x = f_dst_t_ppf_core(p, df, mu_w, sigma_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_t_ppf
 
@@ -659,8 +660,8 @@ elemental function f_dst_t_ppf_core(p, df, mu, sigma) result(x)
      endif
   enddo
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_t_ppf_core
 
@@ -702,17 +703,17 @@ impure function f_dst_gamma_pdf(x, alpha, beta, loc) result(fx)
 
   ! check if alpha value is valid
   if (alpha_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
   ! check if beta value is valid
   if (beta_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -798,26 +799,26 @@ impure function f_dst_gamma_cdf(x, alpha, beta, loc, tail) result(p)
 
   ! check if alpha value is valid
   if (alpha_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if beta value is valid
   if (beta_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -913,25 +914,25 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
 
   ! check if alpha value is valid
   if (alpha_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if beta value is valid
   if (beta_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -941,7 +942,7 @@ impure function f_dst_gamma_ppf(p, alpha, beta, loc) result(x)
   x = f_dst_gamma_ppf_core(p, alpha_w, beta_w, loc_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_gamma_ppf
 
@@ -991,8 +992,8 @@ elemental function f_dst_gamma_ppf_core(p, alpha, beta, loc) result(x)
      endif
   enddo
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_gamma_ppf_core
 
@@ -1027,9 +1028,9 @@ impure function f_dst_exp_pdf(x, lambda, loc) result(fx)
 
   ! check if lambda value is valid
   if (lambda_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -1106,18 +1107,18 @@ impure function f_dst_exp_cdf(x, lambda, loc, tail) result(p)
 
   ! check if lambda value is valid
   if (lambda_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -1199,17 +1200,17 @@ impure function f_dst_exp_ppf(p, lambda, loc) result(x)
 
   ! check if lambda value is valid
   if (lambda_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if value invalid
+     ! write error message and assign NaN value if value invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -1219,7 +1220,7 @@ impure function f_dst_exp_ppf(p, lambda, loc) result(x)
   x = f_dst_exp_ppf_core(p, lambda_w, loc_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_exp_ppf
 
@@ -1267,8 +1268,8 @@ elemental function f_dst_exp_ppf_core(p, lambda, loc) result(x)
      endif
   enddo
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_exp_ppf_core
 
@@ -1304,17 +1305,17 @@ impure function f_dst_chi2_pdf(x, df, loc, scale) result(fx)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -1393,26 +1394,26 @@ impure function f_dst_chi2_cdf(x, df, loc, scale, tail) result(p)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -1510,25 +1511,25 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if degrees of freedom value is valid
   if (df .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -1538,7 +1539,7 @@ impure function f_dst_chi2_ppf(p, df, loc, scale) result(x)
   x = f_dst_chi2_ppf_core(p, df, loc_w, scale_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_chi2_ppf
 
@@ -1585,8 +1586,8 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
      end if
   end do
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_chi2_ppf_core
 
@@ -1623,25 +1624,25 @@ impure function f_dst_f_pdf(x, d1, d2, loc, scale) result(fx)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
   ! check if numerator degrees of freedom value is valid
   if (d1 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
   ! check if denominator degrees of freedom value is valid
   if (d2 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -1730,34 +1731,34 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if numerator degrees of freedom value is valid
   if (d1 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if denominator degrees of freedom value is valid
   if (d2 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -1864,33 +1865,33 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
 
   ! check if scale value is valid
   if (scale_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if numerator degrees of freedom value is valid
   if (d1 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if denominator degrees of freedom value is valid
   if (d2 .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
@@ -1900,7 +1901,7 @@ impure function f_dst_f_ppf(p, d1, d2, loc, scale) result(x)
   x = f_dst_f_ppf_core(p, d1, d2, loc_w, scale_w)
 
   ! issue warning in case of suspicious result
-  if (x .eq. c_sentinel_r) call s_err_warn(fsml_warning(1))
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
 
 end function f_dst_f_ppf
 
@@ -1948,8 +1949,8 @@ elemental function f_dst_f_ppf_core(p, d1, d2, loc, scale) result(x)
      end if
   end do
 
-  ! if x not found in iterations, pass sentinel
-  if (i .ge. i_max) x = c_sentinel_r
+  ! if x not found in iterations, pass NaN
+  if (i .ge. i_max) x = f_utl_assign_nan()
 
 end function f_dst_f_ppf_core
 
@@ -1985,9 +1986,9 @@ impure function f_dst_gpd_pdf(x, xi, mu, sigma) result(fx)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     fx = c_sentinel_r
+     fx = f_utl_assign_nan()
      return
   endif
 
@@ -2077,18 +2078,18 @@ impure function f_dst_gpd_cdf(x, xi, mu, sigma, tail) result(p)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
   ! check if tail options are valid
   if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
      &tail_w .ne. "two" .and. tail_w .ne. "confidence") then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(2))
-     p = c_sentinel_r
+     p = f_utl_assign_nan()
      return
   endif
 
@@ -2184,17 +2185,17 @@ impure function f_dst_gpd_ppf(p, xi, mu, sigma) result(x)
 
   ! check if sigma value is valid
   if (sigma_w .le. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 
   ! check if p value is valid
   if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(1))
-     x = c_sentinel_r
+     x = f_utl_assign_nan()
      return
   endif
 

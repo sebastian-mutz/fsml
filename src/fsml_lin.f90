@@ -274,13 +274,13 @@ subroutine s_lin_lda_2c(x, nd, nv, nc, sa, g, score, mh)
   ! eigendecomposition of s_pool
   call eigh(s_pool, ew, vectors=ev)
 
-  ! set returns to sentinel
+  ! set returns to NaN
   do i = 1, nv
      if (ew(i) .le. 0.0_wp) then
-        if (present(mh)) mh = c_sentinel_r
-        g     = c_sentinel_r
-        sa(:) = c_sentinel_r
-        score = c_sentinel_r
+        if (present(mh)) mh = f_utl_assign_nan()
+        g     = f_utl_assign_nan()
+        sa(:) = f_utl_assign_nan()
+        score = f_utl_assign_nan()
         return
      endif
   enddo
@@ -404,15 +404,15 @@ subroutine s_lin_ols(x, y, nd, nv, b0, b, r2, y_hat, se, cov_b)
   ! eigendecomposition of s_pool
   call eigh(xtx, ew, vectors=ev)
 
-  ! check result and return sentinel if needed
+  ! check result and return NaN if needed
   do i = 1, nv+1
      if (ew(i) .le. 0.0_wp) then
-        b0        = c_sentinel_r
-        b(:)      = c_sentinel_r
-        r2        = c_sentinel_r
-        if (present(y_hat)) y_hat = c_sentinel_r
-        if (present(se))       se = c_sentinel_r
-        if (present(cov_b)) cov_b = c_sentinel_r
+        b0        = f_utl_assign_nan()
+        b(:)      = f_utl_assign_nan()
+        r2        = f_utl_assign_nan()
+        if (present(y_hat)) y_hat = f_utl_assign_nan()
+        if (present(se))       se = f_utl_assign_nan()
+        if (present(cov_b)) cov_b = f_utl_assign_nan()
         return
      endif
   enddo
@@ -560,15 +560,15 @@ subroutine s_lin_ridge(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b)
   ! eigen-decomposition for inversion of ridge-adjusted XᵀX
   call eigh(xtx_ridge, ew_r, vectors=ev_r)
 
-  ! check result and return sentinel if needed
+  ! check result and return NaN if needed
   do i = 1, nv+1
      if (ew_r(i) .le. 0.0_wp) then
-        b0        = c_sentinel_r
-        b(:)      = c_sentinel_r
-        r2        = c_sentinel_r
-        if (present(y_hat)) y_hat = c_sentinel_r
-        if (present(se))       se = c_sentinel_r
-        if (present(cov_b)) cov_b = c_sentinel_r
+        b0        = f_utl_assign_nan()
+        b(:)      = f_utl_assign_nan()
+        r2        = f_utl_assign_nan()
+        if (present(y_hat)) y_hat = f_utl_assign_nan()
+        if (present(se))       se = f_utl_assign_nan()
+        if (present(cov_b)) cov_b = f_utl_assign_nan()
         return
      endif
   enddo
@@ -659,26 +659,26 @@ impure function f_lin_mahalanobis(x, y, cov) result(dist)
 
   ! check if size is valid
   if (size(x) .le. 1 .or. size(y) .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     dist = c_sentinel_r
+     dist = f_utl_assign_nan()
      return
   endif
 
   if (present(cov)) then
      ! check if dims match
      if (size(cov, 1) .ne. size(x)) then
-        ! write error message and assign sentinel value if invalid
+        ! write error message and assign NaN value if invalid
         call s_err_print(fsml_error(3))
-        dist = c_sentinel_r
+        dist = f_utl_assign_nan()
         return
      endif
 
      ! check if dims match
      if (size(cov, 1) .ne. size(cov, 2)) then
-        ! write error message and assign sentinel value if invalid
+        ! write error message and assign NaN value if invalid
         call s_err_print(fsml_error(3))
-        dist = c_sentinel_r
+        dist = f_utl_assign_nan()
         return
      endif
   endif

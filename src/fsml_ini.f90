@@ -33,7 +33,7 @@ module fsml_ini
 
   ! declare public
   public :: hp, qp, dp, sp, wp, i4, i8
-  public :: ieee_value, ieee_quiet_nan
+  public :: ieee_value, ieee_quiet_nan, ieee_is_nan
   public :: std_i, std_o, std_e, std_rw
   public :: eigh, chol
 !   public :: fg_color_cyan, fg_color_blue, fg_color_magenta, &

@@ -58,12 +58,12 @@ impure subroutine s_nlp_hclust(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - data points
   if (nd .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -71,19 +71,19 @@ impure subroutine s_nlp_hclust(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! issue warning for small datasets
   if (nd .le. 15) then
-     ! write error message and assign sentinel value if invalid
+     ! write warning message
      call s_err_warn("[fsml warning] hcluster: small datasets can create&
                     & problems with Cholesky fractionisation.")
   endif
 
   ! check if argument values are valid - variable/feature number
   if (nv .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -91,12 +91,12 @@ impure subroutine s_nlp_hclust(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - cluster number
   if (nc .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -104,13 +104,13 @@ impure subroutine s_nlp_hclust(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - cluster number must be smaller than data points
   if (nc .gt. nd) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print("[fsml error] hcluster: cluster number must be&
                     & equal or less than number of data points.")
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -283,12 +283,12 @@ impure subroutine s_nlp_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
 
   ! check if argument values are valid - data points
   if (nd .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -296,19 +296,19 @@ impure subroutine s_nlp_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
 
   ! issue warning for small datasets
   if (nd .le. 15) then
-     ! write error message and assign sentinel value if invalid
+     ! write warning message
      call s_err_warn("[fsml warning] k-means: small datasets can create&
                     & problems with Cholesky fractionisation.")
   endif
 
   ! check if argument values are valid - variable/feature number
   if (nv .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -316,12 +316,12 @@ impure subroutine s_nlp_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
 
   ! check if argument values are valid - cluster number
   if (nc .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -329,13 +329,13 @@ impure subroutine s_nlp_kmeans(x, nd, nv, nc, cm_in, gm, cm, cl, cc, &
 
   ! check if argument values are valid - cluster number must be smaller than data points
   if (nc .gt. nd) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print("[fsml error] k-means: cluster number must be&
                     & equal or less than number of data points.")
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -525,12 +525,12 @@ impure subroutine s_nlp_hkmeans(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - data points
   if (nd .le. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -538,19 +538,19 @@ impure subroutine s_nlp_hkmeans(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! issue warning for small datasets
   if (nd .le. 15) then
-     ! write error message and assign sentinel value if invalid
+     ! write warning message
      call s_err_warn("[fsml warning] hkmeans: small datasets can create&
                     & problems with Cholesky fractionisation.")
   endif
 
   ! check if argument values are valid - variable/feature number
   if (nv .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -558,12 +558,12 @@ impure subroutine s_nlp_hkmeans(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - cluster number
   if (nc .lt. 1) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print(fsml_error(1))
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
@@ -571,13 +571,13 @@ impure subroutine s_nlp_hkmeans(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
 
   ! check if argument values are valid - cluster number must be smaller than data points
   if (nc .gt. nd) then
-     ! write error message and assign sentinel value if invalid
+     ! write error message and assign NaN/sentinel value if invalid
      call s_err_print("[fsml error] hkmeans: cluster number must be&
                     & equal or less than number of data points.")
-     gm    = c_sentinel_r
-     cm    = c_sentinel_r
-     cov   = c_sentinel_r
-     sigma = c_sentinel_r
+     gm    = f_utl_assign_nan()
+     cm    = f_utl_assign_nan()
+     cov   = f_utl_assign_nan()
+     sigma = f_utl_assign_nan()
      cl    = c_sentinel_i
      cc    = c_sentinel_i
      return
