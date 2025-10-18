@@ -90,28 +90,16 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <xref alt="Giorgetta et al., 2018" rid="ref-giorgettaU003A2018" ref-type="bibr">Giorgetta
   et al., 2018</xref>). The same strengths make it suitable for
   computationally demanding ML procedures and data-driven predictions.
-  Furthermore, it is more energy-efficient than other high-level
-  programming languages
-  (<xref alt="Pereira et al., 2021" rid="ref-pereiraU003A2021" ref-type="bibr">Pereira
-  et al., 2021</xref>), which is another factor to consider as the
-  widespread adoption of computationally demanding ML techniques
-  increases electricity consumption
-  (<xref alt="Jia, 2024" rid="ref-jiaU003A2024" ref-type="bibr">Jia,
-  2024</xref>), adds more stress on Earth’s climate and environments,
-  and creates new challenges as a consequence (e.g.,
-  <xref alt="Dodge et al., 2022" rid="ref-dodgeU003A2022" ref-type="bibr">Dodge
-  et al., 2022</xref>;
-  <xref alt="Freitag et al., 2021" rid="ref-freitagU003A2021" ref-type="bibr">Freitag
-  et al., 2021</xref>). <bold>Despite Fortran’s long history in
-  data-driven prediction and ML</bold> (e.g.,
+  However, despite Fortran’s long history in data-driven prediction and
+  ML (e.g.,
   <xref alt="Breiman, 2001" rid="ref-breimanU003A2001" ref-type="bibr">Breiman,
   2001</xref>;
   <xref alt="Gutmann et al., 2022" rid="ref-gutmannU003A2022" ref-type="bibr">Gutmann
   et al., 2022</xref>;
   <xref alt="Tomassetti et al., 2009" rid="ref-tomasettiU003A2009" ref-type="bibr">Tomassetti
-  et al., 2009</xref>), <bold>it has not been as widely adopted in these
+  et al., 2009</xref>), it has not been as widely adopted in these
   fields as other languages and lacks well documented, accessible
-  toolkits for statistics and classic ML.</bold></p>
+  toolkits for statistics and classic ML.</p>
   <p>Although projects like Neural-Fortran
   (<xref alt="Curcic, 2019" rid="ref-curcicU003A2019" ref-type="bibr">Curcic,
   2019</xref>), ATHENA
@@ -196,6 +184,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <p>FSML has minimal requirements. It uses Fortran 2008 features,
     Fortran-lang stdlib for linear algebra, and fpm for easy building
     and distribution.</p>
+    <p><bold>Note:</bold> At the time of publication, LFortran does not
+    reliably compile stdlib. Therefore, early users of FSML are advised
+    to use GFortran.</p>
   </sec>
   <sec id="documentation">
     <title>Documentation</title>
@@ -320,68 +311,6 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <lpage>6514</lpage>
     </element-citation>
   </ref>
-  <ref id="ref-jiaU003A2024">
-    <element-citation publication-type="paper-conference">
-      <person-group person-group-type="author">
-        <name><surname>Jia</surname><given-names>Yuelong</given-names></name>
-      </person-group>
-      <article-title>Analysis of the impact of artificial intelligence on electricity consumption</article-title>
-      <source>2024 3rd international conference on artificial intelligence, internet of things and cloud computing technology (AIoTC)</source>
-      <year iso-8601-date="2024">2024</year>
-      <volume></volume>
-      <pub-id pub-id-type="doi">10.1109/AIoTC63215.2024.10748289</pub-id>
-      <fpage>57</fpage>
-      <lpage>60</lpage>
-    </element-citation>
-  </ref>
-  <ref id="ref-dodgeU003A2022">
-    <element-citation publication-type="paper-conference">
-      <person-group person-group-type="author">
-        <name><surname>Dodge</surname><given-names>Jesse</given-names></name>
-        <name><surname>Prewitt</surname><given-names>Taylor</given-names></name>
-        <name><surname>Tachet des Combes</surname><given-names>Remi</given-names></name>
-        <name><surname>Odmark</surname><given-names>Erika</given-names></name>
-        <name><surname>Schwartz</surname><given-names>Roy</given-names></name>
-        <name><surname>Strubell</surname><given-names>Emma</given-names></name>
-        <name><surname>Luccioni</surname><given-names>Alexandra Sasha</given-names></name>
-        <name><surname>Smith</surname><given-names>Noah A.</given-names></name>
-        <name><surname>DeCario</surname><given-names>Nicole</given-names></name>
-        <name><surname>Buchanan</surname><given-names>Will</given-names></name>
-      </person-group>
-      <article-title>Measuring the carbon intensity of AI in cloud instances</article-title>
-      <source>Proceedings of the 2022 ACM conference on fairness, accountability, and transparency</source>
-      <publisher-name>Association for Computing Machinery</publisher-name>
-      <publisher-loc>New York, NY, USA</publisher-loc>
-      <year iso-8601-date="2022">2022</year>
-      <isbn>9781450393522</isbn>
-      <uri>https://doi.org/10.1145/3531146.3533234</uri>
-      <pub-id pub-id-type="doi">10.1145/3531146.3533234</pub-id>
-      <fpage>1877</fpage>
-      <lpage>1894</lpage>
-    </element-citation>
-  </ref>
-  <ref id="ref-freitagU003A2021">
-    <element-citation publication-type="article-journal">
-      <person-group person-group-type="author">
-        <name><surname>Freitag</surname><given-names>Charlotte</given-names></name>
-        <name><surname>Berners-Lee</surname><given-names>Mike</given-names></name>
-        <name><surname>Widdicks</surname><given-names>Kelly</given-names></name>
-        <name><surname>Knowles</surname><given-names>Bran</given-names></name>
-        <name><surname>Blair</surname><given-names>Gordon S.</given-names></name>
-        <name><surname>Friday</surname><given-names>Adrian</given-names></name>
-      </person-group>
-      <article-title>The real climate and transformative impact of ICT: A critique of estimates, trends, and regulations</article-title>
-      <source>Patterns</source>
-      <year iso-8601-date="2021">2021</year>
-      <volume>2</volume>
-      <issue>9</issue>
-      <issn>2666-3899</issn>
-      <uri>https://www.sciencedirect.com/science/article/pii/S2666389921001884</uri>
-      <pub-id pub-id-type="doi">10.1016/j.patter.2021.100340</pub-id>
-      <fpage>100340</fpage>
-      <lpage></lpage>
-    </element-citation>
-  </ref>
   <ref id="ref-giorgettaU003A2018">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
@@ -418,28 +347,6 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <pub-id pub-id-type="doi">10.1029/2017MS001242</pub-id>
       <fpage>1613</fpage>
       <lpage>1637</lpage>
-    </element-citation>
-  </ref>
-  <ref id="ref-pereiraU003A2021">
-    <element-citation publication-type="article-journal">
-      <person-group person-group-type="author">
-        <name><surname>Pereira</surname><given-names>Rui</given-names></name>
-        <name><surname>Couto</surname><given-names>Marco</given-names></name>
-        <name><surname>Ribeiro</surname><given-names>Francisco</given-names></name>
-        <name><surname>Rua</surname><given-names>Rui</given-names></name>
-        <name><surname>Cunha</surname><given-names>Jácome</given-names></name>
-        <name><surname>Fernandes</surname><given-names>João Paulo</given-names></name>
-        <name><surname>Saraiva</surname><given-names>João</given-names></name>
-      </person-group>
-      <article-title>Ranking programming languages by energy efficiency</article-title>
-      <source>Science of Computer Programming</source>
-      <year iso-8601-date="2021">2021</year>
-      <volume>205</volume>
-      <issn>0167-6423</issn>
-      <uri>https://www.sciencedirect.com/science/article/pii/S0167642321000022</uri>
-      <pub-id pub-id-type="doi">10.1016/j.scico.2021.102609</pub-id>
-      <fpage>102609</fpage>
-      <lpage></lpage>
     </element-citation>
   </ref>
   <ref id="ref-kedwardU003A2022">
