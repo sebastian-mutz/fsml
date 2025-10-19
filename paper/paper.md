@@ -29,7 +29,7 @@ Although projects like Neural-Fortran [@curcic:2019], ATHENA [@taylor:2024], and
 
 `FSML` (Fortran Statistics and Machine Learning) purposefully integrates these projects: It uses [stdlib](https://github.com/fortran-lang/stdlib) for linear algebra, leverages [fpm](https://github.com/fortran-lang/fpm) for easier building and distribution, and is developed to support compilation with the interactive [LFortran](https://github.com/lfortran/lfortran) compiler in addition to GFortran. As such, it builds on recent community efforts and addresses two needs:
 
-1. It adds to the modern Fortran statistics and ML software ecosytem; a richer ecosystem makes Fortran a more attractive choice as a robust, high-performance, energy-efficient option.
+1. It adds to the modern Fortran statistics and ML software ecosytem; a richer ecosystem makes Fortran a more attractive choice as a well-establlished, robust, high-performance language.
 
 2. The use of fpm, the support of free open-source compilers, the extensive documentation, and its permissive license (MIT) facilitate its early adoption and integration into various statistics and ML projects by students, early career researchers, and teachers. It can thus promote the adoption of Fortran.
 
