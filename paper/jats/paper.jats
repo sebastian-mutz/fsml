@@ -129,8 +129,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <list list-type="order">
     <list-item>
       <p>It adds to the modern Fortran statistics and ML software
-      ecosytem; a richer ecosystem makes Fortran a more attractive
-      choice as a well-establlished, robust, high-performance
+      ecosystem; a richer ecosystem makes Fortran a more attractive
+      choice as a well-established, robust, high-performance
       language.</p>
     </list-item>
     <list-item>
@@ -267,8 +267,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
   this project integrates (fpm, stdlib, and LFortran), as well as the
   always helpful discussions the with the same community on
   <ext-link ext-link-type="uri" xlink:href="https://fortran-lang.discourse.group/">Fortran-lang
-  discourse</ext-link> and GitHub. I also extend my gratitude to Herbert
-  Peck.</p>
+  discourse</ext-link> and GitHub. I thank the editor (Jack Atkinson)
+  and reviewers (Ivan Pribec and Mikolaj A. Kowalski) for their time and
+  effort. I also extend my gratitude to Herbert Peck.</p>
 </sec>
 </body>
 <back>

@@ -29,7 +29,7 @@ Although projects like Neural-Fortran [@curcic:2019], ATHENA [@taylor:2024], and
 
 `FSML` (Fortran Statistics and Machine Learning) purposefully integrates these projects: It uses [stdlib](https://github.com/fortran-lang/stdlib) for linear algebra, leverages [fpm](https://github.com/fortran-lang/fpm) for easier building and distribution, and is developed to support compilation with the interactive [LFortran](https://github.com/lfortran/lfortran) compiler in addition to GFortran. As such, it builds on recent community efforts and addresses two needs:
 
-1. It adds to the modern Fortran statistics and ML software ecosytem; a richer ecosystem makes Fortran a more attractive choice as a well-establlished, robust, high-performance language.
+1. It adds to the modern Fortran statistics and ML software ecosystem; a richer ecosystem makes Fortran a more attractive choice as a well-established, robust, high-performance language.
 
 2. The use of fpm, the support of free open-source compilers, the extensive documentation, and its permissive license (MIT) facilitate its early adoption and integration into various statistics and ML projects by students, early career researchers, and teachers. It can thus promote the adoption of Fortran.
 
@@ -105,6 +105,6 @@ The FSML procedures for clustering and linear discriminant analysis were reworke
 
 # Acknowledgements
 
-I gratefully acknowledge the Fortran-lang community efforts that this project integrates (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on [Fortran-lang discourse](https://fortran-lang.discourse.group/) and GitHub. I also extend my gratitude to Herbert Peck.
+I gratefully acknowledge the Fortran-lang community efforts that this project integrates (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on [Fortran-lang discourse](https://fortran-lang.discourse.group/) and GitHub. I thank the editor (Jack Atkinson) and reviewers (Ivan Pribec and Mikolaj A. Kowalski) for their time and effort. I also extend my gratitude to Herbert Peck.
 
 # References
