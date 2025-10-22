@@ -105,6 +105,6 @@ The FSML procedures for clustering and linear discriminant analysis were reworke
 
 # Acknowledgements
 
-I gratefully acknowledge the Fortran-lang community efforts that this project integrates (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on [Fortran-lang discourse](https://fortran-lang.discourse.group/) and GitHub. I thank the editor (Jack Atkinson) and reviewers (Ivan Pribec and Mikolaj A. Kowalski) for their time and effort. I also extend my gratitude to Herbert Peck.
+I gratefully acknowledge the Fortran-lang community efforts that this project integrates (fpm, stdlib, and LFortran), as well as the always helpful discussions the with the same community on [Fortran Discourse](https://fortran-lang.discourse.group/) and GitHub. I thank the editor (Jack Atkinson) and reviewers (Ivan Pribec and Mikolaj A. Kowalski) for their time and effort. I also extend my gratitude to Herbert Peck.
 
 # References
