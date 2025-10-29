@@ -13,6 +13,8 @@ program main
 
   use :: fsml_ini !iso_fortran_env, wp => real64
   use :: fsml
+  use :: fsml_sts, only: corr => f_sts_pcc_core
+  use :: fsml_dst, only: norm_pdf_elemental => f_dst_norm_pdf_core
 
   implicit none
 
@@ -20,6 +22,7 @@ program main
   character(len=128) :: infile
   integer            :: i
   real(wp)           :: r
+  real(wp)           :: x1(10,5), x2(10,5), pcc(5), x(10)
 
 !   infile = "./example/research/data/Mutz_et_al_2021/DMC_Mutz2021_Antofagasta.csv"
 !
@@ -67,5 +70,22 @@ program main
 
   ! invalid probability option; returns sentinel and prints error message
   print*, fsml_norm_ppf(0.95_wp, mu=0.0_wp, sigma=1.0_wp)
+
+  ! ---- pure procedure in do concurrent loop
+
+  ! generate data
+  call random_seed()
+  call random_number(x1)
+  call random_number(x2)
+
+  ! pearson correlation coefficients for 10 vector pairs
+  do concurrent (i=1:5)
+     pcc(i) = corr(x1(:,i), x2(:,i))
+  enddo
+  print*, pcc
+
+  ! ---- use of elemental function for nomal pdf
+  call random_number(x)
+  print*, norm_pdf_elemental(x, 0.0_wp, 1.0_wp)
 
 end program main
