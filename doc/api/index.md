@@ -15,7 +15,7 @@ The FSML procedures are categorised into several thematic modules:
 
 - `STS`: Basic statistics for describing and understanding data (e.g., mean, variance, correlation)
 - `TST`: Parametric and non-parametric hypothesis tests (e.g., Mann–Whitney U , analysis of variance)
-- `LIN`: Statistical procedures relying heavily on linear algebra (e.g., principal component analysis, ridge regression, linear discriminant analysis)
+- `LIN`: Procedures relying heavily on linear algebra (e.g., principal component analysis, ridge regression, linear discriminant analysis)
 - `NLP`: Non-linear and algorithmic procedures (e.g., k-means clustering)
 - `DST`: Statistical distributions (e.g., Student's t distribution); probability density function (PDF), cumulative distribution function (CDF), and percent point function (PPF)
 

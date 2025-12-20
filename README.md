@@ -3,6 +3,7 @@
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
 <!--![95%](https://progress-bar.xyz/95?title=Alpha)-->
 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09058/status.svg)](https://doi.org/10.21105/joss.09058)
 
 ## Description
 
@@ -49,3 +50,24 @@ Currently covered are procedures for basic statistics (STS), statistical distrib
 # Distribution, Installation, Testing
 
 `FSML` is offered as an [FPM](https://fpm.fortran-lang.org/) package with examples and tests.
+
+# Reference
+
+Mutz, S. G., (2025). FSML – A Modern Fortran Statistics and Machine Learning Library. Journal of Open Source Software, 10(116), 9058, [https://doi.org/10.21105/joss.09058](https://doi.org/10.21105/joss.09058)
+
+**BibTex**:
+```bibtex
+@article{Mutz2025,
+doi = {10.21105/joss.09058},
+url = {https://doi.org/10.21105/joss.09058},
+year = {2025},
+publisher = {The Open Journal},
+volume = {10},
+number = {116},
+pages = {9058},
+author = {Mutz, Sebastian Gerhard},
+title = {FSML – A Modern Fortran Statistics and Machine Learning Library}, journal = {Journal of Open Source Software} }
+```
+
+
+
