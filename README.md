@@ -1,7 +1,7 @@
 # Fortran Statistics and Machine Learning
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.09058/status.svg)](https://doi.org/10.21105/joss.09058)
-[![Project homepage](https://fsml.mutz.science)](https://fsml.mutz.science)
+[![Website](https://img.shields.io/badge/Project%20homepage-citation--file--format.github.io-ff0080)(https://fsml.mutz.science)
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
 <!--![95%](https://progress-bar.xyz/95?title=Alpha)-->
 
