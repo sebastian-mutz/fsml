@@ -16,15 +16,15 @@ bibliography: refs.bib
 
 # Summary
 
-`FSML` is a modern Fortran statistics and machine learning library suitable for contemporary research problems and teaching. It includes procedures for basic statistics, hypothesis tests, linear and non-linear methods, and statistical distribution functions.
+`FSML` is a Modern Fortran statistics and machine learning library suitable for contemporary research problems and teaching. It includes procedures for basic statistics, hypothesis tests, linear and non-linear methods, and statistical distribution functions.
 
 # Statement of Need
 
-The advances in computing technology over the past two decades have expanded the practical scope of statistics and allowed the widespread use of machine learning (ML). This also transformed research practices and enhanced predictive modelling across many disciplines, including Earth sciences [@boateng:2023], operational weather forecasting [@lang:2024], and more.
+The advances in computing technology over the past two decades have expanded the practical scope of statistics and allowed the widespread use of machine learning (ML). This has also transformed research practices and enhanced predictive modelling across many disciplines, including Earth sciences [@boateng:2023], operational weather forecasting [@lang:2024], and more.
 
 Fortran is a well-established general purpose programming language that is commonly adopted in science due to its stability, reliability, performance, and array functionality. It is widely used for parallelised high-performance computing and numerical modelling [e.g., @giorgetta:2018]. The same strengths make it suitable for computationally demanding ML procedures and data-driven predictions. However, despite Fortran’s long history in data-driven prediction and ML [e.g., @breiman:2001; @tomasetti:2009; @gutmann:2022], it has not been as widely adopted in these fields as other languages and lacks well documented, accessible toolkits for statistics and classic ML.
 
-Although projects like Neural-Fortran [@curcic:2019], ATHENA [@taylor:2024], and [FStats](https://github.com/jchristopherson/fstats) cover some important procedures for deep-learning and classic statistics, the Fortran statistics and ML ecosystem remains relatively small. This potentially deters from the use of Fortran, which is already perceived as less accessible than other popular languages due to 1) the lack of familiarity with modern Fortran features, which is exacerbated by stagnating adoption of Fortran at universities, and 2) shortcomings that are currently being addressed by Fortran-lang community projects [@kedward:2022].
+Although projects like Neural-Fortran [@curcic:2019], ATHENA [@taylor:2024], and [FStats](https://github.com/jchristopherson/fstats) cover some important procedures for deep-learning and classic statistics, the Fortran statistics and ML ecosystem remains relatively small. This potentially deters from the use of Fortran, which is already perceived as less accessible than other popular languages due to 1) the lack of familiarity with Modern Fortran features, which is exacerbated by stagnating adoption of Fortran at universities, and 2) shortcomings that are currently being addressed by Fortran-lang community projects [@kedward:2022].
 
 
 `FSML` (Fortran Statistics and Machine Learning) purposefully integrates these projects: It uses [stdlib](https://github.com/fortran-lang/stdlib) for linear algebra, leverages [fpm](https://github.com/fortran-lang/fpm) for easier building and distribution, and is developed to support compilation with the interactive [LFortran](https://github.com/lfortran/lfortran) compiler in addition to GFortran. As such, it builds on recent community efforts and addresses two needs:
@@ -58,7 +58,7 @@ The FSML handbook is hosted on [fsml.mutz.science](https://fsml.mutz.science/) a
 
 # Examples
 
-The examples below demonstrate the use of FSML interfaces, using double precision (dp):
+The examples below demonstrate the use of FSML interfaces, using double precision (`dp`):
 
 * statistical distribution functions:
 ```fortran
