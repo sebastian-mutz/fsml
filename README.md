@@ -2,7 +2,7 @@
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.09058/status.svg)](https://doi.org/10.21105/joss.09058)
 [![GitHub](https://img.shields.io/github/license/sebastian-mutz/fsml)](https://github.com/sebastian-mutz/fsml/blob/main/LICENCE)
-[![Website](https://img.shields.io/badge/website-fsml.mutz.science-violet)](https://fsml.mutz.science)
+[![Website](https://img.shields.io/badge/website-fsml.mutz.science-purple)](https://fsml.mutz.science)
 <!--![95%](https://progress-bar.xyz/95?title=Alpha)-->
 
 ## Description
