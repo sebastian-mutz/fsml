@@ -302,7 +302,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Boateng</surname><given-names>D.</given-names></name>
         <name><surname>Mutz</surname><given-names>S. G.</given-names></name>
       </person-group>
-      <article-title>pyESDv1.0.1: An open-source python framework for empirical-statistical downscaling of climate information</article-title>
+      <article-title>pyESDv1.0.1: An open-source Python framework for empirical-statistical downscaling of climate information</article-title>
       <source>Geoscientific Model Development</source>
       <year iso-8601-date="2023">2023</year>
       <volume>16</volume>
@@ -340,7 +340,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Zängl</surname><given-names>G.</given-names></name>
         <name><surname>Stevens</surname><given-names>B.</given-names></name>
       </person-group>
-      <article-title>ICON-a, the atmosphere component of the ICON earth system model: I. Model description</article-title>
+      <article-title>ICON-a, the atmosphere component of the ICON Earth system model: I. Model description</article-title>
       <source>Journal of Advances in Modeling Earth Systems</source>
       <year iso-8601-date="2018">2018</year>
       <volume>10</volume>
@@ -372,7 +372,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Urban</surname><given-names>John</given-names></name>
         <name><surname>Vandenplas</surname><given-names>Jérémie</given-names></name>
       </person-group>
-      <article-title>The state of fortran</article-title>
+      <article-title>The state of Fortran</article-title>
       <source>Computing in Science &amp; Engineering</source>
       <year iso-8601-date="2022">2022</year>
       <volume>24</volume>
@@ -447,7 +447,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <person-group person-group-type="author">
         <name><surname>Mutz</surname><given-names>S. G.</given-names></name>
       </person-group>
-      <article-title>The effect of high-mountain asia topography on northern hemisphere atmospheric flow</article-title>
+      <article-title>The effect of high-mountain Asia topography on Northern Hemisphere atmospheric flow</article-title>
       <source>EGU General Assembly 2025, Vienna, Austria, 27 Apr–2 May 2025</source>
       <year iso-8601-date="2025">2025</year>
       <volume>EGU25-7283</volume>
@@ -464,7 +464,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Stepanek</surname><given-names>C.</given-names></name>
         <name><surname>Li</surname><given-names>J.</given-names></name>
       </person-group>
-      <article-title>Estimates of late cenozoic climate change relevant to earth surface processes in tectonically active orogens</article-title>
+      <article-title>Estimates of Late Cenozoic climate change relevant to Earth surface processes in tectonically active orogens</article-title>
       <source>Earth Surface Dynamics</source>
       <year iso-8601-date="2018">2018</year>
       <volume>6</volume>
@@ -481,7 +481,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Mutz</surname><given-names>S. G.</given-names></name>
         <name><surname>Ehlers</surname><given-names>T. A.</given-names></name>
       </person-group>
-      <article-title>Detection and explanation of spatiotemporal patterns in late cenozoic palaeoclimate change relevant to earth surface processes</article-title>
+      <article-title>Detection and explanation of spatiotemporal patterns in Late Cenozoic palaeoclimate change relevant to Earth surface processes</article-title>
       <source>Earth Surface Dynamics</source>
       <year iso-8601-date="2019">2019</year>
       <volume>7</volume>
@@ -497,7 +497,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <person-group person-group-type="author">
         <name><surname>Taylor</surname><given-names>Ned Thaddeus</given-names></name>
       </person-group>
-      <article-title>ATHENA: A fortran package for neural networks</article-title>
+      <article-title>ATHENA: A Fortran package for neural networks</article-title>
       <source>Journal of Open Source Software</source>
       <publisher-name>The Open Journal</publisher-name>
       <year iso-8601-date="2024">2024</year>
@@ -514,7 +514,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <person-group person-group-type="author">
         <name><surname>Curcic</surname><given-names>Milan</given-names></name>
       </person-group>
-      <article-title>A parallel fortran framework for neural networks and deep learning</article-title>
+      <article-title>A parallel Fortran framework for neural networks and deep learning</article-title>
       <source>SIGPLAN Fortran Forum</source>
       <publisher-name>Association for Computing Machinery</publisher-name>
       <publisher-loc>New York, NY, USA</publisher-loc>
