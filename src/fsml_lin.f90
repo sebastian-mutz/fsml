@@ -766,6 +766,203 @@ pure function f_lin_mahalanobis_core(x, y, cov) result(dist)
 
 end function f_lin_mahalanobis_core
 
+subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, tol, maxiter)
 
+!  ==== Description
+!!  Least Absolute Shrinkage and Selection Operator with intercept.
+!!
+!! Computes:
+!!
+!! Notes:
+
+! ==== Declarations
+  integer(i4), intent(in)            :: nd
+  integer(i4), intent(in)            :: nv
+  real(wp)   , intent(in)            :: x(nd, nv)
+  real(wp)   , intent(in)            :: y(nd)
+  real(wp)   , intent(in)            :: lambda
+  real(wp)   , intent(out)           :: b0
+  real(wp)   , intent(out)           :: b(nv)
+  real(wp)   , intent(out)           :: r2
+  real(wp)   , intent(out), optional :: y_hat(nd)
+  real(wp)   , intent(out), optional :: se(nv)
+  real(wp)   , intent(out), optional :: cov_b(nv, nv)
+  real(wp)   , intent(in) , optional :: rho
+  real(wp)   , intent(in) , optional :: tol
+  integer(i4), intent(in) , optional :: maxiter
+  ! ---- Internal variables
+  real(wp)                           :: rho_
+  real(wp)                           :: xc(nv, nv), yc(nd)
+  real(wp)                           :: xt(nv, nd)
+  real(wp)                           :: xtx(nv, nv)
+  real(wp)                           :: xty(nv)
+  real(wp)                           :: P(nv, nv)
+  real(wp)                           :: res(nd)
+  real(wp)                           :: sse
+  real(wp)                           :: sst
+  real(wp)                           :: y_bar
+  integer(i4)                        :: i, j
+! ==== Instructions
+
+  ! ---- validate input
+  if (nd <= nv + 1) then
+    call s_err_print("[fsml error] Lasso: Number of obersvations must&
+                    & exceed number of predictors + intercept.")
+    error stop
+  endif
+  if (lambda < 0.0_wp) then
+      call s_err_print("[fsml error] Lasso: lambda must be non-zero positive.")
+      error stop
+  endif
+
+  ! ---- optional arguments.
+  rho_ = 50.0_wp; if (present(rho)) rho_ = rho
+
+  ! ---- Preprocessing
+
+  ! center dependent variable.
+  yc = y - f_sts_mean_core(y)
+
+  ! center regressors.
+  do concurrent(j=1:nv)
+      xc(:, j) = x(:, j) - f_sts_mean_core(x(:, j))
+  enddo
+
+  ! ---- Cholesky factorization of P = rho*I + XᵗX
+
+  ! compute transposed matrix and XᵗX
+  xt  = transpose(xc)
+  xtx = matmul(xt, xc)
+
+  ! compute P = rho*I + XᵗX.
+  do concurrent(i=1:nv, j=1:nv)
+      P(i, j) = merge(rho_ + xtx(i, j), xtx(i, j), i == j)
+  enddo
+
+  ! ---- compute coefficients: full vector including intercept
+  xty = matmul(xt, yc)
+  b0  = 0.0_wp
+  b   = 0.0_wp
+
+  ! get intercept coefficient.
+  b0 = f_sts_mean(y)
+
+  ! get predictor coefficients.
+  b = admm(nv, P, xty, lambda, rho_, maxiter, tol)
+
+  ! ---- predicted values and residuals.
+  if (present(y_hat)) then
+    y_hat = b0 + matmul(xc, b)
+    res = y - y_hat
+  else
+    res = y - (b0 + matmul(xc, b))
+  endif
+
+  ! ---- R² calculation.
+
+  ! sum of squares errors
+  sse = sum(res**2)
+
+  ! mean of y.
+  y_bar = f_sts_mean_core(y)
+
+  ! total sum of squares.
+  sst = sum((y-y_bar)**2)
+
+  ! R²
+  r2 = 1.0_wp - sse / sst
+
+end subroutine s_lin_lasso
+
+function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
+  ! ---- Input variables.
+  integer(i4), intent(in)           :: n
+  real(wp)   , intent(inout)        :: P(n, n)
+  real(wp)   , intent(in)           :: q(n)
+  real(wp)   , intent(in)           :: lambda
+  real(wp)   , intent(in)           :: rho
+  integer(i4), intent(in), optional :: maxiter
+  real(wp)   , intent(in), optional :: tol
+  ! ---- Result.
+  real(wp)                          :: x(n)
+  ! ---- Internal variables.
+  integer(i4)                       :: iter, maxiter_
+  real(wp)                          :: tol_
+  real(wp)                          :: primal_eps, primal_norm
+  real(wp)                          :: dual_eps, dual_norm
+  real(wp)                          :: z(n), v(n)
+
+! ==== Pre-processing.
+
+  ! ---- validate inputs.
+  if (lambda < 0.0_wp) then
+      call s_err_print("[fmsl error] Lasso: lambda must be non-zero positive.")
+      error stop
+  endif
+
+  ! ---- optional arguments.
+  maxiter_ = 100 ; if (present(maxiter)) maxiter_ = maxiter
+  if (maxiter_ < 0) then
+      call s_err_print("[fmsl error] Lasso: maxiter must be positive.")
+      error stop
+  endif
+
+  tol_ = sqrt(epsilon(1.0_wp)) ; if (present(tol)) tol_ = tol
+  if (tol_ < 0.0_wp) then
+      call s_err_print("[fmsl error] Lasso: tol must be positive.")
+      error stop
+  endif
+
+  ! ---- initialize variables.
+  x = 0.0_wp; z = 0.0_wp ; v = 0.0_wp
+
+  ! ---- Cholesky factorization.
+  P = chol(P)
+
+! ==== Optimization loop.
+  do iter = 1, maxiter_
+    ! Partial minimization over x.
+    x = cho_solve(n, P, q + rho*(z - v))
+    ! Partial minimization over z.
+    z = shrinkage(x+v, lambda/rho)
+    ! Dual ascent step.
+    v = v + rho*(x - z)
+    ! Check residuals.
+    primal_norm = max(norm2(x), norm2(z)) ; primal_eps = norm2(x - z)
+    dual_norm = rho*norm2(v) ; dual_eps = rho*norm2(x-z)
+    if ((primal_eps < tol_*primal_norm) .and. (dual_eps < tol_*dual_norm)) then
+      x = z
+      exit
+    endif
+  enddo
+
+contains
+    real(wp) elemental function shrinkage(x, a) result(y)
+      real(wp), intent(in) :: x, a
+      y = max(0.0_wp, x-a) - max(0.0_wp, -x-a)
+    end function
+
+    function cho_solve(n, A, b) result(x)
+      use stdlib_linalg_lapack, only: trtrs
+      ! ---- Input variables.
+      integer(i4), intent(in) :: n
+      real(wp), intent(in)    :: A(n, n)
+      real(wp), intent(in)    :: b(n)
+      ! ---- Result.
+      real(wp), target        :: x(n)
+      ! ---- Internal variables.
+      real(wp), pointer       :: xmat(:, :)
+      integer(i4)             :: info
+
+!   ==== Instructions.
+    ! Copy rhs vector into solution.
+    x = b
+    ! Pointer trick.
+    xmat(1:n, 1:1) => x
+    ! Cholesky solve.
+    call trtrs("L", "T", "N", n, 1, A, n, xmat, n, info)
+    call trtrs("L", "N", "N", n, 1, A, n, xmat, n, info)
+    end function
+end function
 
 end module fsml_lin
