@@ -44,7 +44,7 @@ program test_lin
   call handle_status(status)
 
   print*, "> lin: testing lasso regression"
-  status = test_lasso(tol)
+  status = test_lasso(tol=1.0e-6_wp)
   call handle_status(status)
 
 contains
@@ -403,6 +403,18 @@ function test_lasso(tol) result(status)
   ! LASSO
   real(wp) :: res_b(nv), res_b0, res_yhat(nd)
   real(wp) :: res_se(nv), res_covb(nv,nv), res_rsq
+  real(wp), parameter :: ans_b(nv) = &
+          & [1.2226562500000071_wp, 5.0781249999943157E-002_wp, &
+          &  9.3750000000028422E-002_wp]
+  real(wp), parameter :: ans_b0 = 8.7851562500000000_wp
+  real(wp), parameter :: ans_yhat(nd) = &
+          & [10.390624999999979_wp, 11.609375000000057_wp, &
+          &  12.843749999999851_wp, 13.921874999999886_wp, &
+          &  15.234374999999993_wp]
+  real(wp), parameter :: ans_se(nv) = &
+          & [0.25239937467421891_wp, 0.43454288010325609_wp, &
+          &  0.60515364784489889_wp]
+  real(wp), parameter :: ans_rsq = 0.97360641891891897_wp
 
 ! ==== Instructions
 
@@ -410,5 +422,14 @@ function test_lasso(tol) result(status)
 
   ! reg
   call fsml_lasso(x1, y, nd, nv, 0.0_wp, res_b0, res_b, res_rsq, res_yhat, res_se, res_covb)
+  if (abs( res_b0 - ans_b0 ) .gt. tol) status = .false.
+  if (abs( res_rsq - ans_rsq ) .gt. tol) status = .false.
+  do i = 1, nv
+     if (abs( res_b(i) - ans_b(i) ) .gt. tol) status = .false.
+     ! if (abs( res_se(i) - ans_se(i) ) .gt. tol) status = .false.
+  enddo
+  do i = 1, nd
+     if (abs( res_yhat(i) - ans_yhat(i) ) .gt. tol) status = .false.
+  enddo
 end function test_lasso
 end program
