@@ -49,6 +49,7 @@ module fsml
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
   public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge, fsml_mahalanobis
+  public :: fsml_lasso
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures

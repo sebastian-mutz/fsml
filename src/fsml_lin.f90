@@ -800,7 +800,7 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
   integer(i4), intent(in) , optional :: maxiter       !! Maximum number of iterations for ADMM
   ! ---- Internal variables
   real(wp)                           :: rho_          !! ADMM weights for augmented Lagrangian
-  real(wp)                           :: xc(nv, nv)    !! centered predictor data matrix
+  real(wp)                           :: xc(nd, nv)    !! centered predictor data matrix
   real(wp)                           :: yc(nd)        !! centered response vector
   real(wp)                           :: xt(nv, nd)    !! transpose of xc
   real(wp)                           :: xtx(nv, nv)   !! XᵀX matrix

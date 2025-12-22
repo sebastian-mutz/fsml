@@ -43,6 +43,10 @@ program test_lin
   status = test_ridge(tol)
   call handle_status(status)
 
+  print*, "> lin: testing lasso regression"
+  status = test_lasso(tol)
+  call handle_status(status)
+
 contains
 
 
@@ -377,4 +381,34 @@ function test_ridge(tol) result(status)
 end function test_ridge
 
 
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_lasso(tol) result(status)
+
+! ==== Description
+!! Tests for lasso regression.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol   !! deviation tolerance
+  logical                :: status
+  integer(i4)            :: i
+  integer(i4), parameter :: nd = 5, nv = 3
+  real(wp), parameter    :: x1(nd,nv) = reshape([ &
+                                   & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! var 1
+                                   & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp, & ! var 2
+                                   & 3.0_wp, 3.5_wp, 2.0_wp, 1.0_wp, 2.5_wp  & ! var 3
+                                   & ], shape=[nd,nv])
+  real(wp), parameter :: y(nd) = [10.0_wp, 12.0_wp, 13.0_wp, 14.0_wp, 15.0_wp]  ! target values
+
+  ! LASSO
+  real(wp) :: res_b(nv), res_b0, res_yhat(nd)
+  real(wp) :: res_se(nv), res_covb(nv,nv), res_rsq
+
+! ==== Instructions
+
+  status = .true.
+
+  ! reg
+  call fsml_lasso(x1, y, nd, nv, 0.0_wp, res_b0, res_b, res_rsq, res_yhat, res_se, res_covb)
+end function test_lasso
 end program
