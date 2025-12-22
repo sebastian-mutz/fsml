@@ -800,12 +800,11 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
   integer(i4), intent(in) , optional :: maxiter       !! Maximum number of iterations for ADMM
   ! ---- Internal variables
   real(wp)                           :: rho_          !! ADMM weights for augmented Lagrangian
-  real(wp)                           :: xc(nd, nv)    !! centered predictor data matrix
-  real(wp)                           :: yc(nd)        !! centered response vector
-  real(wp)                           :: xt(nv, nd)    !! transpose of xc
-  real(wp)                           :: xtx(nv, nv)   !! XᵀX matrix
-  real(wp)                           :: xty(nv)       !! Xᵀy
-  real(wp)                           :: P(nv, nv)     !! Symmetric positive definite matrix.
+  real(wp)                           :: x1(nd, nv+1)    !! centered predictor data matrix
+  real(wp)                           :: xt(nv+1, nd)    !! transpose of xc
+  real(wp)                           :: xtx(nv+1, nv+1)   !! XᵀX matrix
+  real(wp)                           :: xty(nv+1)       !! Xᵀy
+  real(wp)                           :: coefs(nv+1)
   real(wp)                           :: res(nd)       !! residuals
   real(wp)                           :: sse           !! sum of squared errors
   real(wp)                           :: sst           !! total sum of squares
@@ -829,38 +828,38 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 
   ! ---- Preprocessing
 
-  ! center dependent variable.
-  yc = y - f_sts_mean_core(y)
-
   ! center regressors.
-  do concurrent(j=1:nv)
-      xc(:, j) = x(:, j) - f_sts_mean_core(x(:, j))
+  ! x1(:, 1) = 1.0_wp; x1(:, 2:) = x
+  do i = 1, nd
+     x1(i,1) = 1.0_wp
+     do j = 1, nv
+        x1(i,j+1) = x(i,j)
+     enddo
   enddo
 
   ! ---- Cholesky factorization of P = rho*I + XᵗX
 
   ! compute transposed matrix and XᵗX
-  xt  = transpose(xc)
-  xtx = matmul(xt, xc)
-
+  xt  = transpose(x1)
+  xtx = matmul(xt, x1)
 
   ! ---- compute coefficients: full vector including intercept
-  xty = matmul(xt, yc)
+  xty = matmul(xt, y)
   b0  = 0.0_wp
   b   = 0.0_wp
 
-  ! get intercept coefficient.
-  b0 = f_sts_mean(y)
+  ! solve lasso problem.
+  coefs = admm(nv+1, xtx, xty, lambda, rho_, maxiter, tol)
 
-  ! get predictor coefficients.
-  b = admm(nv, xtx, xty, lambda, rho_, maxiter, tol)
+  ! get coefficients.
+  b0 = coefs(1) ; b = coefs(2:)
 
   ! ---- predicted values and residuals.
   if (present(y_hat)) then
-    y_hat = b0 + matmul(xc, b)
+    y_hat = b0 + matmul(x, b)
     res = y - y_hat
   else
-    res = y - (b0 + matmul(xc, b))
+    res = y - (b0 + matmul(x, b))
   endif
 
   ! ---- R² calculation.
@@ -879,7 +878,7 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 
 end subroutine s_lin_lasso
 
-pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
+function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   ! ---- Input variables.
   integer(i4), intent(in)           :: n              !! number of optimization variables
   real(wp)   , intent(in)           :: xtx(n, n)      !! covariance matrix of regressors
@@ -895,50 +894,54 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   integer(i4)                       :: i, j           !! Loop counters
   integer(i4)                       :: maxiter_       !! maximum number of iterations
   real(wp)                          :: P(n, n)        !! sym. pos. def. matrix for ADMM
+  real(wp)                          :: q(n)
   real(wp)                          :: tol_           !! convergence tolerance
-  real(wp)                          :: primal_eps     !! residual of primal feasiblity
-  real(wp)                          :: primal_norm    !! norm of primal variables
-  real(wp)                          :: dual_eps       !! residual of dual feasibility
-  real(wp)                          :: dual_norm      !! norm of dual variable
-  real(wp)                          :: z(n), v(n)     !! ADMM variables
+  real(wp)                          :: z(n-1), z_old(n-1)
+  real(wp)                          :: v(n-1)     !! ADMM variables
+  real(wp)                          :: r_norm, s_norm
+  real(wp)                          :: primal_eps, dual_eps
 
 ! ==== Pre-processing.
   ! ---- optional arguments.
-  maxiter_ = 100                   ; if (present(maxiter)) maxiter_ = maxiter
+  maxiter_ = 1000                  ; if (present(maxiter)) maxiter_ = maxiter
   tol_     = sqrt(epsilon(1.0_wp)) ; if (present(tol))     tol_ = tol
 
   ! ---- initialize variables.
-  x = 0.0_wp; z = 0.0_wp ; v = 0.0_wp
+  x = 0.0_wp; z = 0.0_wp ; z_old = 0.0_wp ; v = 0.0_wp
 
   ! compute P = rho*I + XᵗX.
   do concurrent(i=1:n, j=1:n)
-      P(i, j) = merge(rho + xtx(i, j), xtx(i, j), i == j)
+      P(i, j) = merge(rho + xtx(i, j), xtx(i, j), i == j .and. i > 1)
   enddo
 
   ! ---- Cholesky factorization.
-  P = chol(P)
+  P = chol(P, lower = .false., other_zeroed= .true.)
 
 ! ==== optimization loop.
   do iter = 1, maxiter_
     ! partial minimization over x.
-    x = cho_solve(n, P, xty + rho*(z - v))
+    q = xty ; q(2:) = q(2:) + rho*(z-v)
+    x = cho_solve(n, P, q)
 
     ! partial minimization over z.
-    z = shrinkage(x+v, lambda/rho)
+    z = shrinkage(x(2:)+v, lambda/rho)
 
     ! dual ascent step.
-    v = v + rho*(x - z)
+    v = v + (x(2:) - z)
 
     ! ---- check residuals.
-    ! primal variables
-    primal_norm = max(norm2(x), norm2(z)) ; primal_eps = norm2(x - z)
+    r_norm = norm2(x(2:) - z)
+    s_norm = norm2(rho*(z-z_old))
 
-    ! dual variables
-    dual_norm = rho*norm2(v) ; dual_eps = rho*norm2(x-z)
+    primal_eps = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*max(norm2(x(2:)), norm2(z))
+    dual_eps   = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*norm2(rho*v)
+
+    ! Update variables.
+    z_old = z
 
     ! convergence check
-    if ((primal_eps < tol_*primal_norm) .and. (dual_eps < tol_*dual_norm)) then
-      x = z
+    if ((r_norm <= primal_eps) .and. (s_norm <= dual_eps)) then
+      x(2:) = z
       exit
     endif
   enddo
@@ -950,8 +953,8 @@ contains
       y = max(0.0_wp, x-a) - max(0.0_wp, -x-a)
     end function
 
-    pure function cho_solve(n, A, b) result(x)
-      use stdlib_linalg_lapack, only: trtrs
+    function cho_solve(n, A, b) result(x)
+      use stdlib_linalg_lapack, only: potrs
       ! ---- Input variables.
       integer(i4), intent(in) :: n        !! number of variables
       real(wp), intent(in)    :: A(n, n)  !! Cholesky factorization of A
@@ -961,17 +964,13 @@ contains
       ! ---- Internal variables.
       real(wp), pointer       :: xmat(:, :)
       integer(i4)             :: info
-
     ! ==== Initialization
       ! copy rhs vector into solution.
       x = b
       ! pointer trick.
       xmat(1:n, 1:1) => x
       ! ---- Cholesky solve.
-      ! solve L.T @ y = b
-      call trtrs("L", "T", "N", n, 1, A, n, xmat, n, info)
-      ! solve L @ x = y
-      call trtrs("L", "N", "N", n, 1, A, n, xmat, n, info)
+      call potrs("U", n, 1, A, n, xmat, n, info)
     end function
 end function
 
