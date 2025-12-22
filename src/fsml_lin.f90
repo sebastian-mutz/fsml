@@ -888,7 +888,7 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   ! ---- optional arguments.
   maxiter_ = 1000                  ; if (present(maxiter)) maxiter_ = maxiter
   tol_     = sqrt(epsilon(1.0_wp)) ; if (present(tol))     tol_ = tol
-  rho_     = 100.0_wp              ; if (present(rho))     rho_ = rho
+  rho_     = 50.0_wp               ; if (present(rho))     rho_ = rho
 
   ! ---- initialize variables.
   x = 0.0_wp; z = 0.0_wp ; z_old = 0.0_wp ; v = 0.0_wp
