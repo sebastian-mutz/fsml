@@ -772,36 +772,45 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 !!  Least Absolute Shrinkage and Selection Operator with intercept.
 !!
 !! Computes:
+!!  - Intercept b0 (scalar)
+!!  - Predictor coefficients b(nv)
+!!  - Coefficient of determination R²
+!!  - Standard errors se(nv) (lasso-adjusted)
+!!  - Covariance matrix of predictors cov_b(nv, nv) (lasso-adjusted)
 !!
 !! Notes:
+!!  - When lambda (λ) = 0, this reduces to ordinary least squares (OLS).
+!!  - Lasso problem is solved using the Alternating Direction Method of Multipliers.
 
 ! ==== Declarations
-  integer(i4), intent(in)            :: nd
-  integer(i4), intent(in)            :: nv
-  real(wp)   , intent(in)            :: x(nd, nv)
-  real(wp)   , intent(in)            :: y(nd)
-  real(wp)   , intent(in)            :: lambda
-  real(wp)   , intent(out)           :: b0
-  real(wp)   , intent(out)           :: b(nv)
-  real(wp)   , intent(out)           :: r2
-  real(wp)   , intent(out), optional :: y_hat(nd)
-  real(wp)   , intent(out), optional :: se(nv)
-  real(wp)   , intent(out), optional :: cov_b(nv, nv)
-  real(wp)   , intent(in) , optional :: rho
-  real(wp)   , intent(in) , optional :: tol
-  integer(i4), intent(in) , optional :: maxiter
+  integer(i4), intent(in)            :: nd            !! number of datapoints
+  integer(i4), intent(in)            :: nv            !! number of predictors (excluding intercept)
+  real(wp)   , intent(in)            :: x(nd, nv)     !! predictor data matrix (no intercept column)
+  real(wp)   , intent(in)            :: y(nd)         !! response vector
+  real(wp)   , intent(in)            :: lambda        !! lasso penaly parameter (≥ 0, non-optional)
+
+  real(wp)   , intent(out)           :: b0            !! intercept coefficient
+  real(wp)   , intent(out)           :: b(nv)         !! predictor coefficients
+  real(wp)   , intent(out)           :: r2            !! coefficient of determination R²
+  real(wp)   , intent(out), optional :: y_hat(nd)     !! predicted y values
+  real(wp)   , intent(out), optional :: se(nv)        !! standard errors of predictor coefficients
+  real(wp)   , intent(out), optional :: cov_b(nv, nv) !! covariance matrix of predictor coefficients
+  real(wp)   , intent(in) , optional :: rho           !! ADMM weight for augmented Lagrangian
+  real(wp)   , intent(in) , optional :: tol           !! Tolerance for ADMM solver
+  integer(i4), intent(in) , optional :: maxiter       !! Maximum number of iterations for ADMM
   ! ---- Internal variables
-  real(wp)                           :: rho_
-  real(wp)                           :: xc(nv, nv), yc(nd)
-  real(wp)                           :: xt(nv, nd)
-  real(wp)                           :: xtx(nv, nv)
-  real(wp)                           :: xty(nv)
-  real(wp)                           :: P(nv, nv)
-  real(wp)                           :: res(nd)
-  real(wp)                           :: sse
-  real(wp)                           :: sst
-  real(wp)                           :: y_bar
-  integer(i4)                        :: i, j
+  real(wp)                           :: rho_          !! ADMM weights for augmented Lagrangian
+  real(wp)                           :: xc(nv, nv)    !! centered predictor data matrix
+  real(wp)                           :: yc(nd)        !! centered response vector
+  real(wp)                           :: xt(nv, nd)    !! transpose of xc
+  real(wp)                           :: xtx(nv, nv)   !! XᵀX matrix
+  real(wp)                           :: xty(nv)       !! Xᵀy
+  real(wp)                           :: P(nv, nv)     !! Symmetric positive definite matrix.
+  real(wp)                           :: res(nd)       !! residuals
+  real(wp)                           :: sse           !! sum of squared errors
+  real(wp)                           :: sst           !! total sum of squares
+  real(wp)                           :: y_bar         !! mean of y
+  integer(i4)                        :: i, j          !! loop counters
 ! ==== Instructions
 
   ! ---- validate input
@@ -876,21 +885,23 @@ end subroutine s_lin_lasso
 
 function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
   ! ---- Input variables.
-  integer(i4), intent(in)           :: n
-  real(wp)   , intent(inout)        :: P(n, n)
-  real(wp)   , intent(in)           :: q(n)
-  real(wp)   , intent(in)           :: lambda
-  real(wp)   , intent(in)           :: rho
-  integer(i4), intent(in), optional :: maxiter
-  real(wp)   , intent(in), optional :: tol
+  integer(i4), intent(in)           :: n              !! number of optimization variables
+  real(wp)   , intent(inout)        :: P(n, n), q(n)  !! quadratic form for lstsq cost
+  real(wp)   , intent(in)           :: lambda         !! lasso penalty parameter
+  real(wp)   , intent(in)           :: rho            !! ADMM weight for augmented Lagrangian
+  integer(i4), intent(in), optional :: maxiter        !! maximum number of ADMM iterations
+  real(wp)   , intent(in), optional :: tol            !! tolerance for ADMM solver
   ! ---- Result.
-  real(wp)                          :: x(n)
+  real(wp)                          :: x(n)           !! optimal solution
   ! ---- Internal variables.
-  integer(i4)                       :: iter, maxiter_
-  real(wp)                          :: tol_
-  real(wp)                          :: primal_eps, primal_norm
-  real(wp)                          :: dual_eps, dual_norm
-  real(wp)                          :: z(n), v(n)
+  integer(i4)                       :: iter           !! Iteration counter
+  integer(i4)                       :: maxiter_       !! maximum number of iterations
+  real(wp)                          :: tol_           !! convergence tolerance
+  real(wp)                          :: primal_eps     !! residual of primal feasiblity
+  real(wp)                          :: primal_norm    !! norm of primal variables
+  real(wp)                          :: dual_eps       !! residual of dual feasibility
+  real(wp)                          :: dual_norm      !! norm of dual variable
+  real(wp)                          :: z(n), v(n)     !! ADMM variables
 
 ! ==== Pre-processing.
 
@@ -919,17 +930,26 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
   ! ---- Cholesky factorization.
   P = chol(P)
 
-! ==== Optimization loop.
+! ==== optimization loop.
   do iter = 1, maxiter_
-    ! Partial minimization over x.
+    ! partial minimization over x.
     x = cho_solve(n, P, q + rho*(z - v))
-    ! Partial minimization over z.
+
+    ! partial minimization over z.
     z = shrinkage(x+v, lambda/rho)
-    ! Dual ascent step.
+
+    ! dual ascent step.
     v = v + rho*(x - z)
-    ! Check residuals.
+
+    ! ---- check residuals.
+
+    ! primal variables
     primal_norm = max(norm2(x), norm2(z)) ; primal_eps = norm2(x - z)
+
+    ! dual variables
     dual_norm = rho*norm2(v) ; dual_eps = rho*norm2(x-z)
+
+    ! convergence check
     if ((primal_eps < tol_*primal_norm) .and. (dual_eps < tol_*dual_norm)) then
       x = z
       exit
@@ -938,18 +958,19 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
 
 contains
     real(wp) elemental function shrinkage(x, a) result(y)
-      real(wp), intent(in) :: x, a
+      real(wp), intent(in) :: x !! Variable to be shrinked
+      real(wp), intent(in) :: a !! Bound to set x to zero.
       y = max(0.0_wp, x-a) - max(0.0_wp, -x-a)
     end function
 
-    function cho_solve(n, A, b) result(x)
+    pure function cho_solve(n, A, b) result(x)
       use stdlib_linalg_lapack, only: trtrs
       ! ---- Input variables.
-      integer(i4), intent(in) :: n
-      real(wp), intent(in)    :: A(n, n)
-      real(wp), intent(in)    :: b(n)
+      integer(i4), intent(in) :: n        !! number of variables
+      real(wp), intent(in)    :: A(n, n)  !! Cholesky factorization of A
+      real(wp), intent(in)    :: b(n)     !! right-hand side vector
       ! ---- Result.
-      real(wp), target        :: x(n)
+      real(wp), target        :: x(n)     !! solution vector
       ! ---- Internal variables.
       real(wp), pointer       :: xmat(:, :)
       integer(i4)             :: info
