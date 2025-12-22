@@ -783,33 +783,30 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 !!  - Lasso problem is solved using the Alternating Direction Method of Multipliers.
 
 ! ==== Declarations
-  integer(i4), intent(in)            :: nd            !! number of datapoints
-  integer(i4), intent(in)            :: nv            !! number of predictors (excluding intercept)
-  real(wp)   , intent(in)            :: x(nd, nv)     !! predictor data matrix (no intercept column)
-  real(wp)   , intent(in)            :: y(nd)         !! response vector
-  real(wp)   , intent(in)            :: lambda        !! lasso penaly parameter (≥ 0, non-optional)
-
-  real(wp)   , intent(out)           :: b0            !! intercept coefficient
-  real(wp)   , intent(out)           :: b(nv)         !! predictor coefficients
-  real(wp)   , intent(out)           :: r2            !! coefficient of determination R²
-  real(wp)   , intent(out), optional :: y_hat(nd)     !! predicted y values
-  real(wp)   , intent(out), optional :: se(nv)        !! standard errors of predictor coefficients
-  real(wp)   , intent(out), optional :: cov_b(nv, nv) !! covariance matrix of predictor coefficients
-  real(wp)   , intent(in) , optional :: rho           !! ADMM weight for augmented Lagrangian
-  real(wp)   , intent(in) , optional :: tol           !! Tolerance for ADMM solver
-  integer(i4), intent(in) , optional :: maxiter       !! Maximum number of iterations for ADMM
+  integer(i4), intent(in)            :: nd              !! number of datapoints
+  integer(i4), intent(in)            :: nv              !! number of predictors (excluding intercept)
+  real(wp)   , intent(in)            :: x(nd, nv)       !! predictor data matrix (no intercept column)
+  real(wp)   , intent(in)            :: y(nd)           !! response vector
+  real(wp)   , intent(in)            :: lambda          !! lasso penaly parameter (≥ 0, non-optional)
+  real(wp)   , intent(out)           :: b0              !! intercept coefficient
+  real(wp)   , intent(out)           :: b(nv)           !! predictor coefficients
+  real(wp)   , intent(out)           :: r2              !! coefficient of determination R²
+  real(wp)   , intent(out), optional :: y_hat(nd)       !! predicted y values
+  real(wp)   , intent(out), optional :: se(nv)          !! standard errors of predictor coefficients
+  real(wp)   , intent(out), optional :: cov_b(nv, nv)   !! covariance matrix of predictor coefficients
+  real(wp)   , intent(in) , optional :: rho             !! ADMM weight for augmented Lagrangian
+  real(wp)   , intent(in) , optional :: tol             !! Tolerance for ADMM solver
+  integer(i4), intent(in) , optional :: maxiter         !! Maximum number of iterations for ADMM
   ! ---- Internal variables
-  real(wp)                           :: rho_          !! ADMM weights for augmented Lagrangian
   real(wp)                           :: x1(nd, nv+1)    !! centered predictor data matrix
   real(wp)                           :: xt(nv+1, nd)    !! transpose of xc
-  real(wp)                           :: xtx(nv+1, nv+1)   !! XᵀX matrix
+  real(wp)                           :: xtx(nv+1, nv+1) !! XᵀX matrix
   real(wp)                           :: xty(nv+1)       !! Xᵀy
-  real(wp)                           :: coefs(nv+1)
-  real(wp)                           :: res(nd)       !! residuals
-  real(wp)                           :: sse           !! sum of squared errors
-  real(wp)                           :: sst           !! total sum of squares
-  real(wp)                           :: y_bar         !! mean of y
-  integer(i4)                        :: i, j          !! loop counters
+  real(wp)                           :: coefs(nv+1)     !! solution of lasso-admm
+  real(wp)                           :: res(nd)         !! residuals
+  real(wp)                           :: sse             !! sum of squared errors
+  real(wp)                           :: sst             !! total sum of squares
+  real(wp)                           :: y_bar           !! mean of y
 ! ==== Instructions
 
   ! ---- validate input
@@ -823,33 +820,18 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
       error stop
   endif
 
-  ! ---- optional arguments.
-  rho_ = 50.0_wp; if (present(rho)) rho_ = rho
-
-  ! ---- Preprocessing
-
-  ! center regressors.
-  ! x1(:, 1) = 1.0_wp; x1(:, 2:) = x
-  do i = 1, nd
-     x1(i,1) = 1.0_wp
-     do j = 1, nv
-        x1(i,j+1) = x(i,j)
-     enddo
-  enddo
-
-  ! ---- Cholesky factorization of P = rho*I + XᵗX
+  ! ---- Pre-processing
+  ! construct matrix with intercept column (first column = 1.0)
+  x1(:, 1) = 1.0_wp; x1(:, 2:) = x
 
   ! compute transposed matrix and XᵗX
   xt  = transpose(x1)
   xtx = matmul(xt, x1)
+  xty = matmul(xt, y)
 
   ! ---- compute coefficients: full vector including intercept
-  xty = matmul(xt, y)
-  b0  = 0.0_wp
-  b   = 0.0_wp
-
   ! solve lasso problem.
-  coefs = admm(nv+1, xtx, xty, lambda, rho_, maxiter, tol)
+  coefs = admm(nv+1, xtx, xty, lambda, rho, maxiter, tol)
 
   ! get coefficients.
   b0 = coefs(1) ; b = coefs(2:)
@@ -863,7 +845,6 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
   endif
 
   ! ---- R² calculation.
-
   ! sum of squares errors
   sse = sum(res**2)
 
@@ -878,40 +859,43 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 
 end subroutine s_lin_lasso
 
-function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
+pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
+!==== Declarations
   ! ---- Input variables.
-  integer(i4), intent(in)           :: n              !! number of optimization variables
-  real(wp)   , intent(in)           :: xtx(n, n)      !! covariance matrix of regressors
-  real(wp)   , intent(in)           :: xty(n)         !! Xᵀy
-  real(wp)   , intent(in)           :: lambda         !! lasso penalty parameter
-  real(wp)   , intent(in)           :: rho            !! ADMM weight for augmented Lagrangian
-  integer(i4), intent(in), optional :: maxiter        !! maximum number of ADMM iterations
-  real(wp)   , intent(in), optional :: tol            !! tolerance for ADMM solver
+  integer(i4), intent(in)           :: n                    !! number of optimization variables
+  real(wp)   , intent(in)           :: xtx(n, n)            !! covariance matrix of regressors
+  real(wp)   , intent(in)           :: xty(n)               !! Xᵀy
+  real(wp)   , intent(in)           :: lambda               !! lasso penalty parameter
+  real(wp)   , intent(in), optional :: rho                  !! ADMM weight for augmented Lagrangian
+  integer(i4), intent(in), optional :: maxiter              !! maximum number of ADMM iterations
+  real(wp)   , intent(in), optional :: tol                  !! tolerance for ADMM solver
   ! ---- Result.
-  real(wp)                          :: x(n)           !! optimal solution
+  real(wp)                          :: x(n)                 !! optimal solution
   ! ---- Internal variables.
-  integer(i4)                       :: iter           !! Iteration counter
-  integer(i4)                       :: i, j           !! Loop counters
-  integer(i4)                       :: maxiter_       !! maximum number of iterations
-  real(wp)                          :: P(n, n)        !! sym. pos. def. matrix for ADMM
-  real(wp)                          :: q(n)
-  real(wp)                          :: tol_           !! convergence tolerance
-  real(wp)                          :: z(n-1), z_old(n-1)
-  real(wp)                          :: v(n-1)     !! ADMM variables
-  real(wp)                          :: r_norm, s_norm
-  real(wp)                          :: primal_eps, dual_eps
+  integer(i4)                       :: iter                 !! Iteration counter
+  integer(i4)                       :: i, j                 !! Loop counters
+  integer(i4)                       :: maxiter_             !! maximum number of iterations
+  real(wp)                          :: P(n, n)              !! sym. pos. def. matrix for ADMM
+  real(wp)                          :: q(n)                 !! rhs vector for x-minimization.
+  real(wp)                          :: tol_                 !! convergence tolerance
+  real(wp)                          :: rho_                 !! ADMM weight for aug. Lagrangian
+  real(wp)                          :: z(n-1), z_old(n-1)   !! ADMM dummy variable
+  real(wp)                          :: v(n-1)               !! ADMM dual variable
+  real(wp)                          :: r_norm, s_norm       !! ADMM residual norms
+  real(wp)                          :: primal_eps, dual_eps !! ADMM tolerance
 
 ! ==== Pre-processing.
   ! ---- optional arguments.
   maxiter_ = 1000                  ; if (present(maxiter)) maxiter_ = maxiter
   tol_     = sqrt(epsilon(1.0_wp)) ; if (present(tol))     tol_ = tol
+  rho_     = 100.0_wp              ; if (present(rho))     rho_ = rho
 
   ! ---- initialize variables.
   x = 0.0_wp; z = 0.0_wp ; z_old = 0.0_wp ; v = 0.0_wp
 
-  ! compute P = rho*I + XᵗX.
+  ! compute P = rho*E + XᵗX (where E = I except for E_11 = 0).
   do concurrent(i=1:n, j=1:n)
-      P(i, j) = merge(rho + xtx(i, j), xtx(i, j), i == j .and. i > 1)
+      P(i, j) = merge(rho_ + xtx(i, j), xtx(i, j), i == j .and. i > 1)
   enddo
 
   ! ---- Cholesky factorization.
@@ -920,21 +904,21 @@ function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
 ! ==== optimization loop.
   do iter = 1, maxiter_
     ! partial minimization over x.
-    q = xty ; q(2:) = q(2:) + rho*(z-v)
+    q = xty ; q(2:) = q(2:) + rho_*(z-v)
     x = cho_solve(n, P, q)
 
     ! partial minimization over z.
-    z = shrinkage(x(2:)+v, lambda/rho)
+    z = shrinkage(x(2:)+v, lambda/rho_)
 
     ! dual ascent step.
     v = v + (x(2:) - z)
 
     ! ---- check residuals.
-    r_norm = norm2(x(2:) - z)
-    s_norm = norm2(rho*(z-z_old))
+    r_norm = norm2(x(2:) - z)       ! Primal feasiblity.
+    s_norm = norm2(rho_*(z-z_old))  ! Convergence of ADMM dummy variable.
 
     primal_eps = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*max(norm2(x(2:)), norm2(z))
-    dual_eps   = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*norm2(rho*v)
+    dual_eps   = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*norm2(rho_*v)
 
     ! Update variables.
     z_old = z
@@ -953,7 +937,9 @@ contains
       y = max(0.0_wp, x-a) - max(0.0_wp, -x-a)
     end function
 
-    function cho_solve(n, A, b) result(x)
+    pure function cho_solve(n, A, b) result(x)
+    ! ==== Declarations
+      ! ---- External functions
       use stdlib_linalg_lapack, only: potrs
       ! ---- Input variables.
       integer(i4), intent(in) :: n        !! number of variables
