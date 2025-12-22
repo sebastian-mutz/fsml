@@ -26,7 +26,7 @@ module fsml_lin
   private
 
   ! declare public procedures
-  public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
+  public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge, s_lin_lasso
   public :: f_lin_mahalanobis, f_lin_mahalanobis_core
 
 contains
@@ -843,10 +843,6 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
   xt  = transpose(xc)
   xtx = matmul(xt, xc)
 
-  ! compute P = rho*I + XᵗX.
-  do concurrent(i=1:nv, j=1:nv)
-      P(i, j) = merge(rho_ + xtx(i, j), xtx(i, j), i == j)
-  enddo
 
   ! ---- compute coefficients: full vector including intercept
   xty = matmul(xt, yc)
@@ -857,7 +853,7 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
   b0 = f_sts_mean(y)
 
   ! get predictor coefficients.
-  b = admm(nv, P, xty, lambda, rho_, maxiter, tol)
+  b = admm(nv, xtx, xty, lambda, rho_, maxiter, tol)
 
   ! ---- predicted values and residuals.
   if (present(y_hat)) then
@@ -883,10 +879,11 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 
 end subroutine s_lin_lasso
 
-function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
+pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   ! ---- Input variables.
   integer(i4), intent(in)           :: n              !! number of optimization variables
-  real(wp)   , intent(inout)        :: P(n, n), q(n)  !! quadratic form for lstsq cost
+  real(wp)   , intent(in)           :: xtx(n, n)      !! covariance matrix of regressors
+  real(wp)   , intent(in)           :: xty(n)         !! Xᵀy
   real(wp)   , intent(in)           :: lambda         !! lasso penalty parameter
   real(wp)   , intent(in)           :: rho            !! ADMM weight for augmented Lagrangian
   integer(i4), intent(in), optional :: maxiter        !! maximum number of ADMM iterations
@@ -895,7 +892,9 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
   real(wp)                          :: x(n)           !! optimal solution
   ! ---- Internal variables.
   integer(i4)                       :: iter           !! Iteration counter
+  integer(i4)                       :: i, j           !! Loop counters
   integer(i4)                       :: maxiter_       !! maximum number of iterations
+  real(wp)                          :: P(n, n)        !! sym. pos. def. matrix for ADMM
   real(wp)                          :: tol_           !! convergence tolerance
   real(wp)                          :: primal_eps     !! residual of primal feasiblity
   real(wp)                          :: primal_norm    !! norm of primal variables
@@ -904,28 +903,17 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
   real(wp)                          :: z(n), v(n)     !! ADMM variables
 
 ! ==== Pre-processing.
-
-  ! ---- validate inputs.
-  if (lambda < 0.0_wp) then
-      call s_err_print("[fmsl error] Lasso: lambda must be non-zero positive.")
-      error stop
-  endif
-
   ! ---- optional arguments.
-  maxiter_ = 100 ; if (present(maxiter)) maxiter_ = maxiter
-  if (maxiter_ < 0) then
-      call s_err_print("[fmsl error] Lasso: maxiter must be positive.")
-      error stop
-  endif
-
-  tol_ = sqrt(epsilon(1.0_wp)) ; if (present(tol)) tol_ = tol
-  if (tol_ < 0.0_wp) then
-      call s_err_print("[fmsl error] Lasso: tol must be positive.")
-      error stop
-  endif
+  maxiter_ = 100                   ; if (present(maxiter)) maxiter_ = maxiter
+  tol_     = sqrt(epsilon(1.0_wp)) ; if (present(tol))     tol_ = tol
 
   ! ---- initialize variables.
   x = 0.0_wp; z = 0.0_wp ; v = 0.0_wp
+
+  ! compute P = rho*I + XᵗX.
+  do concurrent(i=1:n, j=1:n)
+      P(i, j) = merge(rho + xtx(i, j), xtx(i, j), i == j)
+  enddo
 
   ! ---- Cholesky factorization.
   P = chol(P)
@@ -933,7 +921,7 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
 ! ==== optimization loop.
   do iter = 1, maxiter_
     ! partial minimization over x.
-    x = cho_solve(n, P, q + rho*(z - v))
+    x = cho_solve(n, P, xty + rho*(z - v))
 
     ! partial minimization over z.
     z = shrinkage(x+v, lambda/rho)
@@ -942,7 +930,6 @@ function admm(n, P, q, lambda, rho, maxiter, tol) result(x)
     v = v + rho*(x - z)
 
     ! ---- check residuals.
-
     ! primal variables
     primal_norm = max(norm2(x), norm2(z)) ; primal_eps = norm2(x - z)
 
@@ -975,14 +962,16 @@ contains
       real(wp), pointer       :: xmat(:, :)
       integer(i4)             :: info
 
-!   ==== Instructions.
-    ! Copy rhs vector into solution.
-    x = b
-    ! Pointer trick.
-    xmat(1:n, 1:1) => x
-    ! Cholesky solve.
-    call trtrs("L", "T", "N", n, 1, A, n, xmat, n, info)
-    call trtrs("L", "N", "N", n, 1, A, n, xmat, n, info)
+    ! ==== Initialization
+      ! copy rhs vector into solution.
+      x = b
+      ! pointer trick.
+      xmat(1:n, 1:1) => x
+      ! ---- Cholesky solve.
+      ! solve L.T @ y = b
+      call trtrs("L", "T", "N", n, 1, A, n, xmat, n, info)
+      ! solve L @ x = y
+      call trtrs("L", "N", "N", n, 1, A, n, xmat, n, info)
     end function
 end function
 
