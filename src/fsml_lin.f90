@@ -860,6 +860,7 @@ subroutine s_lin_lasso(x, y, nd, nv, lambda, b0, b, r2, y_hat, se, cov_b, rho, t
 end subroutine s_lin_lasso
 
 pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
+  use stdlib_linalg, only: cholesky
 !==== Declarations
   ! ---- Input variables.
   integer(i4), intent(in)           :: n                    !! number of optimization variables
@@ -875,10 +876,12 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   integer(i4)                       :: iter                 !! Iteration counter
   integer(i4)                       :: i, j                 !! Loop counters
   integer(i4)                       :: maxiter_             !! maximum number of iterations
+  real(wp), parameter               :: alpha = 1.00_wp      !! ADMM over-relaxation
   real(wp)                          :: P(n, n)              !! sym. pos. def. matrix for ADMM
   real(wp)                          :: q(n)                 !! rhs vector for x-minimization.
   real(wp)                          :: tol_                 !! convergence tolerance
   real(wp)                          :: rho_                 !! ADMM weight for aug. Lagrangian
+  real(wp)                          :: xhat(n-1)            !! ADMM over-relaxed variable
   real(wp)                          :: z(n-1), z_old(n-1)   !! ADMM dummy variable
   real(wp)                          :: v(n-1)               !! ADMM dual variable
   real(wp)                          :: r_norm, s_norm       !! ADMM residual norms
@@ -888,10 +891,10 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   ! ---- optional arguments.
   maxiter_ = 1000                  ; if (present(maxiter)) maxiter_ = maxiter
   tol_     = sqrt(epsilon(1.0_wp)) ; if (present(tol))     tol_ = tol
-  rho_     = 50.0_wp               ; if (present(rho))     rho_ = rho
+  rho_     = 1.0_wp                ; if (present(rho))     rho_ = rho
 
   ! ---- initialize variables.
-  x = 0.0_wp; z = 0.0_wp ; z_old = 0.0_wp ; v = 0.0_wp
+  x = 0.0_wp; z = 0.0_wp ; z_old = 0.0_wp ; v = 0.0_wp ; xhat = 0.0_wp
 
   ! compute P = rho*E + XᵗX (where E = I except for E_11 = 0).
   do concurrent(i=1:n, j=1:n)
@@ -899,7 +902,7 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
   enddo
 
   ! ---- Cholesky factorization.
-  P = chol(P, lower = .false., other_zeroed= .true.)
+  call cholesky(P)
 
 ! ==== optimization loop.
   do iter = 1, maxiter_
@@ -908,20 +911,18 @@ pure function admm(n, xtx, xty, lambda, rho, maxiter, tol) result(x)
     x = cho_solve(n, P, q)
 
     ! partial minimization over z.
-    z = shrinkage(x(2:)+v, lambda/rho_)
+    z_old = z ; xhat = alpha*x(2:) + (1.0_wp - alpha)*z_old
+    z = shrinkage(xhat+v, lambda/rho_)
 
     ! dual ascent step.
-    v = v + (x(2:) - z)
+    v = v + (xhat - z)
 
     ! ---- check residuals.
     r_norm = norm2(x(2:) - z)       ! Primal feasiblity.
     s_norm = norm2(rho_*(z-z_old))  ! Convergence of ADMM dummy variable.
 
     primal_eps = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*max(norm2(x(2:)), norm2(z))
-    dual_eps   = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*norm2(rho_*v)
-
-    ! Update variables.
-    z_old = z
+    dual_eps   = sqrt(1.0_wp*n)*epsilon(1.0_wp) + tol_*rho_*norm2(v)
 
     ! convergence check
     if ((r_norm <= primal_eps) .and. (s_norm <= dual_eps)) then
@@ -956,7 +957,7 @@ contains
       ! pointer trick.
       xmat(1:n, 1:1) => x
       ! ---- Cholesky solve.
-      call potrs("U", n, 1, A, n, xmat, n, info)
+      call potrs("L", n, 1, A, n, xmat, n, info)
     end function
 end function
 
