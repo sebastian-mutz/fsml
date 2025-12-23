@@ -425,6 +425,89 @@ Invalid argument values will result in the return of a sentinel value.
 
 `cov_b`: An optional return and rank-2 array of type `real` with dimensions `nv`, `nv`.
 
+<br>
+# Least Absolute Shrinkage and Selection Operator (LASSO)
+
+## `fsml_lasso`
+
+### Description
+
+LASSO (Least Absolute Shrinkage and Selection Operator) models the relationship or linear
+dependence between a dependent (predictand) variable and one or more independent
+(predictor) variables, incorporating a penalty term promoting the sparsity of the
+regression coefficients. It can be used for feature selection and also help mitigate the
+influence of multicolinearity and reduce overfitting.
+
+The procedure estimates the linear regression coefficients by minimising the sum of squared
+residuals plus a penalty proportion ot the sum of absolute values of the coefficients:
+
+$$
+    \hat{\beta} = argmin \dfrac12 \| X \beta - y  \|_2^2 + \lambda \| \beta \|_1
+$$
+
+where \( \lambda \) (`lambda`) is the lasso penalty parameter.
+
+The estimate regression model is of the form:
+
+$$
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_m x_m + \cdots + \beta_M x_M
+$$
+
+where \( y \) is the predictand variable, \( x_m \(m=1 \cdots M\) \) are the predictor
+variables (`x`) with `nd` observations, \( \beta_0 \) is the y-intercept (`b0`),
+\( \beta_m \(m=1 \cdots M\) \) (`b`) are the lasso coefficients (often sparse), and \(M\)
+(`nv`) is the number of predictors (excluding the intercept).
+
+The lasso problem is solved using the Alternating Direction Method of Multipliers (ADMM).
+The coefficient of detemrination \( R^2 \) (`r2`), predicted values (`y_hat`),
+lasso-adjusted covariance matrix of the predictors (`cov_b`) can optionally be returned.
+The covariance matrix and standard deviation errors are adjusted for the lasso penalty as:
+
+$$
+    ??
+$$
+
+@note
+This implementation uses the [Alternating Direction Method of Multipliers](https://stanford.edu/~boyd/admm.html) to solve the convex LASSO problem.
+@endnote
+
+### Syntax
+
+`call` [fsml(module):fsml_lasso(interface)]`(x, y, nd, nv, lambda, b0, b, r2, [y_hat, se, cov_b, rho, tol, maxiter)`
+
+### Parameters
+
+`x`: A rank-2 array of type `real` with dimensions `nd`, `nv`.
+
+`y`: A rank-1 array of type `real` with dimension `nd`.
+
+`nd`: A scalar of type `integer`.
+
+`nv`: A scalar of type `integer`.
+
+`lambda`: A scalar of type `real`. Must be non-negative.
+
+`rho` (optional): A scalar of type `real` defining the weight in the ADMM algorithm. Must be non-negative.
+
+`tol` (optional): A scalar of type `real` defining the tolerance for convergence in the ADMM algorithm. Must be non-negative.
+
+`maxiter` (optional): A scalar of type `integer` determining the maximum number of ADMM iterations. Must be non-negative.
+
+Invalid argument values will result in the return of a sentinel value.
+
+### Returns
+
+`b0`: A scalar of type `real`.
+
+`b`: A rank-1 array of the type `real` with dimension `nv`.
+
+`r2`: A scalar of type `real`.
+
+`y_hat`: An optional return and rank-1 array of type `real` with dimension `nd`.
+
+`se`: An optional return and rank-1 array of type `real` with dimension `nv`.
+
+`cov_b`: An optional return and rank-2 array of type `real` with dimensions `nv`, `nv`.
 
 <br>
 # Mahalanobis Distance
