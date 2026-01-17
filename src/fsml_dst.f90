@@ -47,6 +47,9 @@ module fsml_dst
   public :: f_dst_gpd_pdf, f_dst_gpd_pdf_core
   public :: f_dst_gpd_cdf, f_dst_gpd_cdf_core
   public :: f_dst_gpd_ppf, f_dst_gpd_ppf_core
+  public :: f_dst_logistic_pdf, f_dst_logistic_pdf_core
+  public :: f_dst_logistic_cdf, f_dst_logistic_cdf_core
+  public :: f_dst_logistic_ppf, f_dst_logistic_ppf_core
 
   ! additional core features; only exposed in fsml_dst
   public :: f_dst_gammai_core, f_dst_betai_core
@@ -245,12 +248,12 @@ impure function f_dst_norm_ppf(p, mu, sigma) result(x)
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
-  real(wp)   , intent(in)           :: p                !! probability between 0.0 - 1.0
-  real(wp)   , intent(in), optional :: mu               !! distribution location (mean)
-  real(wp)   , intent(in), optional :: sigma            !! distribution dispersion/scale (standard deviation)
-  real(wp)                          :: mu_w             !! final value of mu
-  real(wp)                          :: sigma_w          !! final value of sigma
-  real(wp)                          :: x                !! sample position
+  real(wp)   , intent(in)           :: p       !! probability between 0.0 - 1.0
+  real(wp)   , intent(in), optional :: mu      !! distribution location (mean)
+  real(wp)   , intent(in), optional :: sigma   !! distribution dispersion/scale (standard deviation)
+  real(wp)                          :: mu_w    !! final value of mu
+  real(wp)                          :: sigma_w !! final value of sigma
+  real(wp)                          :: x       !! sample position
 
 ! ==== Instructions
 
@@ -2235,6 +2238,274 @@ elemental function f_dst_gpd_ppf_core(p, xi, mu, sigma) result(x)
   endif
 
 end function f_dst_gpd_ppf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_logistic_pdf(x, mu, scale) result(fx)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_logis_pdf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in), optional :: mu      !! distribution location
+  real(wp), intent(in), optional :: scale   !! distribution scale
+  real(wp)                       :: mu_w    !! final value for mu
+  real(wp)                       :: scale_w !! final value for scale
+  real(wp)                       :: fx
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume sscale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     call s_err_print(fsml_error(1))
+     fx = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute PDF
+
+  ! call pure function to calculate probability/fx
+  fx = f_dst_logistic_pdf_core(x, mu_w, scale_w)
+
+end function f_dst_logistic_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_logistic_pdf_core(x, mu, scale) result(fx)
+
+! ==== Description
+!! Probability density function for logistic distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x     !! sample position
+  real(wp), intent(in) :: mu    !! distribution location
+  real(wp), intent(in) :: scale !! distribution scale
+  real(wp)             :: z     !! z-score
+  real(wp)             :: p     !! probability from CDF
+  real(wp)             :: fx
+
+! ==== Instructions
+
+  ! compute z-score
+  z  = (x - mu) / scale
+
+  ! CDF evaluation
+  if (z .ge. 0.0_wp) then
+    p = 1.0_wp / (1.0_wp + exp(-z))
+  else
+     p = exp(z) / (1.0_wp + exp(z))
+  endif
+
+  ! calculate probability/fx
+  fx = (p * (1.0_wp - p)) / scale
+
+  ! NOTE: mathematically more intuitive, but less stable:
+  ! ez = exp(-z)
+  ! fx = ez / (scale * (1.0_wp + ez)**2)
+
+end function f_dst_logistic_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_logistic_cdf(x, mu, scale, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_logis_cdf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: x       !! sample position
+  real(wp)        , intent(in), optional :: mu      !! distribution location
+  real(wp)        , intent(in), optional :: scale   !! distribution scale
+  character(len=*), intent(in), optional :: tail    !! tail options
+  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: scale_w !! final value of scale
+  character(len=16)                      :: tail_w  !! final tail option
+  real(wp)                               :: p
+
+! ==== Instructions
+
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume sscale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
+
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(1))
+     p = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two"  .and. tail_w .ne. "confidence") then
+     call s_err_print(fsml_error(2))
+     p = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_logistic_cdf_core(x, mu_w, scale_w, tail_w)
+
+end function f_dst_logistic_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_logistic_cdf_core(x, mu, scale, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for logistic distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x     !! sample position
+  real(wp)        , intent(in) :: mu    !! distribution location
+  real(wp)        , intent(in) :: scale !! distribution scale
+  character(len=*), intent(in) :: tail  !! tail options
+  real(wp)                     :: z     !! z-score
+  real(wp)                     :: p
+
+! ==== Instructions
+
+  ! compute z-score
+  z = (x - mu) / scale
+
+  ! compute integral (left tailed); partition by z for numerical stability
+  if (z .ge. 0.0_wp) then
+     p = 1.0_wp / (1.0_wp + exp(-z))
+  else
+     p = exp(z) / (1.0_wp + exp(z))
+  endif
+
+  ! tail options
+  select case(tail)
+    ! left-tailed; P(z<x)
+     case("left")
+        p = p
+     ! right-tailed; P(z>x)
+     case("right")
+        p = 1.0_wp - p
+     ! two-tailed
+     case("two")
+        if (x .gt. mu) then
+           p = 2.0_wp * (1.0_wp - p)
+        else
+           p = 2.0_wp * p
+        endif
+     ! confidence interval
+     case("confidence")
+        if (x .gt. mu) then
+           p = 1.0_wp - 2.0_wp * (1.0_wp - p)
+        else
+           p = 1.0_wp - 2.0_wp * p
+        endif
+  end select
+
+end function f_dst_logistic_cdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_logistic_ppf(p, mu, scale) result(x)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_logis_ppf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp), intent(in)           :: p       !! probability between 0.0 - 1.0
+  real(wp), intent(in), optional :: mu      !! distribution location (mean)
+  real(wp), intent(in), optional :: scale   !! distribution scale
+  real(wp)                       :: p_w     !! final value of p
+  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: scale_w !! final value of scale
+  real(wp)                       :: x
+
+! ==== Instructions
+
+  ! assume location/mean = 0, overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume scale = 1, overwrite if specified
+  scale_w = 1.0_wp
+  if (present(scale)) scale_w = scale
+
+  ! check if scale value is valid
+  if (scale_w .le. 0.0_wp) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(1))
+     x = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .le. 0.0_wp .or. p .ge. 1.0_wp) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(1))
+     x = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute PPF
+
+  ! for stability, set very small (large) numbers to epsilon (1-epsilon)
+  p_w = min(max(p, c_eps), 1.0_wp - c_eps)
+
+  ! call pure function to calculate x
+  x = f_dst_logistic_ppf_core(p_w, mu_w, scale_w)
+
+  ! issue warning in case of suspicious result
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
+
+end function f_dst_logistic_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_logistic_ppf_core(p, mu, scale) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for logistic distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: p     !! probability between 0.0 - 1.0
+  real(wp), intent(in) :: mu    !! distribution location (mean)
+  real(wp), intent(in) :: scale !! distribution scale
+  real(wp)             :: x
+
+! ==== Instructions
+
+  ! calculate position based on probability
+  x = mu + scale * log(p / (1.0_wp - p))
+
+end function f_dst_logistic_ppf_core
 
 
 ! ==================================================================== !

@@ -62,6 +62,9 @@ program main
   ! chi square distribution ppf
   print*, fsml_chi2_ppf(0.2_wp, df=10.0_wp, loc=2.0_wp, scale=1.2_wp)
 
+  ! logistic pdf (x=0.8, mu=0.1, scale=1.0)
+  print*, fsml_logistic_pdf(-0.8_wp, mu=0.1_wp, scale=1.0_wp)
+
   ! invalid sigma; returns sentinel and prints error message
   print*, fsml_norm_pdf(2.0_wp, mu=0.0_wp, sigma=0.0_wp)
 

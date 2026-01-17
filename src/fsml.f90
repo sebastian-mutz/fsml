@@ -42,6 +42,7 @@ module fsml
   public :: fsml_chi2_pdf, fsml_chi2_cdf, fsml_chi2_ppf
   public :: fsml_f_pdf, fsml_f_cdf, fsml_f_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
+  public :: fsml_logistic_pdf, fsml_logistic_cdf, fsml_logistic_ppf
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
   public :: fsml_anova_1way
@@ -345,6 +346,26 @@ interface fsml_gpd_ppf
   !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for generalised pareto distribution.
   !! Procedure uses bisection method. `p` must be between 0.0 and 1.0.
   module procedure f_dst_gpd_ppf
+end interface
+
+! logistic distribution pdf
+interface fsml_logistic_pdf
+  !! Probability density function for logistic distribution.
+  !! $$ f(x) = \frac{e^{-(x-\mu)/s}}{s\left(1 + e^{-(x-\mu)/s}\right)^2} $$
+  !! where \(\mu\) is the location and mean, and \(\s\) is the scale parameter.
+  module procedure f_dst_logistic_pdf
+end interface
+
+! logistic distribution cdf
+interface fsml_logistic_cdf
+  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for logistic distribution.
+  module procedure f_dst_logistic_cdf
+end interface
+
+! logistic distribution ppf
+interface fsml_logistic_ppf
+  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
+  module procedure f_dst_logistic_ppf
 end interface
 
 ! ==================================================================== !
