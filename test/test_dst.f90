@@ -52,6 +52,14 @@ program test_dst
   status = test_gpd(tol)
   call handle_status(status)
 
+  print*, "> dst: testing all logistic distribution functions (pdf, cdf, ppf)"
+  status = test_logistic(tol)
+  call handle_status(status)
+
+  print*, "> dst: testing all log-logistic distribution functions (pdf, cdf, ppf)"
+  status = test_llogistic(tol)
+  call handle_status(status)
+
   print*, "> dst: testing results of invalid arguments (and print messages)"
   status = test_invalid()
   call handle_status(status)
@@ -71,9 +79,9 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, "  passed"
+     print*, "  [✓] passed"
   else
-     print*, "  [error] one or more failed"
+     print*, "  [x] one or more failed"
      stop
   endif
 
@@ -213,17 +221,17 @@ function test_t(tol) result(status)
      j = j + 1
      res = fsml_t_pdf(x(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_t_cdf(x(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_t_ppf(p(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_t
 
@@ -290,17 +298,17 @@ function test_gamma(tol) result(status)
      j = j + 1
      res = fsml_gamma_pdf(x(i), alpha(i), beta(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_gamma_cdf(x(i), alpha(i), beta(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_gamma_ppf(p(i), alpha(i), beta(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_gamma
 
@@ -361,17 +369,17 @@ function test_exp(tol) result(status)
      j = j + 1
      res = fsml_exp_pdf(x(i), lambda(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_exp_cdf(x(i), lambda(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_exp_ppf(p(i), lambda(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_exp
 
@@ -432,17 +440,17 @@ function test_chi2(tol) result(status)
      j = j + 1
      res = fsml_chi2_pdf(x(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_chi2_cdf(x(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_chi2_ppf(p(i), df(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_chi2
 
@@ -509,17 +517,17 @@ function test_f(tol) result(status)
      j = j + 1
      res = fsml_f_pdf(x(i), df1(i), df2(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_f_cdf(x(i), df1(i), df2(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_f_ppf(p(i), df1(i), df2(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_f
 
@@ -592,20 +600,179 @@ function test_gpd(tol) result(status)
      j = j + 1
      res = fsml_gpd_pdf(x(i), xi(i), mu(i), sigma(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_gpd_cdf(x(i), xi(i), mu(i), sigma(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
   do i = 1, n
      j = j + 1
      res = fsml_gpd_ppf(p(i), xi(i), mu(i), sigma(i))
      if (abs( res - ans(j) ) .gt. tol) status = .false.
-  end do
+  enddo
 
 end function test_gpd
 
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_logistic(tol) result(status)
+
+! ==== Description
+!! Tests logistic distribution pdf, cdf, and ppf and checks against answers.
+!! If answers deviate, return test (passed) status as false.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  real(wp)               :: res        !! result
+  integer(i4)            :: i, j
+  integer(i4), parameter :: n = 5      !! number of tests per function
+  real(wp), parameter :: x(n) = &
+                                  [0.5_wp,   &
+                                   1.0_wp,   &
+                                   2.0_wp,   &
+                                   5.0_wp,   &
+                                   8.0_wp]
+  real(wp), parameter :: p(n) = &
+                                  [0.02_wp,  &
+                                   0.25_wp,  &
+                                   0.5_wp,   &
+                                   0.75_wp,  &
+                                   0.99_wp]
+  real(wp), parameter :: mu(n)    =          &
+                                  [0.0_wp,   &
+                                   0.0_wp,   &
+                                   0.0_wp,   &
+                                   1.5_wp,   &
+                                   0.0_wp]
+  real(wp), parameter :: scale(n) = &
+                                  [1.0_wp,   &
+                                   2.0_wp,   &
+                                   1.5_wp,   &
+                                   0.5_wp,   &
+                                   1.0_wp]
+  real(wp), parameter :: ans(n*3) = &
+                                  [0.23500371220159449_wp,     &
+                                   0.11750185610079725_wp,     &
+                                   0.11006067310193580_wp,     &
+                                   1.8204423602435681E-003_wp, &
+                                   3.3523767075636815E-004_wp, &
+                                   0.62245933120185459_wp,     &
+                                   0.62245933120185459_wp,     &
+                                   0.79139147267395504_wp,     &
+                                   0.99908894880559940_wp,     &
+                                   0.99966464986953363_wp,     &
+                                   -3.8918202981106265_wp,     &
+                                   -2.1972245773362196_wp,     &
+                                   0.0000000000000000_wp,      &
+                                   2.0493061443340550_wp,      &
+                                   4.5951198501345889_wp]
+
+! ==== Instructions
+  j = 0
+  status = .true.
+  do i = 1, n
+     j = j + 1
+     res = fsml_logistic_pdf(x(i), mu(i), scale(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+  do i = 1, n
+     j = j + 1
+     res = fsml_logistic_cdf(x(i), mu(i), scale(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+  do i = 1, n
+     j = j + 1
+     res = fsml_logistic_ppf(p(i), mu(i), scale(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+
+end function test_logistic
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_llogistic(tol) result(status)
+
+! ==== Description
+!! Tests logistic distribution pdf, cdf, and ppf and checks against answers.
+!! If answers deviate, return test (passed) status as false.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  real(wp)               :: res        !! result
+  integer(i4)            :: i, j
+  integer(i4), parameter :: n = 5      !! number of tests per function
+  real(wp), parameter :: x(n) = &
+                                  [0.5_wp,   &
+                                   1.0_wp,   &
+                                   2.0_wp,   &
+                                   5.0_wp,   &
+                                   8.0_wp]
+  real(wp), parameter :: p(n) = &
+                                  [0.02_wp,  &
+                                   0.25_wp,  &
+                                   0.5_wp,   &
+                                   0.75_wp,  &
+                                   0.99_wp]
+  real(wp), parameter :: alpha(n) = &
+                                  [1.0_wp,   &
+                                   2.0_wp,   &
+                                   2.0_wp,   &
+                                   1.5_wp,   &
+                                   5.1_wp]
+  real(wp), parameter :: beta(n) = &
+                                  [1.0_wp,   &
+                                   2.0_wp,   &
+                                   1.5_wp,   &
+                                   0.5_wp,   &
+                                   1.0_wp]
+  real(wp), parameter :: loc(n) = &
+                                  [0.5_wp,   &
+                                   0.0_wp,   &
+                                   -0.2_wp,  &
+                                   0.1_wp,   &
+                                   0.3_wp]
+  real(wp), parameter :: ans(n*3) = &
+                                  [0.35709771799815032_wp,     &
+                                   0.25000000000000000_wp,     &
+                                   8.3972559995355800E-002_wp, &
+                                   1.5654810928091734E-002_wp, &
+                                   5.9446841888305046E-003_wp, &
+                                   0.23269653761889864_wp,     &
+                                   0.50000000000000000_wp,     &
+                                   0.66147189645792204_wp,     &
+                                   0.62319836069779466_wp,     &
+                                   0.58635325758600820_wp,     &
+                                   3.3647372871431193E-002_wp, &
+                                   0.33333333333333331_wp,     &
+                                   0.81873075307798182_wp,     &
+                                   29.839614788042489_wp,      &
+                                   20324872833.094673_wp]
+
+! ==== Instructions
+  j = 0
+  status = .true.
+  do i = 1, n
+     j = j + 1
+     res = fsml_llogistic_pdf(x(i), alpha(i), beta(i), loc(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+  do i = 1, n
+     j = j + 1
+     res = fsml_llogistic_cdf(x(i), alpha(i), beta(i), loc(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+  do i = 1, n
+     j = j + 1
+     res = fsml_llogistic_ppf(p(i), alpha(i), beta(i), loc(i))
+     if (abs( res - ans(j) ) .gt. tol) status = .false.
+  enddo
+
+end function test_llogistic
 
 
 ! ==================================================================== !

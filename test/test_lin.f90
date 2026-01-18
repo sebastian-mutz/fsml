@@ -58,9 +58,9 @@ subroutine handle_status(status)
 
 ! Instructions
   if (status) then
-     print*, "  passed"
+     print*, "  [✓] passed"
   else
-     print*, "  [error] one or more failed"
+     print*, "  [x] one or more failed"
      stop
   endif
 
