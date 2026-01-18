@@ -33,7 +33,7 @@ The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -60,7 +60,7 @@ The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`),
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -89,7 +89,7 @@ will return large negative or positive numbers (highly dependent on the toleranc
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -122,7 +122,7 @@ The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -150,7 +150,7 @@ The location parameter \( \mu \) (`mu`), scale parameter \( \sigma \) (`sigma`),
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -181,7 +181,7 @@ will return large negative or positive numbers (highly dependent on the toleranc
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -218,7 +218,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the loc
 
 `loc`:  A scalar of type `real`.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -246,7 +246,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`), the locati
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -275,7 +275,7 @@ The scale parameters \( \alpha \) (`alpha`) and \( \beta \) (`beta`) and the loc
 
 `loc`:  A scalar of type `real`.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -305,7 +305,7 @@ The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are o
 
 `loc`:  A scalar of type `real`.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -331,7 +331,7 @@ The rate parameter \( \lambda \) (`lambda`), location parameter (`loc`), and tai
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -357,7 +357,7 @@ The rate parameter \( \lambda \) (`lambda`) and location parameter (`loc`) are o
 
 `loc`:  A scalar of type `real`.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -391,7 +391,7 @@ The location (`loc`) and scale parameter (`scale`) are optional arguments. The p
 
 `scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -420,7 +420,7 @@ The location (`loc`), scale parameter (`scale`), and tail option (`tail`) argume
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -448,7 +448,7 @@ The location (`loc`) and scale parameter (`scale`) are optional arguments. The p
 
 `scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -485,7 +485,7 @@ The location (`loc`) and scale parameter (`scale`) are optional arguments. The p
 
 `scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -516,7 +516,7 @@ The location (`loc`), scale parameter (`scale`), and tail option (`tail`) argume
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -546,7 +546,7 @@ The location (`loc`) and scale parameter (`scale`) are optional arguments. The p
 
 `scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.
@@ -578,7 +578,7 @@ The location (`mu`) and scale parameter (`sigma`) are optional arguments.
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -607,7 +607,7 @@ The location (`mu`) and scale parameter (`sigma`), and tail option (`tail`) are 
 
 `tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `x`.
@@ -635,7 +635,180 @@ The location parameter \( \mu \) (`mu`) and scale parameter \( \sigma \) (`sigma
 
 `sigma`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
 
-Invalid argument values will result in the return of a sentinel value.
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `p`.
+
+
+<br>
+# Logistic Distribution
+
+
+<br>
+## `fsml_logistic_pdf`
+
+### Description
+Probability density function for logistic distribution.
+$$ f(x) = \frac{e^{-(x-\mu)/s}}{s\left(1 + e^{-(x-\mu)/s}\right)^2} $$
+where \(\mu\) (`mu`) is the location and mean, and \(s\) (`scale`) is the scale parameter.
+
+The procedure calculates the probability based on the provided parameter `x`.
+The location (`mu`) and scale parameter (`scale`) are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_logistic_pdf(interface)]]`(x, [, mu, scale])`
+
+### Parameters
+`x`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `x`.
+
+
+<br>
+## `fsml_logistic_cdf`
+
+### Description
+Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for logistic distribution.
+
+The procedure calculates the probability based on the provided parameter `x`.
+The location (`mu`) and scale parameter (`scale`), and tail option (`tail`) are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_logistic_cdf(interface)]]`(x, [, mu, scale, tail])`
+
+### Parameters
+`x`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `x`.
+
+
+<br>
+## `fsml_logistic_ppf`
+
+### Description
+Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
+
+It computes the position (`x`) based on the probability (`p`). `p` must be between 0.0 and 1.0.
+The location parameter (`mu`) and scale parameter (`scale`) are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_logistic_ppf(interface)]]`(p, [, mu, scale])`
+
+### Parameters
+`p`: A scalar of type `real`.
+
+`mu`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`scale`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `p`.
+
+
+<br>
+# Log-Logistic Distribution
+
+
+<br>
+## `fsml_llogistic_pdf`
+
+### Description
+Probability density function for log-logistic distribution.
+$$ f(x) = \frac{\frac{\beta}{\alpha}\left(\frac{x}{\alpha}\right)^{\beta-1}}{\left(1 + \left(\frac{x}{\alpha}\right)^{\beta}\right)^2} $$
+where \(\alpha\) (`alpha`) is the scale parameter, and (\beta\) (`beta`) is the shape parameter.
+
+
+The procedure calculates the probability based on the provided parameter `x`.
+The scale (`alpha`), shape (`beta`) and location (`loc`) parameters are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_llogistic_pdf(interface)]]`(x, [, alpha, beta, loc])`
+
+### Parameters
+`x`: A scalar of type `real`.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `x`.
+
+
+<br>
+## `fsml_llogistic_cdf`
+
+### Description
+Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for logistic distribution.
+
+The procedure calculates the probability based on the provided parameter `x`.
+The scale (`alpha`), shape (`beta`) and location (`loc`) parameters and tail option (`tail`) are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_llogistic_cdf(interface)]]`(x, [, alpha, beta, loc, tail])`
+
+### Parameters
+`x`: A scalar of type `real`.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+`tail`: An optional argument and `character` string. If passed, it must be one of the following: *"left"*, *"right"*, *"two"*, or *"confidence"*. If not passed, it will default to *"left"*.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar of the same type as `x`.
+
+
+<br>
+## `fsml_llogistic_ppf`
+
+### Description
+Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
+
+It computes the position (`x`) based on the probability (`p`). `p` must be between 0.0 and 1.0.
+The scale (`alpha`), shape (`beta`) and location (`loc`) parameters are optional arguments.
+
+### Syntax
+`result =` [[fsml(module):fsml_llogistic_ppf(interface)]]`(p, [, alpha, beta, loc])`
+
+### Parameters
+`p`: A scalar of type `real`.
+
+`alpha`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`beta`: An optional argument and positive scalar of type `real`. If passed, it must be non-zero positive. It will default to *1.0* if not passed.
+
+`loc`: An optional argument and scalar of type `real`. It will default to *0.0* if not passed.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
 
 ### Returns
 The result is a scalar of the same type as `p`.

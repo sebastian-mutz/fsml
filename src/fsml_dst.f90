@@ -2513,7 +2513,7 @@ end function f_dst_logistic_ppf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_dst_llogistic_pdf(x, mu, alpha, beta) result(fx)
+impure function f_dst_llogistic_pdf(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
 !! Impure wrapper function for `f_dst_llogistic_pdf_core`.
@@ -2521,10 +2521,10 @@ impure function f_dst_llogistic_pdf(x, mu, alpha, beta) result(fx)
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
-  real(wp), intent(in), optional :: mu      !! distribution mean (log-scale location)
   real(wp), intent(in), optional :: alpha   !! distribution scale
   real(wp), intent(in), optional :: beta    !! distribution shape
-  real(wp)                       :: mu_w    !! final value for mu
+  real(wp), intent(in), optional :: loc     !! distribution location
+  real(wp)                       :: loc_w    !! final value for loc
   real(wp)                       :: alpha_w !! final value for alpha
   real(wp)                       :: beta_w  !! final value for beta
   real(wp)                       :: fx
@@ -2534,8 +2534,8 @@ impure function f_dst_llogistic_pdf(x, mu, alpha, beta) result(fx)
 ! ---- handle input
 
   ! assume mean/location = 0 (log-alpha), overwrite if specified
-  mu_w = 0.0_wp
-  if (present(mu)) mu_w = mu
+  loc_w = 0.0_wp
+  if (present(mu)) loc_w = loc
 
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
@@ -2561,23 +2561,23 @@ impure function f_dst_llogistic_pdf(x, mu, alpha, beta) result(fx)
 ! ---- compute PDF
 
   ! call pure function to calculate probability/fx
-  fx = f_dst_llogistic_pdf_core(x, mu_w, alpha_w, beta_w)
+  fx = f_dst_llogistic_pdf_core(x, alpha_w, beta_w, loc_w)
 
 end function f_dst_llogistic_pdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_llogistic_pdf_core(x, mu, alpha, beta) result(fx)
+elemental function f_dst_llogistic_pdf_core(x, alpha, beta, loc) result(fx)
 
 ! ==== Description
 !! Probability density function for log-logistic distribution.
 
 ! ==== Declarations
   real(wp), intent(in) :: x     !! sample position
-  real(wp), intent(in) :: mu    !! distribution mean (log-alpha location)
   real(wp), intent(in) :: alpha !! distribution scale
   real(wp), intent(in) :: beta  !! distribution shape
+  real(wp), intent(in) :: loc   !! distribution location
   real(wp)             :: z     !! z-score (log-alpha)
   real(wp)             :: t     !! transformed variable
   real(wp)             :: fx
@@ -2585,7 +2585,7 @@ elemental function f_dst_llogistic_pdf_core(x, mu, alpha, beta) result(fx)
 ! ==== Instructions
 
   ! compute transformed variable
-  z = (log(x) - mu) / alpha
+  z = (log(x) - loc) / alpha
   t = exp(beta * z)
 
   ! calculate probability/fx
@@ -2596,7 +2596,7 @@ end function f_dst_llogistic_pdf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_dst_llogistic_cdf(x, mu, alpha, beta, tail) result(p)
+impure function f_dst_llogistic_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Description
 !! Impure wrapper function for `f_dst_llogistic_cdf_core`.
@@ -2604,11 +2604,11 @@ impure function f_dst_llogistic_cdf(x, mu, alpha, beta, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
-  real(wp)        , intent(in), optional :: mu      !! distribution mean (log-alpha location)
   real(wp)        , intent(in), optional :: alpha   !! distribution scale
   real(wp)        , intent(in), optional :: beta    !! distribution shape
+  real(wp)        , intent(in), optional :: loc      !! distribution location
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: loc_w    !! final value of loc
   real(wp)                               :: alpha_w !! final value of alpha
   real(wp)                               :: beta_w  !! final value of beta
   character(len=16)                      :: tail_w  !! final tail option
@@ -2617,8 +2617,8 @@ impure function f_dst_llogistic_cdf(x, mu, alpha, beta, tail) result(p)
 ! ==== Instructions
 
   ! assume mean/location = 0 (log-alpha), overwrite if specified
-  mu_w = 0.0_wp
-  if (present(mu)) mu_w = mu
+  loc_w = 0.0_wp
+  if (present(mu)) loc_w = loc
 
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
@@ -2662,23 +2662,23 @@ impure function f_dst_llogistic_cdf(x, mu, alpha, beta, tail) result(p)
 ! ---- compute CDF
 
   ! call pure function to calculate probability integral
-  p = f_dst_llogistic_cdf_core(x, mu_w, alpha_w, beta_w, tail_w)
+  p = f_dst_llogistic_cdf_core(x, alpha_w, beta_w, loc_w, tail_w)
 
 end function f_dst_llogistic_cdf
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_llogistic_cdf_core(x, mu, alpha, beta, tail) result(p)
+elemental function f_dst_llogistic_cdf_core(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Description
 !! Cumulative distribution function for log-logistic distribution.
 
 ! ==== Declarations
   real(wp)        , intent(in) :: x     !! sample position
-  real(wp)        , intent(in) :: mu    !! distribution mean (log-alpha location)
   real(wp)        , intent(in) :: alpha !! distribution alpha
   real(wp)        , intent(in) :: beta  !! distribution shape
+  real(wp)        , intent(in) :: loc   !! distribution location
   character(len=*), intent(in) :: tail  !! tail options
   real(wp)                     :: z     !! z-score (log-alpha)
   real(wp)                     :: t     !! transformed variable
@@ -2687,7 +2687,7 @@ elemental function f_dst_llogistic_cdf_core(x, mu, alpha, beta, tail) result(p)
 ! ==== Instructions
 
   ! compute transformed variable
-  z = (log(x) - mu) / alpha
+  z = (log(x) - loc) / alpha
   t = exp(beta * z)
 
   ! compute integral (left tailed)
@@ -2718,7 +2718,7 @@ end function f_dst_llogistic_cdf_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_dst_llogistic_ppf(p, mu, alpha, beta) result(x)
+impure function f_dst_llogistic_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Description
 !! Impure wrapper function for `f_dst_llogistic_ppf_core`.
@@ -2726,11 +2726,11 @@ impure function f_dst_llogistic_ppf(p, mu, alpha, beta) result(x)
 
 ! ==== Declarations
   real(wp), intent(in)           :: p       !! probability between 0.0 - 1.0
-  real(wp), intent(in), optional :: mu      !! distribution mean (log-alpha location)
   real(wp), intent(in), optional :: alpha   !! distribution scale
   real(wp), intent(in), optional :: beta    !! distribution shape
+  real(wp), intent(in), optional :: loc     !! distribution location
   real(wp)                       :: p_w     !! final value of p
-  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: loc_w    !! final value of loc
   real(wp)                       :: alpha_w !! final value of alpha
   real(wp)                       :: beta_w  !! final value of beta
   real(wp)                       :: x
@@ -2738,8 +2738,8 @@ impure function f_dst_llogistic_ppf(p, mu, alpha, beta) result(x)
 ! ==== Instructions
 
   ! assume mean/location = 0 (log-alpha), overwrite if specified
-  mu_w = 0.0_wp
-  if (present(mu)) mu_w = mu
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
@@ -2769,7 +2769,7 @@ impure function f_dst_llogistic_ppf(p, mu, alpha, beta) result(x)
   p_w = min(max(p, c_eps), 1.0_wp - c_eps)
 
   ! call pure function to calculate x
-  x = f_dst_llogistic_ppf_core(p_w, mu_w, alpha_w, beta_w)
+  x = f_dst_llogistic_ppf_core(p_w, alpha_w, beta_w, loc_w)
 
   ! issue warning in case of suspicious result
   if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
@@ -2779,22 +2779,22 @@ end function f_dst_llogistic_ppf
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-elemental function f_dst_llogistic_ppf_core(p, mu, alpha, beta) result(x)
+elemental function f_dst_llogistic_ppf_core(p, alpha, beta, loc) result(x)
 
 ! ==== Description
 !! Percent point function/quantile function for log-logistic distribution.
 
 ! ==== Declarations
   real(wp), intent(in) :: p     !! probability between 0.0 - 1.0
-  real(wp), intent(in) :: mu    !! distribution mean (log-alpha location)
   real(wp), intent(in) :: alpha !! distribution scale
   real(wp), intent(in) :: beta  !! distribution shape
+  real(wp), intent(in) :: loc   !! distribution location
   real(wp)             :: x
 
 ! ==== Instructions
 
   ! calculate position based on probability (log-alpha inversion)
-  x = exp(mu + (alpha / beta) * log(p / (1.0_wp - p)))
+  x = exp(loc + (alpha / beta) * log(p / (1.0_wp - p)))
 
 end function f_dst_llogistic_ppf_core
 

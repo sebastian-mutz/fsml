@@ -371,21 +371,21 @@ end interface
 
 ! log-logistic distribution pdf
 interface fsml_llogistic_pdf
-  !! Probability density function for logistic distribution.
+  !! Probability density function for log-logistic distribution.
   !! $$ f(x) = \frac{\frac{\beta}{\alpha}\left(\frac{x}{\alpha}\right)^{\beta-1}}{\left(1 + \left(\frac{x}{\alpha}\right)^{\beta}\right)^2}, \quad x > 0 $$
-  !! where \(\mu\) is the location and mean, and \(\s\) is the scale parameter.
+  !! where \(\alpha\) is the scale parameter, and (\beta\) is the shape parameter.
   module procedure f_dst_llogistic_pdf
 end interface
 
 ! log-logistic distribution cdf
 interface fsml_llogistic_cdf
-  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for logistic distribution.
+  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for log-logistic distribution.
   module procedure f_dst_llogistic_cdf
 end interface
 
 ! log-logistic distribution ppf
 interface fsml_llogistic_ppf
-  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
+  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for log-logistic distribution.
   module procedure f_dst_llogistic_ppf
 end interface
 
