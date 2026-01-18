@@ -50,6 +50,9 @@ module fsml_dst
   public :: f_dst_logistic_pdf, f_dst_logistic_pdf_core
   public :: f_dst_logistic_cdf, f_dst_logistic_cdf_core
   public :: f_dst_logistic_ppf, f_dst_logistic_ppf_core
+  public :: f_dst_llogistic_pdf, f_dst_llogistic_pdf_core
+  public :: f_dst_llogistic_cdf, f_dst_llogistic_cdf_core
+  public :: f_dst_llogistic_ppf, f_dst_llogistic_ppf_core
 
   ! additional core features; only exposed in fsml_dst
   public :: f_dst_gammai_core, f_dst_betai_core
@@ -2245,7 +2248,7 @@ end function f_dst_gpd_ppf_core
 impure function f_dst_logistic_pdf(x, mu, scale) result(fx)
 
 ! ==== Description
-!! Impure wrapper function for `f_dst_logis_pdf_core`.
+!! Impure wrapper function for `f_dst_logistic_pdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -2305,7 +2308,7 @@ elemental function f_dst_logistic_pdf_core(x, mu, scale) result(fx)
 
   ! CDF evaluation
   if (z .ge. 0.0_wp) then
-    p = 1.0_wp / (1.0_wp + exp(-z))
+     p = 1.0_wp / (1.0_wp + exp(-z))
   else
      p = exp(z) / (1.0_wp + exp(z))
   endif
@@ -2325,7 +2328,7 @@ end function f_dst_logistic_pdf_core
 impure function f_dst_logistic_cdf(x, mu, scale, tail) result(p)
 
 ! ==== Description
-!! Impure wrapper function for `f_dst_logis_cdf_core`.
+!! Impure wrapper function for `f_dst_logistic_cdf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -2435,7 +2438,7 @@ end function f_dst_logistic_cdf_core
 impure function f_dst_logistic_ppf(p, mu, scale) result(x)
 
 ! ==== Description
-!! Impure wrapper function for `f_dst_logis_ppf_core`.
+!! Impure wrapper function for `f_dst_logistic_ppf_core`.
 !! Handles optional arguments and invalid values for arguments.
 
 ! ==== Declarations
@@ -2506,6 +2509,294 @@ elemental function f_dst_logistic_ppf_core(p, mu, scale) result(x)
   x = mu + scale * log(p / (1.0_wp - p))
 
 end function f_dst_logistic_ppf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_llogistic_pdf(x, mu, alpha, beta) result(fx)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_llogistic_pdf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp), intent(in)           :: x       !! sample position
+  real(wp), intent(in), optional :: mu      !! distribution mean (log-scale location)
+  real(wp), intent(in), optional :: alpha   !! distribution scale
+  real(wp), intent(in), optional :: beta    !! distribution shape
+  real(wp)                       :: mu_w    !! final value for mu
+  real(wp)                       :: alpha_w !! final value for alpha
+  real(wp)                       :: beta_w  !! final value for beta
+  real(wp)                       :: fx
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! assume mean/location = 0 (log-alpha), overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
+
+  ! assume shape = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
+
+  ! check if alpha and shape values are valid
+  if (alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
+     call s_err_print(fsml_error(1))
+     fx = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if x value is valid (support x > 0)
+  if (x .le. 0.0_wp) then
+     fx = 0.0_wp
+     return
+  endif
+
+! ---- compute PDF
+
+  ! call pure function to calculate probability/fx
+  fx = f_dst_llogistic_pdf_core(x, mu_w, alpha_w, beta_w)
+
+end function f_dst_llogistic_pdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_llogistic_pdf_core(x, mu, alpha, beta) result(fx)
+
+! ==== Description
+!! Probability density function for log-logistic distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: x     !! sample position
+  real(wp), intent(in) :: mu    !! distribution mean (log-alpha location)
+  real(wp), intent(in) :: alpha !! distribution scale
+  real(wp), intent(in) :: beta  !! distribution shape
+  real(wp)             :: z     !! z-score (log-alpha)
+  real(wp)             :: t     !! transformed variable
+  real(wp)             :: fx
+
+! ==== Instructions
+
+  ! compute transformed variable
+  z = (log(x) - mu) / alpha
+  t = exp(beta * z)
+
+  ! calculate probability/fx
+  fx = (beta / (alpha * x)) * t / (1.0_wp + t)**2
+
+end function f_dst_llogistic_pdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_llogistic_cdf(x, mu, alpha, beta, tail) result(p)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_llogistic_cdf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp)        , intent(in)           :: x       !! sample position
+  real(wp)        , intent(in), optional :: mu      !! distribution mean (log-alpha location)
+  real(wp)        , intent(in), optional :: alpha   !! distribution scale
+  real(wp)        , intent(in), optional :: beta    !! distribution shape
+  character(len=*), intent(in), optional :: tail    !! tail options
+  real(wp)                               :: mu_w    !! final value of mu
+  real(wp)                               :: alpha_w !! final value of alpha
+  real(wp)                               :: beta_w  !! final value of beta
+  character(len=16)                      :: tail_w  !! final tail option
+  real(wp)                               :: p
+
+! ==== Instructions
+
+  ! assume mean/location = 0 (log-alpha), overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
+
+  ! assume shape = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
+
+  ! assume left-tailed, overwrite if specified
+  tail_w = "left"
+  if (present(tail)) tail_w = tail
+
+  ! check if alpha and shape values are valid
+  if (alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
+     call s_err_print(fsml_error(1))
+     p = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if tail options are valid
+  if (tail_w .ne. "left" .and. tail_w .ne. "right" .and. &
+     &tail_w .ne. "two"  .and. tail_w .ne. "confidence") then
+     call s_err_print(fsml_error(2))
+     p = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if x value is valid (support x > 0)
+  if (x .le. 0.0_wp) then
+     if (tail_w .eq. "left") then
+        p = 0.0_wp
+     else if (tail_w .eq. "right") then
+        p = 1.0_wp
+     else
+        p = 0.0_wp
+     endif
+     return
+  endif
+
+! ---- compute CDF
+
+  ! call pure function to calculate probability integral
+  p = f_dst_llogistic_cdf_core(x, mu_w, alpha_w, beta_w, tail_w)
+
+end function f_dst_llogistic_cdf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_llogistic_cdf_core(x, mu, alpha, beta, tail) result(p)
+
+! ==== Description
+!! Cumulative distribution function for log-logistic distribution.
+
+! ==== Declarations
+  real(wp)        , intent(in) :: x     !! sample position
+  real(wp)        , intent(in) :: mu    !! distribution mean (log-alpha location)
+  real(wp)        , intent(in) :: alpha !! distribution alpha
+  real(wp)        , intent(in) :: beta  !! distribution shape
+  character(len=*), intent(in) :: tail  !! tail options
+  real(wp)                     :: z     !! z-score (log-alpha)
+  real(wp)                     :: t     !! transformed variable
+  real(wp)                     :: p
+
+! ==== Instructions
+
+  ! compute transformed variable
+  z = (log(x) - mu) / alpha
+  t = exp(beta * z)
+
+  ! compute integral (left tailed)
+  p = t / (1.0_wp + t)
+
+  ! tail options
+  select case(tail)
+     case("left")
+        p = p
+     case("right")
+        p = 1.0_wp - p
+     case("two")
+        if (z .gt. 0.0_wp) then
+           p = 2.0_wp * (1.0_wp - p)
+        else
+           p = 2.0_wp * p
+        endif
+     case("confidence")
+        if (z .gt. 0.0_wp) then
+           p = 1.0_wp - 2.0_wp * (1.0_wp - p)
+        else
+           p = 1.0_wp - 2.0_wp * p
+        endif
+  end select
+
+end function f_dst_llogistic_cdf_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_dst_llogistic_ppf(p, mu, alpha, beta) result(x)
+
+! ==== Description
+!! Impure wrapper function for `f_dst_llogistic_ppf_core`.
+!! Handles optional arguments and invalid values for arguments.
+
+! ==== Declarations
+  real(wp), intent(in)           :: p       !! probability between 0.0 - 1.0
+  real(wp), intent(in), optional :: mu      !! distribution mean (log-alpha location)
+  real(wp), intent(in), optional :: alpha   !! distribution scale
+  real(wp), intent(in), optional :: beta    !! distribution shape
+  real(wp)                       :: p_w     !! final value of p
+  real(wp)                       :: mu_w    !! final value of mu
+  real(wp)                       :: alpha_w !! final value of alpha
+  real(wp)                       :: beta_w  !! final value of beta
+  real(wp)                       :: x
+
+! ==== Instructions
+
+  ! assume mean/location = 0 (log-alpha), overwrite if specified
+  mu_w = 0.0_wp
+  if (present(mu)) mu_w = mu
+
+  ! assume alpha = 1, overwrite if specified
+  alpha_w = 1.0_wp
+  if (present(alpha)) alpha_w = alpha
+
+  ! assume shape = 1, overwrite if specified
+  beta_w = 1.0_wp
+  if (present(beta)) beta_w = beta
+
+  ! check if alpha and shape values are valid
+  if (alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
+     call s_err_print(fsml_error(1))
+     x = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .le. 0.0_wp .or. p .ge. 1.0_wp) then
+     call s_err_print(fsml_error(1))
+     x = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute PPF
+
+  ! for stability, set very small (large) numbers to epsilon (1-epsilon)
+  p_w = min(max(p, c_eps), 1.0_wp - c_eps)
+
+  ! call pure function to calculate x
+  x = f_dst_llogistic_ppf_core(p_w, mu_w, alpha_w, beta_w)
+
+  ! issue warning in case of suspicious result
+  if (f_utl_is_nan(x)) call s_err_warn(fsml_warning(1))
+
+end function f_dst_llogistic_ppf
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+elemental function f_dst_llogistic_ppf_core(p, mu, alpha, beta) result(x)
+
+! ==== Description
+!! Percent point function/quantile function for log-logistic distribution.
+
+! ==== Declarations
+  real(wp), intent(in) :: p     !! probability between 0.0 - 1.0
+  real(wp), intent(in) :: mu    !! distribution mean (log-alpha location)
+  real(wp), intent(in) :: alpha !! distribution scale
+  real(wp), intent(in) :: beta  !! distribution shape
+  real(wp)             :: x
+
+! ==== Instructions
+
+  ! calculate position based on probability (log-alpha inversion)
+  x = exp(mu + (alpha / beta) * log(p / (1.0_wp - p)))
+
+end function f_dst_llogistic_ppf_core
 
 
 ! ==================================================================== !

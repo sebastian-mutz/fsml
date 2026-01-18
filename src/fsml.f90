@@ -43,6 +43,7 @@ module fsml
   public :: fsml_f_pdf, fsml_f_cdf, fsml_f_ppf
   public :: fsml_gpd_pdf, fsml_gpd_cdf, fsml_gpd_ppf
   public :: fsml_logistic_pdf, fsml_logistic_cdf, fsml_logistic_ppf
+  public :: fsml_llogistic_pdf, fsml_llogistic_cdf, fsml_llogistic_ppf
   ! public statistical tests
   public :: fsml_ttest_1sample, fsml_ttest_paired, fsml_ttest_2sample
   public :: fsml_anova_1way
@@ -367,6 +368,27 @@ interface fsml_logistic_ppf
   !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
   module procedure f_dst_logistic_ppf
 end interface
+
+! log-logistic distribution pdf
+interface fsml_llogistic_pdf
+  !! Probability density function for logistic distribution.
+  !! $$ f(x) = \frac{\frac{\beta}{\alpha}\left(\frac{x}{\alpha}\right)^{\beta-1}}{\left(1 + \left(\frac{x}{\alpha}\right)^{\beta}\right)^2}, \quad x > 0 $$
+  !! where \(\mu\) is the location and mean, and \(\s\) is the scale parameter.
+  module procedure f_dst_llogistic_pdf
+end interface
+
+! log-logistic distribution cdf
+interface fsml_llogistic_cdf
+  !! Cumulative distribution function \(F(x) = \mathbb{P}(X \leq x)\) for logistic distribution.
+  module procedure f_dst_llogistic_cdf
+end interface
+
+! log-logistic distribution ppf
+interface fsml_llogistic_ppf
+  !! Percent point function/quantile function \(Q(p) = {F}_{x}^{-1}(p)\) for logistic distribution.
+  module procedure f_dst_llogistic_ppf
+end interface
+
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
