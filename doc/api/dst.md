@@ -734,7 +734,7 @@ The result is a scalar of the same type as `p`.
 ### Description
 Probability density function for log-logistic distribution.
 $$ f(x) = \frac{\frac{\beta}{\alpha}\left(\frac{x}{\alpha}\right)^{\beta-1}}{\left(1 + \left(\frac{x}{\alpha}\right)^{\beta}\right)^2} $$
-where \(\alpha\) (`alpha`) is the scale parameter, and (\beta\) (`beta`) is the shape parameter.
+where \(\alpha\) (`alpha`) is the scale parameter, and \(\beta\) (`beta`) is the shape parameter.
 
 
 The procedure calculates the probability based on the provided parameter `x`.

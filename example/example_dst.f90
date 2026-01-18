@@ -168,11 +168,54 @@ program example_dst
   print*, fsml_gpd_cdf(2.1_wp, xi=2.7_wp, mu=1.2_wp, sigma=1.0_wp, tail="left")
   ! 0.36650539816689109
 
-  ! GPD ppf with p=0.2, xi=0.7, mu=0.0 and sigma=1.0 (standard left tail)
+  ! GPD ppf with p=0.2, xi=0.7, mu=1.0 and sigma=1.0
   print*, fsml_gpd_ppf(0.2_wp, xi=0.7_wp, mu=1.0_wp, sigma=1.0_wp)
   ! 1.2415150853975381
 
   print*
 
+  ! ---- Logistic Distribution
+
+  print*, "> logistic distribution"
+
+  ! Logistic pdf with x=1.0, mu=0.0 and scale=1.0
+  print*, fsml_logistic_pdf(1.0_wp, mu=0.0_wp, scale=1.0_wp)
+  ! 0.19661193324148185
+
+  ! Logistic pdf with x=-2.0, mu=1.0 and scale=1.0
+  print*, fsml_logistic_pdf(-2.0_wp, mu=-1.0_wp, scale=1.0_wp)
+  ! 0.19661193324148185
+
+  ! Logistic cdf with x=2.1, mu=0.2 and scale=1.0 (standard left tail)
+  print*, fsml_logistic_cdf(2.1_wp, mu=0.2_wp, scale=1.0_wp, tail="left")
+  ! 0.86989152563700212
+
+  ! Logistic ppf with p=0.95, mu=0.0 and scale=1.0
+  print*, fsml_logistic_ppf(0.95_wp, mu=0.0_wp, scale=1.0_wp)
+  ! 2.9444389791664394
+
+  print*
+
+  ! ---- Log-Logistic Distribution
+
+  print*, "> log-logistic distribution"
+
+  ! Log-Logistic pdf with x=1.1, and standard alpha(1.0), beta(1.0) and loc(0.0)
+  print*, fsml_llogistic_pdf(1.1_wp, alpha=1.0_wp, beta=1.0_wp, loc=0.0_wp)
+  ! 0.22675736961451246
+
+  ! Log-Logistic pdf with x=1.9, alpha=1.2 and beta=1.5
+  print*, fsml_llogistic_pdf(1.9_wp, alpha=1.2_wp, beta=1.5_wp, loc=0.0_wp)
+  ! 0.14060604688659648
+
+  ! Log-Logistic cdf with x=2.1, alpha=0.8 and beta=1.0 (standard left tail)
+  print*, fsml_llogistic_cdf(2.1_wp, alpha=0.8_wp, beta=1.0_wp, loc=0.0_wp, tail="left")
+  ! 0.71655190780783662
+
+  ! Log-Logistic ppf with p=0.25, alpha=0.4 and beta=1.1
+  print*, fsml_llogistic_ppf(0.25_wp, alpha=0.4_wp, beta=1.1_wp, loc=0.0_wp)
+  ! 0.67065838984142079
+
+  print*
 
 end program example_dst

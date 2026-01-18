@@ -2521,10 +2521,10 @@ impure function f_dst_llogistic_pdf(x, alpha, beta, loc) result(fx)
 
 ! ==== Declarations
   real(wp), intent(in)           :: x       !! sample position
-  real(wp), intent(in), optional :: alpha   !! distribution scale
+  real(wp), intent(in), optional :: alpha   !! distribution log-scale
   real(wp), intent(in), optional :: beta    !! distribution shape
-  real(wp), intent(in), optional :: loc     !! distribution location
-  real(wp)                       :: loc_w    !! final value for loc
+  real(wp), intent(in), optional :: loc     !! distribution log-location
+  real(wp)                       :: loc_w   !! final value for loc
   real(wp)                       :: alpha_w !! final value for alpha
   real(wp)                       :: beta_w  !! final value for beta
   real(wp)                       :: fx
@@ -2533,10 +2533,6 @@ impure function f_dst_llogistic_pdf(x, alpha, beta, loc) result(fx)
 
 ! ---- handle input
 
-  ! assume mean/location = 0 (log-alpha), overwrite if specified
-  loc_w = 0.0_wp
-  if (present(mu)) loc_w = loc
-
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
   if (present(alpha)) alpha_w = alpha
@@ -2544,6 +2540,10 @@ impure function f_dst_llogistic_pdf(x, alpha, beta, loc) result(fx)
   ! assume shape = 1, overwrite if specified
   beta_w = 1.0_wp
   if (present(beta)) beta_w = beta
+
+  ! assume log-location = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
   ! check if alpha and shape values are valid
   if (alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
@@ -2575,10 +2575,10 @@ elemental function f_dst_llogistic_pdf_core(x, alpha, beta, loc) result(fx)
 
 ! ==== Declarations
   real(wp), intent(in) :: x     !! sample position
-  real(wp), intent(in) :: alpha !! distribution scale
+  real(wp), intent(in) :: alpha !! distribution log-scale
   real(wp), intent(in) :: beta  !! distribution shape
-  real(wp), intent(in) :: loc   !! distribution location
-  real(wp)             :: z     !! z-score (log-alpha)
+  real(wp), intent(in) :: loc   !! distribution log-location
+  real(wp)             :: z     !! log-scaled variable
   real(wp)             :: t     !! transformed variable
   real(wp)             :: fx
 
@@ -2604,21 +2604,17 @@ impure function f_dst_llogistic_cdf(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in)           :: x       !! sample position
-  real(wp)        , intent(in), optional :: alpha   !! distribution scale
+  real(wp)        , intent(in), optional :: alpha   !! distribution log-scale
   real(wp)        , intent(in), optional :: beta    !! distribution shape
-  real(wp)        , intent(in), optional :: loc      !! distribution location
+  real(wp)        , intent(in), optional :: loc     !! distribution log-location
   character(len=*), intent(in), optional :: tail    !! tail options
-  real(wp)                               :: loc_w    !! final value of loc
+  real(wp)                               :: loc_w   !! final value of loc
   real(wp)                               :: alpha_w !! final value of alpha
   real(wp)                               :: beta_w  !! final value of beta
   character(len=16)                      :: tail_w  !! final tail option
   real(wp)                               :: p
 
 ! ==== Instructions
-
-  ! assume mean/location = 0 (log-alpha), overwrite if specified
-  loc_w = 0.0_wp
-  if (present(mu)) loc_w = loc
 
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
@@ -2627,6 +2623,10 @@ impure function f_dst_llogistic_cdf(x, alpha, beta, loc, tail) result(p)
   ! assume shape = 1, overwrite if specified
   beta_w = 1.0_wp
   if (present(beta)) beta_w = beta
+
+  ! assume log-location = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
   ! assume left-tailed, overwrite if specified
   tail_w = "left"
@@ -2676,11 +2676,11 @@ elemental function f_dst_llogistic_cdf_core(x, alpha, beta, loc, tail) result(p)
 
 ! ==== Declarations
   real(wp)        , intent(in) :: x     !! sample position
-  real(wp)        , intent(in) :: alpha !! distribution alpha
+  real(wp)        , intent(in) :: alpha !! distribution log-scale
   real(wp)        , intent(in) :: beta  !! distribution shape
-  real(wp)        , intent(in) :: loc   !! distribution location
+  real(wp)        , intent(in) :: loc   !! distribution log-location
   character(len=*), intent(in) :: tail  !! tail options
-  real(wp)                     :: z     !! z-score (log-alpha)
+  real(wp)                     :: z     !! log-scaled variable
   real(wp)                     :: t     !! transformed variable
   real(wp)                     :: p
 
@@ -2726,20 +2726,16 @@ impure function f_dst_llogistic_ppf(p, alpha, beta, loc) result(x)
 
 ! ==== Declarations
   real(wp), intent(in)           :: p       !! probability between 0.0 - 1.0
-  real(wp), intent(in), optional :: alpha   !! distribution scale
+  real(wp), intent(in), optional :: alpha   !! distribution log-scale
   real(wp), intent(in), optional :: beta    !! distribution shape
-  real(wp), intent(in), optional :: loc     !! distribution location
+  real(wp), intent(in), optional :: loc     !! distribution log-location
   real(wp)                       :: p_w     !! final value of p
-  real(wp)                       :: loc_w    !! final value of loc
+  real(wp)                       :: loc_w   !! final value of loc
   real(wp)                       :: alpha_w !! final value of alpha
   real(wp)                       :: beta_w  !! final value of beta
   real(wp)                       :: x
 
 ! ==== Instructions
-
-  ! assume mean/location = 0 (log-alpha), overwrite if specified
-  loc_w = 0.0_wp
-  if (present(loc)) loc_w = loc
 
   ! assume alpha = 1, overwrite if specified
   alpha_w = 1.0_wp
@@ -2748,6 +2744,10 @@ impure function f_dst_llogistic_ppf(p, alpha, beta, loc) result(x)
   ! assume shape = 1, overwrite if specified
   beta_w = 1.0_wp
   if (present(beta)) beta_w = beta
+
+  ! assume log-location = 0, overwrite if specified
+  loc_w = 0.0_wp
+  if (present(loc)) loc_w = loc
 
   ! check if alpha and shape values are valid
   if (alpha_w .le. 0.0_wp .or. beta_w .le. 0.0_wp) then
@@ -2786,9 +2786,9 @@ elemental function f_dst_llogistic_ppf_core(p, alpha, beta, loc) result(x)
 
 ! ==== Declarations
   real(wp), intent(in) :: p     !! probability between 0.0 - 1.0
-  real(wp), intent(in) :: alpha !! distribution scale
+  real(wp), intent(in) :: alpha !! distribution log-scale
   real(wp), intent(in) :: beta  !! distribution shape
-  real(wp), intent(in) :: loc   !! distribution location
+  real(wp), intent(in) :: loc   !! distribution log-location
   real(wp)             :: x
 
 ! ==== Instructions
