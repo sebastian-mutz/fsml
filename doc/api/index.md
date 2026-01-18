@@ -101,3 +101,9 @@ The following procedures are currently covered and have a public interface. The 
 | [Generalised Pareto PDF](./dst.html#fsml_gpd_pdf) |
 | [Generalised Pareto CDF](./dst.html#fsml_gpd_cdf) |
 | [Generalised Pareto PPF](./dst.html#fsml_gpd_ppf) |
+| [Logistic PDF](./dst.html#fsml_logistic_pdf)      |
+| [Logistic CDF](./dst.html#fsml_logistic_cdf)      |
+| [Logistic PPF](./dst.html#fsml_logistic_ppf)      |
+| [Log-Logistic PDF](./dst.html#fsml_llogistic_pdf) |
+| [Log-Logistic CDF](./dst.html#fsml_llogistic_cdf) |
+| [Log-Logistic PPF](./dst.html#fsml_llogistic_ppf) |

@@ -8,10 +8,8 @@ The following has changed since the last release (v0.1.0):
 - [ ] Added Canonical Correlation Analysis (CCA) [contributed by @loiseaujc].
 
 ### DST module
-- [ ] Added logistic distribution PDF, CDF, and PPF. ([3f81edb](https://github.com/sebastian-mutz/fsml/commit/3f81edb9e9ecfe48a34a2d4a75115fb909d9cccc))
-- [ ] Added log-logistic distribution PDF, CDF, and PPF. ([3ad09b9](https://github.com/sebastian-mutz/fsml/commit/3ad09b9107c1aaa6f5d0516491d32a1ac3d7999))
-
-
+- [ ] Added logistic distribution PDF, CDF, and PPF. ([3f81edb](https://github.com/sebastian-mutz/fsml/commit/3f81edb9e9ecfe48a34a2d4a75115fb909d9cccc), [3ae5c64](https://github.com/sebastian-mutz/fsml/commit/3ae5c6413967e13ff11495414b4d83f26f103453))
+- [ ] Added log-logistic distribution PDF, CDF, and PPF. ([3ad09b9](https://github.com/sebastian-mutz/fsml/commit/3ad09b9107c1aaa6f5d0516491d32a1ac3d7999), [3ae5c64](https://github.com/sebastian-mutz/fsml/commit/3ae5c6413967e13ff11495414b4d83f26f103453))
 
 ### NLP module
 
