@@ -51,6 +51,7 @@ module fsml
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
   public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge, fsml_mahalanobis
+  public :: fsml_lasso
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures
@@ -908,6 +909,44 @@ interface fsml_mahalanobis
   !! **Note:** If passed, the covariance matrix (`cov`) must be positive definite
   !! for the factorisation to succeed.
   module procedure f_lin_mahalanobis
+end interface
+
+interface fsml_lasso
+  !! LASSO (Least Absolute Shrinkage and Selection Operator) models the relationship or linear
+  !! dependence between a dependent (predictand) variable and one or more independent
+  !! (predictor) variables, incorporating a penalty term promoting the sparsity of the
+  !! regression coefficients. It can be used for feature selection and also help mitigate the
+  !! influence of multicolinearity and reduce overfitting.
+  !!
+  !! The procedure estimates the linear regression coefficients by minimising the sum of squared
+  !! residuals plus a penalty proportion ot the sum of absolute values of the coefficients:
+  !!
+  !! $$
+  !! \hat{\beta} = argmin \dfrac12 \| X \beta - y  \|_2^2 + \lambda \| \beta \|_1
+  !!  $$
+  !!
+  !!  where \( \lambda \) (`lambda`) is the lasso penalty parameter.
+  !!
+  !!  The estimate regression model is of the form:
+  !!
+  !!  $$
+  !!  y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_m x_m + \cdots + \beta_M x_M
+  !!  $$
+  !!
+  !!  where \( y \) is the predictand variable, \( x_m \(m=1 \cdots M\) \) are the predictor
+  !!  variables (`x`) with `nd` observations, \( \beta_0 \) is the y-intercept (`b0`),
+  !!  \( \beta_m \(m=1 \cdots M\) \) (`b`) are the lasso coefficients (often sparse), and \(M\)
+  !!  (`nv`) is the number of predictors (excluding the intercept).
+  !!
+  !!  The lasso problem is solved using the Alternating Direction Method of Multipliers (ADMM).
+  !!  The coefficient of detemrination \( R^2 \) (`r2`), predicted values (`y_hat`),
+  !!  lasso-adjusted covariance matrix of the predictors (`cov_b`) can optionally be returned.
+  !!  The covariance matrix and standard deviation errors are adjusted for the lasso penalty as:
+  !!
+  !!  $$
+  !!  ??
+  !!  $$
+  module procedure s_lin_lasso
 end interface
 
 
