@@ -751,12 +751,12 @@ elemental function f_dst_gamma_pdf_core(x, alpha, beta, loc) result(fx)
 ! ---- compute PDF
 
   ! calculate probability/fx
-  if (x .le. 0.0_wp .or. alpha .le. 0.0_wp .or. beta .le. 0.0_wp) then
+  if ( x .le. loc) then
      fx = 0.0_wp
   else
      z = (x - loc) / beta
-     fx = ( x ** (alpha - 1.0_wp) ) * exp( -z) / &
-        & ( beta ** alpha * gamma(alpha))
+     fx = ( (x - loc) ** (alpha - 1.0_wp) ) * exp( -z ) / &
+        & ( beta ** alpha * gamma(alpha) )
   endif
 
 end function f_dst_gamma_pdf_core
@@ -1563,7 +1563,7 @@ elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
   real(wp), intent(in)   :: loc                !! location parameter
   real(wp), intent(in)   :: scale              !! scale parameter
   integer(i4), parameter :: i_max = c_bisect_i !! max. number of iterations
-  real(wp), parameter    :: tol = c_conv_tol   !! tolerance for convergence
+  real(wp)   , parameter :: tol = c_conv_tol   !! tolerance for convergence
   real(wp)               :: a, b               !! interval bounds
   real(wp)               :: x_mid, p_mid       !! midpoint and corresponding CDF value
   integer(i4)            :: i                  !! iteration counter
@@ -1679,7 +1679,7 @@ elemental function f_dst_f_pdf_core(x, d1, d2, loc, scale) result(fx)
 
 ! ==== Instructions
 
-! ----compute PDF
+! ---- compute PDF
 
   ! get z score (standardise)
   z = (x - loc) / scale
@@ -1768,7 +1768,7 @@ impure function f_dst_f_cdf(x, d1, d2, loc, scale, tail) result(p)
      return
   endif
 
-! ----compute CDF
+! ---- compute CDF
 
   ! call pure function to calculate probability integral
   p = f_dst_f_cdf_core(x, d1, d2, loc_w, scale_w, tail_w)
@@ -1797,7 +1797,7 @@ elemental function f_dst_f_cdf_core(x, d1, d2, loc, scale, tail) result(p)
 
 ! ==== Instructions
 
-! ----compute CDF
+! ---- compute CDF
 
   ! get z score (standardise)
   z = (x - loc) / scale
