@@ -34,6 +34,7 @@ module fsml
   public :: fsml_mean, fsml_median
   public :: fsml_var, fsml_std
   public :: fsml_cov, fsml_trend, fsml_pcc, fsml_scc
+  public :: fsml_quantile
   ! public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
   public :: fsml_t_pdf, fsml_t_cdf, fsml_t_ppf
@@ -153,6 +154,16 @@ interface fsml_scc
   !!
   !! Vectors `x` and `y` must be the same size.
   module procedure f_sts_scc
+end interface
+
+! Spearman rank correlation coefficient
+interface fsml_quantile
+  !! Computes the Spearman rank correlation coefficient (SCC).
+  !! The procedure gets the ranks of cectors `x` and `y`, then
+  !! calculates the Pearson correlation coefficient on these ranks.
+  !!
+  !! Vectors `x` and `y` must be the same size.
+  module procedure f_sts_quantile
 end interface
 
 

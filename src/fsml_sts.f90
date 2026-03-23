@@ -34,6 +34,7 @@ module fsml_sts
   public :: f_sts_trend, f_sts_trend_core
   public :: f_sts_pcc, f_sts_pcc_core
   public :: f_sts_scc, f_sts_scc_core
+  public :: f_sts_quantile, f_sts_quantile_core
 
 contains
 
@@ -360,8 +361,8 @@ pure function f_sts_cov_core(x, y, ddf) result(cov)
 ! ==== Instructions
   xbar = f_sts_mean_core(x)
   ybar = f_sts_mean_core(y)
-  cov = dot_product( (x - xbar), (y - ybar) ) / &
-      & (real(size(x), kind=wp) - ddf)
+  cov  = dot_product( (x - xbar), (y - ybar) ) / &
+       & (real(size(x), kind=wp) - ddf)
 
 end function f_sts_cov_core
 
@@ -553,5 +554,102 @@ pure function f_sts_scc_core(x, y) result(corr)
   deallocate(ry)
 
 end function f_sts_scc_core
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_sts_quantile(x, p) result(q)
+
+! ==== Description
+!! Impure wrapper for `f_sts_quantile_core`.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(:)         !! data vector (assumed size array)
+  real(wp)   , intent(in)  :: p            !! desired percentile
+  real(wp)                 :: q            !! quantile value
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if size is valid
+  if (size(x) .le. 1) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(4))
+     q = f_utl_assign_nan()
+     return
+  endif
+
+  ! check if p value is valid
+  if (p .gt. 1.0_wp .or. p .lt. 0.0_wp) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(1))
+     q = f_utl_assign_nan()
+     return
+  endif
+
+  ! call pure function
+  q = f_sts_quantile_core(x, p)
+
+end function f_sts_quantile
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_sts_quantile_core(x, p) result(q)
+
+! ==== Description
+!! Computes the percentile of a given dataset (array).
+!! Uses Hyndman & Fan (1996) type 7 percentile definition:
+!!
+!! $$ h = (n - 1) \cdot p + 1 $$
+!! $$ Q(p) = x[k] + f * ( x[k+1] - x[k] ) $$
+!!
+!! where `k = floor(h)`, and `f = h - k`.
+
+! ==== Declarations
+  real(wp)   , intent(in)  :: x(:)         !! data vector (assumed size array)
+  real(wp)   , intent(in)  :: p            !! desired percentile
+  real(wp)                 :: q            !! quantile value
+  integer                  :: n            !! size of data vector
+  integer                  :: k
+  real(wp)                 :: h
+  real(wp)                 :: f
+  real(wp)   , allocatable :: x_w(:)       !! working copy of data
+  integer(i4), allocatable :: ii(:), io(:) !! for sorting procedure
+
+! ==== Instructions
+
+  ! get data vector size
+  n = size(x)
+
+  ! allocate and initialise
+  allocate(x_w(n))
+  allocate(ii(n))
+  allocate(io(n))
+  do k = 1, n
+     ii(k) = k
+  enddo
+
+  ! sort in ascending order
+  call s_utl_sort(x, n, 2, ii, x_w, io)
+
+  ! Hyndman-Fan type 7 index
+  h = ( real(n, kind=wp) - 1.0_wp ) * p + 1.0_wp
+  k = int( floor(h) )
+  f = h - real(k, kind=wp)
+
+  ! percentile value
+  q = x_w(k)
+  if ( (f .gt. 0.0_wp) .and. (k .lt. n) ) then
+     q = q + f * ( x_w(k+1) - q )
+  endif
+
+  ! deallocate
+  deallocate(x_w)
+  deallocate(ii)
+  deallocate(io)
+
+end function f_sts_quantile_core
 
 end module fsml_sts
