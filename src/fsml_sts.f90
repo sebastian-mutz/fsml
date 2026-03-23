@@ -564,9 +564,9 @@ impure function f_sts_quantile(x, p) result(q)
 !! Impure wrapper for `f_sts_quantile_core`.
 
 ! ==== Declarations
-  real(wp)   , intent(in)  :: x(:)         !! data vector (assumed size array)
-  real(wp)   , intent(in)  :: p            !! desired percentile
-  real(wp)                 :: q            !! quantile value
+  real(wp)   , intent(in)  :: x(:) !! data vector (assumed size array)
+  real(wp)   , intent(in)  :: p    !! desired percentile
+  real(wp)                 :: q    !! quantile value
 
 ! ==== Instructions
 
@@ -588,6 +588,8 @@ impure function f_sts_quantile(x, p) result(q)
      return
   endif
 
+! ---- compute quantile value
+
   ! call pure function
   q = f_sts_quantile_core(x, p)
 
@@ -599,7 +601,7 @@ end function f_sts_quantile
 pure function f_sts_quantile_core(x, p) result(q)
 
 ! ==== Description
-!! Computes the percentile of a given dataset (array).
+!! Computes the quantile value for a given dataset (array).
 !! Uses Hyndman & Fan (1996) type 7 percentile definition:
 !!
 !! $$ h = (n - 1) \cdot p + 1 $$
@@ -632,7 +634,7 @@ pure function f_sts_quantile_core(x, p) result(q)
   enddo
 
   ! sort in ascending order
-  call s_utl_sort(x, n, 2, ii, x_w, io)
+  call s_utl_sort(x, n, 1, ii, x_w, io)
 
   ! Hyndman-Fan type 7 index
   h = ( real(n, kind=wp) - 1.0_wp ) * p + 1.0_wp

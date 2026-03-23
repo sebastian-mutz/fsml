@@ -32,6 +32,10 @@ program test_sts
   status = test_dispersion(tol)
   call handle_status(status)
 
+  print*, "> sts: testing quantiles"
+  status = test_quantiles(tol)
+  call handle_status(status)
+
   print*, "> sts: testing basic statistical relationships (cov., trend, Pearson- and Spearman corr.)"
   status = test_relationship(tol)
   call handle_status(status)
@@ -148,6 +152,45 @@ function test_dispersion(tol) result(status)
   enddo
 
 end function test_dispersion
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_quantiles(tol) result(status)
+
+! ==== Description
+!! Tests quantiles.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  real(wp)               :: res        !! result
+  integer(i4), parameter :: n = 15     !! number of data points
+  real(wp)   , parameter :: x(n) = [ &
+                          0.97_wp , 0.7_wp  , 2.1_wp , -0.9_wp , -1.2_wp, &
+                          0.02_wp , -0.25_wp, 0.5_wp , 0.75_wp , 0.99_wp, &
+                          -1.02_wp, -0.25_wp, -0.5_wp, -0.75_wp, -0.99_wp]
+  real(wp), parameter :: ans(4) =                          &
+                                  [0.98199999999999998_wp, &
+                                   1.3229999999999988_wp,  &
+                                   1.9445999999999994_wp,  &
+                                   2.0844600000000009_wp   ]
+
+
+! ==== Instructions
+  status = .true.
+  res = fsml_quantile( x, 0.90_wp )
+  if (abs( res - ans(1) ) .gt. tol) status = .false.
+  res = fsml_quantile( x, 0.95_wp )
+  if (abs( res - ans(2) ) .gt. tol) status = .false.
+  res = fsml_quantile( x, 0.99_wp )
+  if (abs( res - ans(3) ) .gt. tol) status = .false.
+  res = fsml_quantile( x, 0.999_wp )
+  if (abs( res - ans(4) ) .gt. tol) status = .false.
+
+end function test_quantiles
 
 
 

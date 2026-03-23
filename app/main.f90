@@ -87,8 +87,11 @@ program main
   enddo
   print*, pcc
 
-  ! ---- use of elemental function for nomal pdf
+  ! use of elemental function for nomal pdf
   call random_number(x)
   print*, norm_pdf_elemental(x, 0.0_wp, 1.0_wp)
+
+  ! compute quantile
+  print*, fsml_quantile(x, 0.90_wp)
 
 end program main
