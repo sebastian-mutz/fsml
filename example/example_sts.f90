@@ -91,4 +91,8 @@ program example_sts
   print*, "Spearman R (x1, x2): ", fsml_scc(x1, x2)
   ! -0.19999999999999998
 
+  ! quantile/percentile of vector x1
+  print*, "95th percentile (x1): ", fsml_quantile(x1, 0.95_wp)
+  ! 2.7444999999999991
+
 end program example_sts

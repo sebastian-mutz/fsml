@@ -608,6 +608,9 @@ pure function f_sts_quantile_core(x, p) result(q)
 !! $$ Q(p) = x[k] + f * ( x[k+1] - x[k] ) $$
 !!
 !! where `k = floor(h)`, and `f = h - k`.
+!!
+!! NOTE: Similar to quantile function for uniform distribution, but
+!! uses discrete index mapping.
 
 ! ==== Declarations
   real(wp)   , intent(in)  :: x(:)         !! data vector (assumed size array)

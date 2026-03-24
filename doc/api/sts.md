@@ -223,6 +223,34 @@ The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
+# Quantile
+
+## `fsml_quantile`
+
+### Description
+The procedure computes the quantile value for a given dataset (array). It uses
+the Hyndman & Fan (1996) type 7 percentile definition:
+$$ h = (n - 1) \cdot p + 1 $$
+$$ Q(p) = x[k] + f \cdot ( x[k+1] - x[k] ) $$
+where \( k = floor(h) \), and  \( f = h - k \).
+
+It returns the quantile value \( Q(p) \) (`q`) for a given data vector `x` and specified quantile \( p \) (`p`), which must have a value between *0.0* and *1.0*.
+
+### Syntax
+`result =` [[fsml(module):fsml_quantile(interface)]]`(x, p)`
+
+### Parameters
+`x`: A rank-1 array of type `real`.
+
+`p`: A scalar of type `real`. It must be between *0.0* or *1.0*.
+
+Invalid argument values will result in the return of a sentinel value (NaN).
+
+### Returns
+The result is a scalar and the same type as `p`.
+
+
+<br>
 # Examples
 
 ```fortran

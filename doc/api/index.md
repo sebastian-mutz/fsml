@@ -42,6 +42,7 @@ The following procedures are currently covered and have a public interface. The 
 | [Linear trend](./sts.html#fsml_trend)              |
 | [Correlation (Pearson)](./sts.html#fsml_pcc)       |
 | [Correlation (Spearman rank)](./sts.html#fsml_scc) |
+| [Quantile](./sts.html#fsml_quantile)               |
 
 <br>
 

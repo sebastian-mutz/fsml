@@ -1555,7 +1555,7 @@ end function f_dst_chi2_ppf
 elemental function f_dst_chi2_ppf_core(p, df, loc, scale) result(x)
 
 ! ==== Description
-!! Percent point function/quantile functionfor the chi-squared distribution.
+!! Percent point function/quantile function for the chi-squared distribution.
 
 ! ==== Declarations
   real(wp), intent(in)   :: p                  !! probability between 0.0 and 1.0

@@ -162,9 +162,9 @@ interface fsml_quantile
   !! Uses Hyndman & Fan (1996) type 7 percentile definition:
   !!
   !! $$ h = (n - 1) \cdot p + 1 $$
-  !! $$ Q(p) = x[k] + f * ( x[k+1] - x[k] ) $$
+  !! $$ Q(p) = x[k] + f \cdot ( x[k+1] - x[k] ) $$
   !!
-  !! where `k = floor(h)`, and `f = h - k`.
+  !! where \( k = floor(h) \), and  \( f = h - k \).
   module procedure f_sts_quantile
 end interface
 
