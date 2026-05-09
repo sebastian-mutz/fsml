@@ -30,3 +30,11 @@ main = "main.f90"
 
 [dependencies]
 stdlib = "*"
+
+[extra.fortitude]
+include = ["*.f90", "*.F90"]
+
+[extra.fortitude.check]
+extend-exclude = ["app", "test"]
+line-length = 120
+ignore = ["MOD021", "C003", "C121"]

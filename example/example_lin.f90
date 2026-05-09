@@ -111,7 +111,8 @@ program example_lin
   ! applying weights of 1 (detault = 1/n)
   wt = 1.0_wp
 
-  ! call eof procedure with weights of 1 and opt=0 (covariance matrix) to makes it consistent with fmsl_pca and other commona pca implementations
+  ! call eof procedure with weights of 1 and opt=0 (covariance matrix) to
+  ! makes it consistent with fmsl_pca and other common pca implementations
   call fsml_eof(x1, nd, nv, pc=pc, eof=eof, ew=ew, opt=0, &
                  wt=wt, r2=r2, eof_scaled=eof_scaled)
   write(*,'(A)') "> empirical orthogonal function analysis"
