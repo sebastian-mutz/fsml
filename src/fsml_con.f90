@@ -15,7 +15,7 @@ module fsml_con
 !! Module for computational and mathematical constants.
 
   ! load modules
-  use :: fsml_ini
+  use :: fsml_ini, only: wp, i4
 
   ! basic options
   implicit none

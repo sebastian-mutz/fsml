@@ -16,10 +16,10 @@ module fsml_dst
 !! notation is used. Additional parameters are sometimes added to enhance functionality.
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_con
-  use :: fsml_utl
-  use :: fsml_err
+  use :: fsml_ini, only: wp, i4
+  use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
+  use :: fsml_con, only: c_eps, c_pi, c_bisect_i, c_conv_tol
+  use :: fsml_utl, only: f_utl_assign_nan, f_utl_is_nan
 
   ! basic options
   implicit none

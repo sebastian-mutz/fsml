@@ -15,9 +15,7 @@ module fsml_err
 !! Module for everything related to error handling.
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_utl
-  use :: fsml_con
+  use :: fsml_ini, only: std_e
 
   ! basic options
   implicit none

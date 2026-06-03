@@ -15,11 +15,11 @@ module fsml_lin
 !! Module for linear algebra procedures. Uses LAPACK routines (through stdlib).
 
   ! load fsml modules
-  use :: fsml_ini
-  use :: fsml_utl
-  use :: fsml_sts
-  use :: fsml_err
-  use :: fsml_con
+  use :: fsml_ini, only: wp, i4, eigh
+  use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
+  use :: fsml_utl, only: f_utl_assign_nan, f_utl_is_nan, s_utl_cholesky_solve
+  use :: fsml_sts, only: f_sts_mean_core, f_sts_std_core, f_sts_var_core, &
+                       & f_sts_cov_core
 
   ! basic options
   implicit none

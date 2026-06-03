@@ -15,8 +15,7 @@ module fsml_utl
 !! Utilities/helper module.
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_con
+  use :: fsml_ini, only: wp, i4, ieee_quiet_nan, ieee_is_nan, ieee_value, chol
 
   ! basic options
   implicit none

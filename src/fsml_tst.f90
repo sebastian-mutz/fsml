@@ -15,12 +15,12 @@ module fsml_tst
 !! Module for common statistical tests.
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_utl
-  use :: fsml_con
-  use :: fsml_err
-  use :: fsml_sts
-  use :: fsml_dst
+  use :: fsml_ini, only: wp, i4
+  use :: fsml_err, only: s_err_print, fsml_error
+  use :: fsml_utl, only: s_utl_rank, f_utl_assign_nan, f_utl_is_nan
+  use :: fsml_sts, only: f_sts_mean_core
+  use :: fsml_dst, only: f_dst_norm_cdf_core, f_dst_t_cdf_core, &
+                       & f_dst_chi2_cdf_core, f_dst_f_cdf_core
 
   ! basic options
   implicit none

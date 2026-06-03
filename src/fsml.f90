@@ -59,7 +59,7 @@ module fsml
   ! public data/io procedures
   public :: fsml_read_csv
   ! public derived types
-  public :: fsml_typ_df
+  !public :: fsml_typ_df
 
 ! ==== Interfaces
 ! Interfaces to offer simpler, consistent public procedure names

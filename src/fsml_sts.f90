@@ -16,10 +16,9 @@ module fsml_sts
 ! TODO: change ddof to ddf for consistency with df
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_con
-  use :: fsml_err
-  use :: fsml_utl
+  use :: fsml_ini, only: wp, i4
+  use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
+  use :: fsml_utl, only: s_utl_rank, s_utl_sort, f_utl_assign_nan, f_utl_is_nan
 
   ! basic options
   implicit none

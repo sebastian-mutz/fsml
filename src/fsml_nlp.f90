@@ -15,12 +15,12 @@ module fsml_nlp
 !! Module for nonlinbear procedures.
 
   ! load fsml modules
-  use :: fsml_ini
-  use :: fsml_utl
-  use :: fsml_err
-  use :: fsml_con
-  use :: fsml_sts
-  use :: fsml_lin
+  use :: fsml_ini, only: wp, i4
+  use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
+  use :: fsml_con, only: c_sentinel_i, c_conv_tol, c_kmeans_i
+  use :: fsml_utl, only: s_utl_sort, f_utl_assign_nan, f_utl_is_nan
+  use :: fsml_sts, only: f_sts_mean_core, f_sts_var_core, f_sts_cov_core
+  use :: fsml_lin, only: f_lin_mahalanobis_core
 
   ! basic options
   implicit none

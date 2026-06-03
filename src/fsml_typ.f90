@@ -15,19 +15,19 @@ module fsml_typ
 !! Module for kinds and derived types; sets working precision.
 
   ! load modules
-  use :: fsml_ini
+  use :: fsml_ini, only: wp, i4
 
   ! basic options
   implicit none
   private
 
   ! declare public
-  public :: fsml_typ_df
+  public :: t_df
 
 ! ==== Definitions
 
   ! simple dataframe
-  type :: fsml_typ_df
+  type :: t_df
      !! Derived type for dataframe.
      integer(i4)                    :: id        !! ID/index for data frame
      character(len=64), allocatable :: nm        !! dataframe name
@@ -36,6 +36,6 @@ module fsml_typ
      integer(i4)      , allocatable :: col_id(:) !! ID/key/index for columns
      character(len=64), allocatable :: row_nm(:) !! names/labels for rows
      character(len=64), allocatable :: col_nm(:) !! names/labels for columns
-  end type fsml_typ_df
+  end type t_df
 
 end module fsml_typ

@@ -18,7 +18,7 @@ program main
 
   implicit none
 
-  type(fsml_typ_df)  :: df
+  !type(fsml_typ_df)  :: df
   character(len=128) :: infile
   integer            :: i
   real(wp)           :: r

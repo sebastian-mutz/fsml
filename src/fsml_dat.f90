@@ -15,9 +15,9 @@ module fsml_dat
 !! Module for data handling, file i/o, parsing.
 
   ! load modules
-  use :: fsml_ini
-  use :: fsml_typ
-  use :: fsml_utl
+  use :: fsml_ini, only: wp, i4, std_o, std_rw
+  use :: fsml_typ, only: t_df
+  use :: fsml_utl, only: f_utl_c2r
 
   ! basic options
   implicit none
@@ -37,7 +37,7 @@ subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
 
 ! ==== Declarations
   character(len=*) , intent(in)           :: infile      !! read csv file
-  type(fsml_typ_df), intent(inout)        :: df          !! dataframe
+  type(t_df)       , intent(inout)        :: df          !! dataframe
   logical          , intent(in), optional :: labelcol    !! true if first column contains row labels
   logical          , intent(in), optional :: labelrow    !! true if first row contains column lavels
   character(len=1) , intent(in), optional :: delimiter   !! single char delimiter
