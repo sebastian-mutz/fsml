@@ -23,6 +23,9 @@ The following has changed since the last release (v0.1.0):
 
 - [ ] Implemented Lance-Williams algorithm for clustering; more efficient than re-computing Mahalanobis distance [contributed by @sebastian-mutz]
 
+### Other
+- [ ] Cleaned up *use* statements (all => only) [contributed by @sebastian-mutz]
+
 ## New Contributors
 - @loiseaujc/[Jean-Christophe Loiseau](https://loiseaujc.github.io/) (PRs).
 
