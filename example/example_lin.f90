@@ -233,6 +233,24 @@ program example_lin
   ! Standard errors:
   ! 0.23481   0.36909   0.49025
 
+! ---- Manhattan distance
+
+  dist = fsml_manhattan(x3(:,1), x3(:,2))
+  write(*,'(A)') "> Manhattan distance"
+  print*
+  write(*,'(A,F10.5)') "  Distance:  ", dist
+  print*
+  ! Distance:     7.00000
+
+! ---- Euclidean distance
+
+  dist = fsml_euclidean(x3(:,1), x3(:,2))
+  write(*,'(A)') "> Euclidean distance"
+  print*
+  write(*,'(A,F10.5)') "  Distance:  ", dist
+  print*
+  ! Distance:     3.60555
+
 ! ---- Mahalanobis distance
 
   ! call without passing covariance matrix
@@ -242,7 +260,6 @@ program example_lin
   write(*,'(A,F10.5)') "  Distance:  ", dist
   print*
   ! Distance:     1.41421
-
 
 
 

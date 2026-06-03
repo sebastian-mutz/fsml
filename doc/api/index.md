@@ -67,6 +67,8 @@ The following procedures are currently covered and have a public interface. The 
 | [Linear Discriminant Analysis (2-Class)](./lin.html#fsml_lda_2class)|
 | [Ordinary Least Squares Regression](./lin.html#fsml_ols)            |
 | [Ridge Regression](./lin.html#fsml_ridge)                           |
+| [Manhattan Distance](./lin.html#fsml_manhattan)                     |
+| [Euclidean Distance](./lin.html#fsml_euclidean)                     |
 | [Mahalanobis Distance](./lin.html#fsml_mahalanobis)                 |
 
 <br>

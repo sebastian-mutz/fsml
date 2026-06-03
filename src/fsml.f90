@@ -51,7 +51,8 @@ module fsml
   public :: fsml_signedrank_1sample, fsml_signedrank_paired, fsml_ranksum
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
-  public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge, fsml_mahalanobis
+  public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge
+  public :: fsml_manhattan, fsml_euclidean, fsml_mahalanobis
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures
@@ -366,7 +367,7 @@ end interface
 interface fsml_logistic_pdf
   !! Probability density function for logistic distribution.
   !! $$ f(x) = \frac{e^{-(x-\mu)/s}}{s\left(1 + e^{-(x-\mu)/s}\right)^2} $$
-  !! where \(\mu\) is the location and mean, and \(\s\) is the scale parameter.
+  !! where \(\mu\) is the location and mean, and \(s\) is the scale parameter.
   module procedure f_dst_logistic_pdf
 end interface
 
@@ -901,9 +902,33 @@ interface fsml_ridge
   module procedure s_lin_ridge
 end interface
 
+! Manhattan distance
+interface fsml_manhattan
+  !! Computes the Manhattan (L1) distance between two input vectors `x` and `y` of length \(n \).
+  !!
+  !! The Manhattan distance is defined as:
+  !!
+  !! $$
+  !! D_{L1}(x, y) = \sum_{i=1}^{n} |x_i - y_i|
+  !! $$
+  module procedure f_lin_manhattan
+end interface
+
+! Euclidean distance
+interface fsml_euclidean
+  !! Computes the Euclidean (L2) distance between two input vectors `x` and `y` of length \(n \).
+  !!
+  !! The Euclidean distance is defined as:
+  !!
+  !! $$
+  !! D_{L2}(x, y) = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}
+  !! $$
+  module procedure f_lin_euclidean
+end interface
+
 ! Mahalanobis distance
 interface fsml_mahalanobis
-  !! Computes the Mahalanobis distance between two input feature vectors `x` and `y`.
+  !! Computes the Mahalanobis distance between two input vectors `x` and `y`.
   !! If a covariance matrix `cov` is provided, it is used directly in the calculation.
   !! Otherwise, the procedure estimates the covariance matrix from the two-sample dataset
   !! formed by `x` and `y`. A Cholesky-based solver is used to perform the distance

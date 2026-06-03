@@ -27,6 +27,8 @@ module fsml_lin
 
   ! declare public procedures
   public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
+  public :: f_lin_manhattan, f_lin_manhattan_core
+  public :: f_lin_euclidean, f_lin_euclidean_core
   public :: f_lin_mahalanobis, f_lin_mahalanobis_core
 
 contains
@@ -642,6 +644,137 @@ end subroutine s_lin_ridge
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
+impure function f_lin_manhattan(x, y) result(dist)
+
+! ==== Description
+!! Impure wrapper function for `f_lin_manhattan_core`.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:) !! input vector 1
+  real(wp), intent(in) :: y(:) !! input vector 2
+  real(wp)             :: dist !! Manhattan distance
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if size is valid
+  if (size(x) .le. 1 .or. size(y) .le. 1) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(4))
+     dist = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute Euclidean distance
+
+  ! call pure function
+  dist = f_lin_manhattan_core(x, y)
+
+end function f_lin_manhattan
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_lin_manhattan_core(x, y) result(dist)
+
+! ==== Description
+!! Compute Manhattan (L1) distance between vectors x and y.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:) !! input vector 1
+  real(wp), intent(in) :: y(:) !! input vector 2
+  real(wp)             :: dist !! Manhattan distance
+  integer(i4)          :: m    !! vector length
+  integer(i4)          :: i
+
+! ==== Instructions
+
+  ! get dims
+  m = size(x)
+
+  ! calculate distance
+  dist = 0.0_wp
+  do i = 1, m
+     dist = dist + abs(x(i) - y(i))
+  enddo
+
+end function f_lin_manhattan_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+impure function f_lin_euclidean(x, y) result(dist)
+
+! ==== Description
+!! Impure wrapper function for `f_lin_euclidean_core`.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:) !! input vector 1
+  real(wp), intent(in) :: y(:) !! input vector 2
+  real(wp)             :: dist !! Euclidean distance
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if size is valid
+  if (size(x) .le. 1 .or. size(y) .le. 1) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(4))
+     dist = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute Euclidean distance
+
+  ! call pure function
+  dist = f_lin_euclidean_core(x, y)
+
+end function f_lin_euclidean
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_lin_euclidean_core(x, y) result(dist)
+
+! ==== Description
+!! Compute Euclidean (L2) distance between vectors x and y.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:)    !! input vector 1
+  real(wp), intent(in) :: y(:)    !! input vector 2
+  real(wp)             :: dist    !! Euclidean distance
+  real(wp)             :: diff    !! vector differences
+  integer(i4)          :: m       !! vector length
+  integer(i4)          :: i
+
+! ==== Instructions
+
+  ! get dims
+  m = size(x)
+
+  ! calculate distance
+  dist = 0.0_wp
+  do i = 1, m
+     diff = x(i) - y(i)
+     dist = dist + diff*diff
+  enddo
+  dist = sqrt(max(0.0_wp, dist))
+
+end function f_lin_euclidean_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 impure function f_lin_mahalanobis(x, y, cov) result(dist)
 
 ! ==== Description
@@ -716,7 +849,7 @@ pure function f_lin_mahalanobis_core(x, y, cov) result(dist)
   real(wp), allocatable          :: diff(:)    !! difference vector
   real(wp), allocatable          :: z(:)       !! solution vector
   real(wp), allocatable          :: xy(:,:)    !! 2-sample data matrix
-  integer(i4)                    :: m          !! number of features
+  integer(i4)                    :: m          !! vector length
   integer(i4)                    :: i, j
 
 ! ==== Instructions

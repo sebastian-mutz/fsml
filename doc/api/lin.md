@@ -427,6 +427,62 @@ Invalid argument values will result in the return of a sentinel value.
 
 
 <br>
+# Manhattan Distance
+
+## `fsml_manhattan`
+
+### Description
+Computes the Manhattan (L1) distance between two input feature vectors `x` and `y`.
+
+The Manhattan distance is defined as:
+
+$$
+D_{L1}(x, y) = \sum_{i=1}^{n} |x_i - y_i|
+$$
+
+where \(n \) is the length of the vectors. Vectors `x` and `y` must be the same length.
+
+### Syntax
+`dist =` [[fsml(module):fsml_manhattan(interface)]]`(x, y)`
+
+### Parameters
+`x`: A rank-1 array of type `real` with dimension `n`.
+
+`y`: A rank-1 array of type `real` with dimension `n`.
+
+### Returns
+`dist`: A scalar of type `real`.
+
+
+<br>
+# Euclidean Distance
+
+## `fsml_euclidean`
+
+### Description
+Computes the Euclidean (L2) distance between two input feature vectors `x` and `y`.
+
+The Euclidean distance is defined as:
+
+$$
+D_{L2}(x, y) = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}
+$$
+
+where \(n \) is the length of the vectors. Vectors `x` and `y` must be the same length.
+
+### Syntax
+`dist =` [[fsml(module):fsml_euclidean(interface)]]`(x, y)`
+
+### Parameters
+`x`: A rank-1 array of type `real` with dimension `n`.
+
+`y`: A rank-1 array of type `real` with dimension `n`.
+
+### Returns
+`dist`: A scalar of type `real`.
+
+
+<br>
 # Mahalanobis Distance
 
 ## `fsml_mahalanobis`
