@@ -24,7 +24,7 @@ The following has changed since the last release (v0.1.0):
 - [ ] Implemented Lance-Williams algorithm for clustering; more efficient than re-computing Mahalanobis distance [contributed by @sebastian-mutz]
 
 ### Other
-- [ ] Cleaned up *use* statements (all => only) [contributed by @sebastian-mutz]
+- [x] Cleaned up *use* statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
 
 ## New Contributors
 - @loiseaujc/[Jean-Christophe Loiseau](https://loiseaujc.github.io/) (PRs).
