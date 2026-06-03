@@ -11,6 +11,8 @@ The following has changed since the last release (v0.1.0):
 #### LIN module
 - [ ] Added Least Absolute Shrinkage and Selection Operator (LASSO) regression [contributed by @loiseaujc].
 - [ ] Added Canonical Correlation Analysis (CCA) [contributed by @loiseaujc].
+- [x] Added Manhattan Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
+- [x] Added Euclidean Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
 
 #### STS module
 - [x] Added function to compute quantile/percentile value (based on Hyndman & Fan (1996) type 7 index). ([562d9af](https://github.com/sebastian-mutz/fsml/commit/562d9af29dccff7c25de1766039ecd304ffc33c4), [a0c67ef](https://github.com/sebastian-mutz/fsml/commit/a0c67ef4b85275220860381db073199b33797884), [262f21b](https://github.com/sebastian-mutz/fsml/commit/262f21b31b47b06267d06a2e43899eed0cc4858b)) [contributed by @sebastian-mutz]
