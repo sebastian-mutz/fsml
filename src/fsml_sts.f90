@@ -13,7 +13,6 @@ module fsml_sts
 
 ! FORD
 !! Module for basic sample statistics.
-! TODO: change ddof to ddf for consistency with df
 
   ! load modules
   use :: fsml_ini, only: wp, i4
