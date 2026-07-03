@@ -28,7 +28,7 @@ The following has changed since the last release (v0.1.0):
 
 #### DAT module
 
-- [x] Moved IO procedures to new `IOP` module; moved data manipulation procedures from `UTL` to `DAT` (see notes on refactoring).
+- [x] Moved I/O procedures to new `IOP` module; moved data manipulation procedures from `UTL` to `DAT` (see notes on refactoring).
 
 #### IOP module
 
@@ -44,6 +44,7 @@ The following has changed since the last release (v0.1.0):
     - Renamed `s_utl_sort` => `s_dat_sort` and `s_utl_rank` => `s_dat_rank` and moved to `DAT` module. References and `use` statements are updated throughout the library. 
     - `DAT` module now reserved for data manipulation and processing (e.g., subsampling, filtering, sorting). `s_dat_sort` and `s_dat_rank` moved to this module.
     - I/O procedure renamed `s_dat_read_csv` => `s_iop_read_csv` and moved from `DAT` to new `IOP` module for input, output, parsing.
+    - Updated folder structure; folders for definitions/ini, utilities, and core modules. 
 - [x] Cleaned up `use` statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
 - [x] Added basic distance tests ([3760845](https://github.com/sebastian-mutz/fsml/commit/3760845cca1a1c00e02c36adb3a8a1bcaaa76895)) [contributed by @sebastian-mutz]
 
