@@ -18,9 +18,9 @@ module fsml
   ! load modules
   use :: fsml_ini
   use :: fsml_typ
-  use :: fsml_dat
+  use :: fsml_iop
   use :: fsml_utl
-  use :: fsml_mnp
+  use :: fsml_dat
   use :: fsml_sts
   use :: fsml_dst
   use :: fsml_tst
@@ -1045,7 +1045,7 @@ interface fsml_rank
   !! Ranks all samples such that the smallest value obtains rank 1
   !! and the largest rank n. Handles tied ranks and assigns average
   !! rank to tied elements within one group of tied elements.
-  module procedure s_mnp_rank
+  module procedure s_dat_rank
 end interface
 
 ! ==================================================================== !
@@ -1055,7 +1055,7 @@ end interface
 ! read csv file into dataframe
 interface fsml_read_csv
   !! Read CSV file directly into dataframe.
-  module procedure s_dat_read_csv
+  module procedure s_iop_read_csv
 end interface
 
 end module fsml

@@ -19,7 +19,7 @@ module fsml_nlp
   use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
   use :: fsml_con, only: c_sentinel_i, c_conv_tol, c_kmeans_i
   use :: fsml_utl, only: f_utl_assign_nan, f_utl_is_nan
-  use :: fsml_mnp, only: s_mnp_sort
+  use :: fsml_dat, only: s_dat_sort
   use :: fsml_sts, only: f_sts_mean_core, f_sts_var_core, f_sts_cov_core
   use :: fsml_lin, only: f_lin_mahalanobis_core
 
@@ -235,7 +235,7 @@ pure subroutine s_nlp_hclust_core(x, nd, nv, nc, gm, cm, cl, cc, cov, sigma)
         re_row(k) = j
      endif
   enddo
-  call s_mnp_sort(pre_vec, nc, 2, re_row, post_vec, cidx)
+  call s_dat_sort(pre_vec, nc, 2, re_row, post_vec, cidx)
 
   ! ---- assign centroids and memberships
   do i = 1, nc
@@ -478,7 +478,7 @@ pure subroutine s_nlp_kmeans_core(x, nd, nv, nc, cm_in, gm, &
      pre_vec(i) = cm(1, i)
      idx_in(i)     = i
   enddo
-  call s_mnp_sort(pre_vec, nc, 2, idx_in, post_vec, idx_out)
+  call s_dat_sort(pre_vec, nc, 2, idx_in, post_vec, idx_out)
 
   tmp_cm = cm
   do i = 1, nc

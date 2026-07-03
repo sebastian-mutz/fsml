@@ -5,223 +5,172 @@ module fsml_dat
 ! |                                                                    |
 ! | about                                                              |
 ! | -----                                                              |
-! | Module for data handling (processing), file i/o, parsing.          |
+! | Module for data manipulation (e.g., sub-sampling, filters).        |
 ! |                                                                    |
 ! | license : MIT                                                      |
 ! | author  : Sebastian G. Mutz (sebastian@sebastianmutz.com)          |
 ! |--------------------------------------------------------------------|
 
 ! FORD
-!! Module for data handling, file i/o, parsing.
+!! Module for basic sample statistics.
 
   ! load modules
-  use :: fsml_ini, only: wp, i4, std_o, std_rw
-  use :: fsml_typ, only: t_df
-  use :: fsml_utl, only: f_utl_c2r
+  use :: fsml_ini, only: wp, i4, ieee_quiet_nan, ieee_is_nan, ieee_value
+  use :: fsml_utl, only: f_utl_assign_nan
 
   ! basic options
   implicit none
   private
 
   ! declare public procedures
-  public :: s_dat_read_csv
+  ! public array operations
+  public :: s_dat_rank, s_dat_sort
 
 contains
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-subroutine s_dat_read_csv(infile, df, labelcol, labelrow, delimiter)
+pure subroutine s_dat_rank(x, ranks)
 
 ! ==== Description
-!! Read CSV file directly into dataframe.
+!! Ranks all samples such that the smallest value obtains rank 1
+!! and the largest rank n. Handles tied ranks and assigns average
+!! rank to tied elements within one group of tied elements.
 
 ! ==== Declarations
-  character(len=*) , intent(in)           :: infile      !! read csv file
-  type(t_df)       , intent(inout)        :: df          !! dataframe
-  logical          , intent(in), optional :: labelcol    !! true if first column contains row labels
-  logical          , intent(in), optional :: labelrow    !! true if first row contains column lavels
-  character(len=1) , intent(in), optional :: delimiter   !! single char delimiter
-  logical                                 :: w_labelcol  !! final value of labelcol
-  logical                                 :: w_labelrow  !! final value of labeleow
-  character(len=1)                        :: w_delimiter !! final value of delimiter
-  character(len=1000)                     :: line        !! row will be read into line string
-  character(len=64), allocatable          :: cells(:)    !! cells in row
-  integer(i4)                             :: nrow        !! number of rows
-  integer(i4)                             :: ncol        !! number of columns
-  integer(i4)                             :: ios         !! io status
-  integer(i4)                             :: i, j, k, p
+  real(wp)                , intent(in)  :: x(:)     !! x array
+  real(wp)   , allocatable, intent(out) :: ranks(:) !! ranks of x
+  integer(i4), allocatable              :: idx(:)   !! index vector to sort x
+  real(wp)                              :: rank_sum !! sum of tied ranks
+  integer(i4)                           :: cnt      !! counter
+  integer(i4)                           :: n        !! size of x
+  integer(i4)                           :: i, j, k  !! loop control & flexible
 
 ! ==== Instructions
 
-  write(std_o, *)
-  write(std_o, '(a, a)') "Reading file: ", trim(infile)
+  ! allocate
+  n = size(x)
+  allocate(idx(n))
+  allocate(ranks(n))
 
-! ---- handle optional arguments
+! ---- create index vector
 
-  ! pass labelcol if present, otherwise set to true
-  w_labelcol = .false.
-  if (present(labelcol)) w_labelcol = labelcol
-
-  ! pass labelrow if present, otherwise set to true
-  w_labelrow = .false.
-  if (present(labelrow)) w_labelrow = labelrow
-
-  ! pass delimiter if present, otherwise set to comma
-  w_delimiter = ","
-  if (present(delimiter)) w_delimiter = delimiter
-
-! --- get dims
-
-  ! open existing file (check if there, stop in case of error)
-  open(unit=std_rw, file=infile, status="old", action="read", iostat=ios)
-  if (ios .ne. 0) then
-    write(std_o,*) "Error opening file:", infile
-    stop
-  endif
-
-  ! get number of rows
-  nrow = 0
-  do
-    read(std_rw, '(a)', iostat=ios) line
-    if (ios .ne. 0) exit
-    if (len_trim(line) .gt. 0) nrow = nrow + 1
+  ! create index vector
+  do i = 1, n
+     idx(i) = i
   enddo
 
-  ! get number of columns
-  rewind(std_rw)
-  read(std_rw, '(a)') line
-  ncol = 1
-  do i = 1, len_trim(line)
-     if (line(i:i) .eq. w_delimiter) ncol = ncol + 1
-  enddo
-
-! --- allocate
-
-  ! number of actual cells per row in file
-  allocate(cells(ncol))
-
-  ! update row number for data if labelrow
-  i = merge(nrow - 1, nrow, w_labelrow)
-
-  ! update column number for data if labelcol
-  j = merge(ncol - 1, ncol, w_labelcol)
-
-  ! column and row ids and names
-  allocate(df%row_id(i))
-  allocate(df%row_nm(i))
-  allocate(df%col_id(j))
-  allocate(df%col_nm(j))
-
-  ! data matrix dimensions
-  allocate(df%data(i,j))
-
-  ! default values
-  df%id = 0
-  df%nm = "no_name"
-  df%row_nm(:) = "no_name"
-  df%col_nm(:) = "no_name"
-  df%data(:,:) = 0.0_wp
-  do k = 1, i
-     df%row_id(k) = k
-  enddo
-  do k = 1, j
-     df%col_id(k) = k
-  enddo
-
-! ---- read data into dataframe
-
-  rewind(std_rw)
-
-  ! read column names if there is a row of labels
-  if (w_labelrow) then
-     ! read entire line
-     read(std_rw, '(a)') line
-     ! split line up into cells
-     call split_line(trim(line), w_delimiter, ncol, cells)
-     ! pass cell values to dataframe
-     if (w_labelcol) then
-        df%col_nm(:) = cells(2:ncol)
-     else
-        df%col_nm(:) = cells(:)
-     endif
-  endif
-
-  ! determine starting row for data
-  k = merge(2, 1, w_labelrow)
-
-  ! determine index correction for data
-  p = merge(1, 0, w_labelrow)
-
-  if (w_labelcol) then
-     do i = k, nrow
-        ! read entire line
-        read(std_rw, '(a)') line
-        ! split line up into cells
-        call split_line(trim(line), w_delimiter, ncol, cells)
-        ! pass cell values label column
-        df%row_nm(i-p) = cells(1)
-        ! pass cell values to data matrix
-        do j = 2, ncol
-           df%data(i-p,j-1) = f_utl_c2r(cells(j))
-        enddo
+  ! sort index based on x
+  do i = 2, n
+     do j = i, 2, -1
+        if (x(idx(j)) .lt. x(idx(j-1))) then
+           k = idx(j)
+           idx(j) = idx(j-1)
+           idx(j-1) = k
+        else
+           exit
+        endif
      enddo
-  else
-     do i = k, nrow
-        ! read entire line
-        read(std_rw, '(a)') line
-        ! split line up into cells
-        call split_line(trim(line), w_delimiter, ncol, cells)
-        ! pass cell values to data matrix
-        do j = 1, ncol
-           df%data(i-p,j) = f_utl_c2r(cells(j))
-        enddo
-     enddo
-  endif
+  enddo
 
-! ---- finish
+! ---- get rank sums
 
-  ! close file
-  close(std_rw)
+  ! assign ranks (with tie averaging)
+  i = 1
+  do while (i .le. n)
 
-  ! deallocate
-  deallocate(cells)
+     ! initialise rank sum and reset counter for tie group
+     rank_sum = real(i, kind=wp)
+     cnt = 1
 
-! ---- conatined procedures
-  contains
-
-  ! --------------------------------------------------------------- !
-  subroutine split_line(line, delimiter, ncol, cells)
-
-     ! ==== Description
-     !! Splits passed line up into cells by delimiter.
-
-     ! ==== Declarations
-     character(len=*) , intent(in)    :: line        !! row read into line string
-     character(len=1) , intent(in)    :: delimiter   !! single char delimiter
-     integer(i4)      , intent(in)    :: ncol        !! number of columns
-     character(len=64), intent(inout) :: cells(ncol) !! cells between delimiter (in line)
-     integer(i4)                      :: i, j, k, p
-
-     ! ==== Instructions
-     ! reset initial cell position (p) and column number (j)
-     p = 1
-     j = 1
-     ! go through line, left to right
-     do k = p, len_trim(line)
-        if (line(k:k) .eq. delimiter) then
-           ! pass data
-           cells(j) = line(p:k-1)
-           ! update initial cell position and column number
-           p = k + 1
-           j = j + 1
-           ! if last column, pass remaining data
-           if (j .eq. ncol) cells(j) = line(p:len_trim(line))
+     ! check for ties
+     do j = i + 1, n
+        if (x(idx(j)) .eq. x(idx(i))) then
+           rank_sum = rank_sum + real(j, kind=wp)
+           cnt = cnt + 1
+        else
+           exit
         endif
      enddo
 
-  end subroutine split_line
+     ! average rank for tie group
+     rank_sum = rank_sum / real(cnt, kind=wp)
 
-end subroutine s_dat_read_csv
+     ! assign average rank to all tied elements
+     do k = i, i + cnt - 1
+        ranks(idx(k)) = rank_sum
+     enddo
+
+     ! advance to next group
+     i = i + cnt
+  enddo
+
+  ! deallocate
+  deallocate(idx)
+
+end subroutine s_dat_rank
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure subroutine s_dat_sort(a_in, n, mode, idx_in, a_out, idx_out)
+
+! ==== Description
+!! Sort real array in ascending (mode=1) or descending (mode=2) order.
+!! Preserves the input array. Outputs sorted array and index mapping.
+
+! ==== Declarations
+  integer(i4), intent(in)    :: n          !! number of elements
+  integer(i4), intent(in)    :: mode       !! 1=ascending, 2=descending
+  real(wp)   , intent(in)    :: a_in(n)    !! input array (unchanged)
+  integer(i4), intent(in)    :: idx_in(n)  !! initial index mapping
+  real(wp)   , intent(out)   :: a_out(n)   !! sorted output array
+  integer(i4), intent(out)   :: idx_out(n) !! updated index mapping
+  real(wp)                   :: tmp_a      !! swap buffer for a
+  integer(i4)                :: tmp_idx    !! swap buffer for idx
+  integer(i4)                :: i, j
+
+! ==== Instructions
+
+  ! make working copies
+  a_out   = a_in
+  idx_out = idx_in
+
+  select case (mode)
+  ! ascending
+  case (1)
+     do i = 1, n - 1
+        do j = i + 1, n
+           if (a_out(j) .lt. a_out(i)) then
+              tmp_a      = a_out(i)
+              a_out(i)   = a_out(j)
+              a_out(j)   = tmp_a
+              tmp_idx    = idx_out(i)
+              idx_out(i) = idx_out(j)
+              idx_out(j) = tmp_idx
+           endif
+        enddo
+     enddo
+  ! descending
+  case (2)
+     do i = 1, n - 1
+        do j = i + 1, n
+           if (a_out(j) .gt. a_out(i)) then
+              tmp_a      = a_out(i)
+              a_out(i)   = a_out(j)
+              a_out(j)   = tmp_a
+              tmp_idx    = idx_out(i)
+              idx_out(i) = idx_out(j)
+              idx_out(j) = tmp_idx
+           endif
+        enddo
+     enddo
+  ! invalid option returns sentinel
+  case default
+     a_out = f_utl_assign_nan()
+  end select
+
+end subroutine s_dat_sort
 
 
 

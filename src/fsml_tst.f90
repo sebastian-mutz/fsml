@@ -18,7 +18,7 @@ module fsml_tst
   use :: fsml_ini, only: wp, i4
   use :: fsml_err, only: s_err_print, fsml_error
   use :: fsml_utl, only: f_utl_assign_nan, f_utl_is_nan
-  use :: fsml_mnp, only: s_mnp_rank
+  use :: fsml_dat, only: s_dat_rank
   use :: fsml_sts, only: f_sts_mean_core
   use :: fsml_dst, only: f_dst_norm_cdf_core, f_dst_t_cdf_core, &
                        & f_dst_chi2_cdf_core, f_dst_f_cdf_core
@@ -654,7 +654,7 @@ pure subroutine s_tst_signedrank_1s_core(x, mu0, w, p, h1)
   enddo
 
   ! rank non-zero differences
-  call s_mnp_rank(dm, ranks)
+  call s_dat_rank(dm, ranks)
 
   ! compute rank sums
   rpos = 0.0_wp
@@ -887,7 +887,7 @@ pure subroutine s_tst_ranksum_core(x1, x2, u, p, h1)
   x(n1+1:) = x2
 
   ! assigns ranks, use stdlib procedure
-  call s_mnp_rank(x, ranks)
+  call s_dat_rank(x, ranks)
 
   ! sum ranks of sample x
   rx1 = sum( ranks(1:n1) )
@@ -1002,7 +1002,7 @@ pure subroutine s_tst_kruskalwallis_core(x, h, df, p)
   x_flat = reshape(x, [n])
 
   ! compute ranks
-  call s_mnp_rank(x_flat, ranks)
+  call s_dat_rank(x_flat, ranks)
 
   ! allocate and compute rank sums for each group
   r_sum = 0.0_wp

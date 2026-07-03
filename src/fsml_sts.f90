@@ -18,7 +18,7 @@ module fsml_sts
   use :: fsml_ini, only: wp, i4
   use :: fsml_err, only: s_err_print, s_err_warn, fsml_error, fsml_warning
   use :: fsml_utl, only: f_utl_assign_nan, f_utl_is_nan
-  use :: fsml_mnp, only: s_mnp_rank, s_mnp_sort
+  use :: fsml_dat, only: s_dat_rank, s_dat_sort
 
   ! basic options
   implicit none
@@ -121,7 +121,7 @@ end function f_sts_median
 pure function f_sts_median_core(x) result(median)
 
 ! ==== Description
-!! Computes median using s_mnp_rank for tie-aware ranking
+!! Computes median using s_dat_rank for tie-aware ranking
 
 ! ==== Declarations
   real(wp), intent(in)  :: x(:)   !! x vector (assumed size array)
@@ -136,7 +136,7 @@ pure function f_sts_median_core(x) result(median)
   n = size(x)
 
   ! get ranks for x; rank arrays allocated in ranking
-  call s_mnp_rank(x, rx)
+  call s_dat_rank(x, rx)
 
   if (mod(n, 2) .eq. 1) then
      ! If n is odd, the middle rank is (n+1)/2
@@ -540,10 +540,10 @@ pure function f_sts_scc_core(x, y) result(corr)
 
 ! ==== Instructions
 
-  ! rank both arrays (uses your existing s_mnp_rank)
+  ! rank both arrays (uses your existing s_dat_rank)
   ! rank arrays allocated in ranking
-  call s_mnp_rank(x, rx)
-  call s_mnp_rank(y, ry)
+  call s_dat_rank(x, rx)
+  call s_dat_rank(y, ry)
 
   ! Pearson correlation on ranks
   corr = f_sts_pcc_core(rx, ry)
@@ -636,7 +636,7 @@ pure function f_sts_quantile_core(x, p) result(q)
   enddo
 
   ! sort in ascending order
-  call s_mnp_sort(x, n, 1, ii, x_w, io)
+  call s_dat_sort(x, n, 1, ii, x_w, io)
 
   ! Hyndman-Fan type 7 index
   h = ( real(n, kind=wp) - 1.0_wp ) * p + 1.0_wp
