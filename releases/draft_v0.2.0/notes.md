@@ -12,6 +12,7 @@ The following has changed since the last release (v0.1.0):
 - [ ] Added Least Absolute Shrinkage and Selection Operator (LASSO) regression [contributed by @loiseaujc].
 - [ ] Added Canonical Correlation Analysis (CCA) [contributed by @loiseaujc].
 - [x] Added Manhattan Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
+- [x] Added Chebychev Distance ([d5b3455](https://github.com/sebastian-mutz/fsml/commit/d5b3455a2dec6ee4511aed2ea22d68f59c4c30f8)) [contributed by @sebastian-mutz].
 - [x] Added Euclidean Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
 
 #### STS module

@@ -43,6 +43,18 @@ program test_lin
   status = test_ridge(tol)
   call handle_status(status)
 
+  print*, "> lin: testing manhattan distance"
+  status = test_manhattan(tol)
+  call handle_status(status)
+
+  print*, "> lin: testing chebychev distance"
+  status = test_chebyshev(tol)
+  call handle_status(status)
+
+  print*, "> lin: testing euclidean distance"
+  status = test_euclidean(tol)
+  call handle_status(status)
+
 contains
 
 
@@ -375,6 +387,118 @@ function test_ridge(tol) result(status)
   enddo
 
 end function test_ridge
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_manhattan(tol) result(status)
+
+! ==== Description
+!! Tests for Manhattan distance.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  integer(i4)            :: i
+  integer(i4), parameter :: nd = 5, nt = 2
+  real(wp), parameter :: x(nd,nt) = reshape([ &
+                                   & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! test 1
+                                   & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+  real(wp), parameter :: y(nd,nt) = reshape([ &
+                                   & 5.0_wp, 2.0_wp, 1.0_wp, 5.0_wp, 4.0_wp, & ! test 1
+                                   & 7.0_wp, 1.0_wp, 6.0_wp, 7.0_wp, 3.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+
+  ! Manhattan Distance
+  real(wp), parameter :: ans(nt) = [8.0_wp, 12.0_wp]
+
+! ==== Instructions
+
+  status = .true.
+  do i = 1, nt
+    if (abs( ans(i) - fsml_manhattan(x(:,i), y(:,i)) ) .gt. tol) &
+     & status = .false.
+  enddo
+
+end function test_manhattan
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_chebyshev(tol) result(status)
+
+! ==== Description
+!! Tests for Chebychev distance.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  integer(i4)            :: i
+  integer(i4), parameter :: nd = 5, nt = 2
+  real(wp), parameter :: x(nd,nt) = reshape([ &
+                                   & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! test 1
+                                   & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+  real(wp), parameter :: y(nd,nt) = reshape([ &
+                                   & 5.0_wp, 2.0_wp, 1.0_wp, 5.0_wp, 4.0_wp, & ! test 1
+                                   & 7.0_wp, 1.0_wp, 6.0_wp, 7.0_wp, 3.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+
+  ! Chebychev Distance
+  real(wp), parameter :: ans(nt) = [4.0_wp, 5.0_wp]
+
+! ==== Instructions
+
+  status = .true.
+  do i = 1, nt
+    if (abs( ans(i) - fsml_chebyshev(x(:,i), y(:,i)) ) .gt. tol) &
+     & status = .false.
+  enddo
+
+end function test_chebyshev
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+function test_euclidean(tol) result(status)
+
+! ==== Description
+!! Tests for Euclidean distance.
+
+! ==== Declarations
+  real(wp), intent(in)   :: tol        !! deviation tolerance
+  logical                :: status     !! status (test passed = true)
+  integer(i4)            :: i
+  integer(i4), parameter :: nd = 5, nt = 2
+  real(wp), parameter :: x(nd,nt) = reshape([ &
+                                   & 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, & ! test 1
+                                   & 2.0_wp, 1.0_wp, 4.0_wp, 3.0_wp, 2.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+  real(wp), parameter :: y(nd,nt) = reshape([ &
+                                   & 5.0_wp, 2.0_wp, 1.0_wp, 5.0_wp, 4.0_wp, & ! test 1
+                                   & 7.0_wp, 1.0_wp, 6.0_wp, 7.0_wp, 3.0_wp  & ! test 2
+                                   & ], shape=[nd,nt])
+
+  ! Euclidean Distance
+  real(wp), parameter :: ans(nt) = [4.6904157598234297_wp, 6.7823299831252681_wp]
+
+! ==== Instructions
+
+  status = .true.
+  do i = 1, nt
+    if (abs( ans(i) - fsml_euclidean(x(:,i), y(:,i)) ) .gt. tol) &
+     & status = .false.
+  enddo
+
+end function test_euclidean
+
 
 
 end program
