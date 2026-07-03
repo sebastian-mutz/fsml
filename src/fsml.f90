@@ -19,12 +19,14 @@ module fsml
   use :: fsml_ini
   use :: fsml_typ
   use :: fsml_dat
+  use :: fsml_utl
+  use :: fsml_mnp
   use :: fsml_sts
   use :: fsml_dst
   use :: fsml_tst
   use :: fsml_lin
   use :: fsml_nlp
-  use :: fsml_utl
+
 
   ! basic options
   implicit none
@@ -1043,7 +1045,7 @@ interface fsml_rank
   !! Ranks all samples such that the smallest value obtains rank 1
   !! and the largest rank n. Handles tied ranks and assigns average
   !! rank to tied elements within one group of tied elements.
-  module procedure s_utl_rank
+  module procedure s_mnp_rank
 end interface
 
 ! ==================================================================== !
