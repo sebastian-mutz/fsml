@@ -12,7 +12,7 @@ The following has changed since the last release (v0.1.0):
 - [ ] Added Least Absolute Shrinkage and Selection Operator (LASSO) regression [contributed by @loiseaujc].
 - [ ] Added Canonical Correlation Analysis (CCA) [contributed by @loiseaujc].
 - [x] Added Manhattan Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
-- [x] Added Chebychev Distance ([d5b3455](https://github.com/sebastian-mutz/fsml/commit/d5b3455a2dec6ee4511aed2ea22d68f59c4c30f8)) [contributed by @sebastian-mutz].
+- [x] Added Chebyshev Distance ([d5b3455](https://github.com/sebastian-mutz/fsml/commit/d5b3455a2dec6ee4511aed2ea22d68f59c4c30f8)) [contributed by @sebastian-mutz].
 - [x] Added Euclidean Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
 
 #### STS module
@@ -28,6 +28,7 @@ The following has changed since the last release (v0.1.0):
 
 ### Other
 - [x] Cleaned up *use* statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
+- [x] Added basic distance tests ([3760845](https://github.com/sebastian-mutz/fsml/commit/3760845cca1a1c00e02c36adb3a8a1bcaaa76895)) [contributed by @sebastian-mutz]
 
 ## New Contributors
 - @loiseaujc/[Jean-Christophe Loiseau](https://loiseaujc.github.io/) (PRs).
