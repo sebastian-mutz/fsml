@@ -40,7 +40,7 @@ The following has changed since the last release (v0.1.0):
 
 
 ### Other
-- [x] **Refactoring** ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9) and [3fb7008](https://github.com/sebastian-mutz/fsml/commit/3fb7008eefc0b7122e59cbb59a0b5f0bb7d4c23b)) [contributed by @sebastian-mutz]
+- [x] **Refactoring** ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9), [3fb7008](https://github.com/sebastian-mutz/fsml/commit/3fb7008eefc0b7122e59cbb59a0b5f0bb7d4c23b), and [9dd4d1b](https://github.com/sebastian-mutz/fsml/commit/9dd4d1b627517e25be937b18848d93c846e9432d)) [contributed by @sebastian-mutz]
     - Renamed `s_utl_sort` => `s_dat_sort` and `s_utl_rank` => `s_dat_rank` and moved to `DAT` module. References and `use` statements are updated throughout the library. 
     - `DAT` module now reserved for data manipulation and processing (e.g., subsampling, filtering, sorting). `s_dat_sort` and `s_dat_rank` moved to this module.
     - I/O procedure renamed `s_dat_read_csv` => `s_iop_read_csv` and moved from `DAT` to new `IOP` module for input, output, parsing.
@@ -57,5 +57,6 @@ The following has changed since the last release (v0.1.0):
 - [ ] Blog post: This blog post is a brief development update, providing more context and background. [contributed by @sebastian-mutz]
 
 ## Application Spotlight
-- @Khadar146/Khadar Dahir Abdisalan used FSML's distribution functions to statistically model future droughts in Somaliland.
+- @Khadar146/Khadar Dahir Abdisalan used FSML's distribution functions to statistically model future droughts in Somaliland. <p align="left">  <img src="khadar.png" alt="Shifting SPEI index under sceneario SSP5-8.5." width="300"> </p>
+
 
