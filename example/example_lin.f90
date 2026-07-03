@@ -242,6 +242,16 @@ program example_lin
   print*
   ! Distance:     7.00000
 
+! ---- Chebyshev distance
+
+  dist = fsml_chebyshev(x3(:,1), x3(:,2))
+  print*, x3(:,1), x3(:,2)
+  write(*,'(A)') "> Chebyshev distance"
+  print*
+  write(*,'(A,F10.5)') "  Distance:  ", dist
+  print*
+  ! Distance:     3.00000
+
 ! ---- Euclidean distance
 
   dist = fsml_euclidean(x3(:,1), x3(:,2))

@@ -455,6 +455,35 @@ where \(n \) is the length of the vectors. Vectors `x` and `y` must be the same 
 
 
 <br>
+# Chebyshev Distance
+
+## `fsml_chebyshev`
+
+### Description
+Computes the Chebyshev (L∞) distance (or "chessboard distance") between two 
+input feature vectors `x` and `y`.
+
+The Chebyshev distance is defined as:
+
+$$
+D_{L\infty}(x, y) = \max_{1<i<n} \left| x_i - y_i \right|
+$$
+
+where \(n \) is the length of the vectors. Vectors `x` and `y` must be the same length.
+
+### Syntax
+`dist =` [[fsml(module):fsml_chebyshev(interface)]]`(x, y)`
+
+### Parameters
+`x`: A rank-1 array of type `real` with dimension `n`.
+
+`y`: A rank-1 array of type `real` with dimension `n`.
+
+### Returns
+`dist`: A scalar of type `real`.
+
+
+<br>
 # Euclidean Distance
 
 ## `fsml_euclidean`

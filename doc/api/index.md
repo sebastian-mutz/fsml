@@ -68,6 +68,7 @@ The following procedures are currently covered and have a public interface. The 
 | [Ordinary Least Squares Regression](./lin.html#fsml_ols)            |
 | [Ridge Regression](./lin.html#fsml_ridge)                           |
 | [Manhattan Distance](./lin.html#fsml_manhattan)                     |
+| [Chebyshev Distance](./lin.html#fsml_chebyshev)                     |
 | [Euclidean Distance](./lin.html#fsml_euclidean)                     |
 | [Mahalanobis Distance](./lin.html#fsml_mahalanobis)                 |
 

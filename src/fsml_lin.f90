@@ -27,6 +27,7 @@ module fsml_lin
 
   ! declare public procedures
   public :: s_lin_eof, s_lin_pca, s_lin_lda_2c, s_lin_ols, s_lin_ridge
+  public :: f_lin_chebyshev, f_lin_chebyshev_core
   public :: f_lin_manhattan, f_lin_manhattan_core
   public :: f_lin_euclidean, f_lin_euclidean_core
   public :: f_lin_mahalanobis, f_lin_mahalanobis_core
@@ -708,6 +709,72 @@ end function f_lin_manhattan_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
+function f_lin_chebyshev(x, y) result(dist)
+
+! ==== Description
+!! Impure wrapper function for `f_lin_chebyshev_core`.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:) !! input vector 1
+  real(wp), intent(in) :: y(:) !! input vector 2
+  real(wp)             :: dist !! Chebyshev distance
+
+! ==== Instructions
+
+! ---- handle input
+
+  ! check if size is valid
+  if (size(x) .le. 1 .or. size(y) .le. 1) then
+     ! write error message and assign NaN value if invalid
+     call s_err_print(fsml_error(4))
+     dist = f_utl_assign_nan()
+     return
+  endif
+
+! ---- compute Euclidean distance
+
+  ! call pure function
+  dist = f_lin_chebyshev_core(x, y)
+
+end function f_lin_chebyshev
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+pure function f_lin_chebyshev_core(x, y) result(dist)
+
+! ==== Description
+!! Compute the Chebyshev (L∞) distance between vectors x and y.
+
+! ==== Declarations
+  real(wp), intent(in) :: x(:) !! input vector 1
+  real(wp), intent(in) :: y(:) !! input vector 2
+  real(wp)             :: dist !! Chebyshev distance
+  real(wp)             :: diff !! difference
+  integer(i4)          :: m    !! vector length
+  integer(i4)          :: i
+
+! ==== Instructions
+
+  ! get dims
+  m = size(x)
+
+  ! calculate distance
+  dist = 0.0_wp
+  do i = 1, m
+     diff = abs(x(i) - y(i))
+     dist = max(dist, diff)
+  enddo
+
+end function f_lin_chebyshev_core
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
 impure function f_lin_euclidean(x, y) result(dist)
 
 ! ==== Description
@@ -751,7 +818,7 @@ pure function f_lin_euclidean_core(x, y) result(dist)
   real(wp), intent(in) :: x(:)    !! input vector 1
   real(wp), intent(in) :: y(:)    !! input vector 2
   real(wp)             :: dist    !! Euclidean distance
-  real(wp)             :: diff    !! vector differences
+  real(wp)             :: diff    !! difference
   integer(i4)          :: m       !! vector length
   integer(i4)          :: i
 

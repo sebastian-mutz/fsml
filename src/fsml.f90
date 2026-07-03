@@ -52,7 +52,7 @@ module fsml
   public :: fsml_kruskalwallis
   ! public linear (algebra) procedures
   public :: fsml_eof, fsml_pca, fsml_lda_2class, fsml_ols, fsml_ridge
-  public :: fsml_manhattan, fsml_euclidean, fsml_mahalanobis
+  public :: fsml_manhattan, fsml_chebyshev, fsml_euclidean, fsml_mahalanobis
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures
@@ -912,6 +912,17 @@ interface fsml_manhattan
   !! D_{L1}(x, y) = \sum_{i=1}^{n} |x_i - y_i|
   !! $$
   module procedure f_lin_manhattan
+end interface
+
+! Chebyshev distance
+interface fsml_chebyshev
+  !! Computes the Chebyshev (L∞) distance between two input vectors `x` and `y` of length \(n \).
+  !!
+  !! The Chebyshev distance is defined ass :
+  !! $$
+  !! D_{L\infty}(x, y) = \max_{1<i<n} \left| x_i - y_i \right|
+  !! $$
+  module procedure f_lin_chebyshev
 end interface
 
 ! Euclidean distance
