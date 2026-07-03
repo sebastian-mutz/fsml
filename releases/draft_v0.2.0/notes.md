@@ -26,13 +26,26 @@ The following has changed since the last release (v0.1.0):
 
 - [ ] Implemented Lance-Williams algorithm for clustering; more efficient than re-computing Mahalanobis distance [contributed by @sebastian-mutz]
 
+#### DAT module
+
+- [x] Moved IO procedures to new `IOP` module; moved data manipulation procedures from `UTL` to `DAT` (see notes on refactoring).
+
+#### IOP module
+
+- [x] New module for input, output, parsing. Moved I/O procedures from `DAT` to `IOP` (see notes on refactoring).
+
+#### UTL module
+
+- [x] Moved data manipulation procedures from `UTL` to `DAT` (see notes on refactoring).
+
+
 ### Other
+- [x] **Refactoring** ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9) and [3fb7008](https://github.com/sebastian-mutz/fsml/commit/3fb7008eefc0b7122e59cbb59a0b5f0bb7d4c23b)) [contributed by @sebastian-mutz]
+    - Renamed `s_utl_sort` => `s_dat_sort` and `s_utl_rank` => `s_dat_rank` and moved to `DAT` module. References and `use` statements are updated throughout the library. 
+    - `DAT` module now reserved for data manipulation and processing (e.g., subsampling, filtering, sorting). `s_dat_sort` and `s_dat_rank` moved to this module.
+    - I/O procedure renamed `s_dat_read_csv` => `s_iop_read_csv` and moved from `DAT` to new `IOP` module for input, output, parsing.
 - [x] Cleaned up `use` statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
 - [x] Added basic distance tests ([3760845](https://github.com/sebastian-mutz/fsml/commit/3760845cca1a1c00e02c36adb3a8a1bcaaa76895)) [contributed by @sebastian-mutz]
-- [x] Refactoring ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9) and [3fb7008](https://github.com/sebastian-mutz/fsml/commit/3fb7008eefc0b7122e59cbb59a0b5f0bb7d4c23b)) [contributed by @sebastian-mutz]
-    - [x] Renamed `s_utl_sort` => `s_dat_sort` and `s_utl_rank` => `s_dat_rank` and moved to `DAT` module. References and `use` statements are updated throughout the library. 
-    - [x] `DAT` module now reserved for data manipulation and processing (e.g., subsampling, filtering, sorting). `s_dat_sort` and `s_dat_rank` moved to this module.
-    - [x] I/O procedure renamed `s_dat_read_csv` => `s_iop_read_csv` and moved from `DAT` to new `IOP` module for input, output, parsing.
 
 ## New Contributors
 - @loiseaujc/[Jean-Christophe Loiseau](https://loiseaujc.github.io/) (PRs).
