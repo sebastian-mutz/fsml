@@ -26,8 +26,17 @@ The following has changed since the last release (v0.1.0):
 
 - [ ] Implemented Lance-Williams algorithm for clustering; more efficient than re-computing Mahalanobis distance [contributed by @sebastian-mutz]
 
+#### MNP module
+
+- [x] New module for data manipulation (e.g., subsampling, filtering, sorting). ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9)) [contributed by @sebastian-mutz]
+
+#### UTL module
+
+- [x] Renamed `s_utl_sort` => `s_mnp_sort` and `s_utl_rank` => `s_mnp_rank` and moved to MNP module. References and `use` statements are corrected throughout the library. ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9)) [contributed by @sebastian-mutz]
+
+
 ### Other
-- [x] Cleaned up *use* statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
+- [x] Cleaned up `use` statements (all => only) ([3d954c5](https://github.com/sebastian-mutz/fsml/commit/3d954c5aa9b1641068a3850e1e4807dce8805f79)) [contributed by @sebastian-mutz]
 - [x] Added basic distance tests ([3760845](https://github.com/sebastian-mutz/fsml/commit/3760845cca1a1c00e02c36adb3a8a1bcaaa76895)) [contributed by @sebastian-mutz]
 
 ## New Contributors
