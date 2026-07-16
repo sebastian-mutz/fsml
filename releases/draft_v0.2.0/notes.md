@@ -29,6 +29,8 @@ The following has changed since the last release (v0.1.0):
 #### DAT module
 
 - [x] Moved I/O procedures to new `IOP` module; moved data manipulation procedures from `UTL` to `DAT` (see notes on refactoring).
+- [x] Added procedure for fixed-n sampling of a rank 1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
+- [x] Added procedure for probabilistic (Poisson) sampling of a rank 1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
 
 #### IOP module
 
