@@ -174,7 +174,6 @@ pure subroutine s_dat_sort(a_in, n, mode, idx_in, a_out, idx_out)
 end subroutine s_dat_sort
 
 
-
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
 subroutine s_dat_sample_n(m, n, mask)
@@ -182,7 +181,7 @@ subroutine s_dat_sample_n(m, n, mask)
 ! ==== Description
 !! Subroutine for subsampling a rank 1 array. It shuffles indeces
 !! using the forward Fisher-Yates algorithm (as needed given n),
-!! then generates an index mask from the first n indeces.
+!! then generates an index mask from it.
 !! The mask can simply be applied using the pack intrinsic function:
 !! new_array = pack (old_array, mask)
 
@@ -231,8 +230,6 @@ subroutine s_dat_sample_n(m, n, mask)
 end subroutine s_dat_sample_n
 
 
-
-
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
 subroutine s_dat_sample_p(m, p, mask)
@@ -240,7 +237,7 @@ subroutine s_dat_sample_p(m, p, mask)
 ! ==== Description
 !! Subroutine for subsampling a rank 1 array using Poisson sampling
 !! (subjecting individual elements independently to Bernoulli experiments),
-!! then generates an index mask for subsampling
+!! then generates an index mask for sampling.
 !! The mask can simply be applied using the pack intrinsic function:
 !! new_array = pack (old_array, mask)
 
@@ -266,7 +263,7 @@ subroutine s_dat_sample_p(m, p, mask)
   ! check if value is valid
   if (p .lt. 0.0_wp .or. p .gt. 1.0_wp) then
      ! write error message and assign false if invalid
-     call s_err_print(fsml_error(4))
+     call s_err_print(fsml_error(1))
      mask = .false.
      return
   endif
@@ -280,20 +277,6 @@ subroutine s_dat_sample_p(m, p, mask)
   enddo
 
 end subroutine s_dat_sample_p
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 end module fsml_dat

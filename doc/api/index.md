@@ -19,6 +19,10 @@ The FSML procedures are categorised into several thematic modules:
 - `NLP`: Non-linear and algorithmic procedures (e.g., k-means clustering)
 - `DST`: Statistical distributions (e.g., Student's t distribution); probability density function (PDF), cumulative distribution function (CDF), and percent point function (PPF)
 
+The following modules provide additional procedures that are useful in working with the five core modules above:
+
+- `DST`: Data manipulation and processing (e.g., sampling)
+
 While the public interfaces do not include these as prefixes, the handbook makes use of these
 categories to give it more structure. If you are interested in exploring the code, you will
 recognise these in module and procedure names.
@@ -111,3 +115,11 @@ The following procedures are currently covered and have a public interface. The 
 | [Log-Logistic PDF](./dst.html#fsml_llogistic_pdf) |
 | [Log-Logistic CDF](./dst.html#fsml_llogistic_cdf) |
 | [Log-Logistic PPF](./dst.html#fsml_llogistic_ppf) |
+
+<br>
+
+| Data Manipulation and Processing (DAT)                       |
+| ------------------------------------------------------------ |
+| [Fixed-N Sampling](./dat.html#fsml_sample_n)                 |
+| [Probabilistic (Poisson) Sampling](./dat.html#fsml_sample_p) |
+

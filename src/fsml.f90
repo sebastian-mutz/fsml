@@ -1059,7 +1059,7 @@ end interface
 interface fsml_sample_n
   !! Subroutine for subsampling a rank 1 array. It shuffles indeces
   !! using the forward Fisher-Yates algorithm (as needed given n),
-  !! then generates an index mask from the first n indeces.
+  !! then generates an index mask.
   module procedure s_dat_sample_n
 end interface
 
@@ -1067,7 +1067,7 @@ end interface
 interface fsml_sample_p
   !! Subroutine for subsampling a rank 1 array using Poisson sampling
   !! (subjecting individual elements independently to Bernoulli experiments),
-  !! then generates an index mask for subsampling
+  !! then generates an index mask for sampling.
   module procedure s_dat_sample_p
 end interface
 

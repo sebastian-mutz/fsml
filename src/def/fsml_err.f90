@@ -30,16 +30,16 @@ module fsml_err
   ! error messages
   character(len=128), parameter :: fsml_error(4) = [ character(len=128) ::   &
                                   & "Argument value out of valid&
-                                  & range. Returning NaN.",&
+                                  & range. Returning NaN/sentinel.",&
                                   & "Argument value not in list&
-                                  & of valid options. Returning NaN.",&
+                                  & of valid options. Returning NaN/sentinel.",&
                                   & "Passed array has invalid&
-                                  & dimensions. Returning NaN.",&
+                                  & dimensions. Returning NaN/sentinel.",&
                                   & "Passed array has invalid&
-                                  & size. Returning NaN."]
+                                  & size. Returning NaN/sentinel."]
   ! warning messages
   character(len=128), parameter :: fsml_warning(1) = [ character(len=128) :: &
-                                  & "NaN returned. Convergence may not have been &
+                                  & "NaN/sentinel returned. Convergence may not have been &
                                   & reached in bisection iterations." ]
 
 contains
