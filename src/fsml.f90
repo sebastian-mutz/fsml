@@ -58,7 +58,7 @@ module fsml
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
   ! public utility procedures
-  public :: fsml_rank
+  public :: fsml_rank, fsml_sort, fsml_sample_n, fsml_sample_p
   ! public data/io procedures
   public :: fsml_read_csv
   ! public derived types
@@ -1038,7 +1038,7 @@ end interface
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-! ---- Utilities
+! ---- Data Manipulation and Processing
 
 ! ranks elements in an array
 interface fsml_rank
@@ -1047,6 +1047,30 @@ interface fsml_rank
   !! rank to tied elements within one group of tied elements.
   module procedure s_dat_rank
 end interface
+
+! array element sorting
+interface fsml_sort
+  !! Sort real array in ascending (mode=1) or descending (mode=2) order.
+  !! Preserves the input array. Outputs sorted array and index mapping.
+  module procedure s_dat_rank
+end interface
+
+! sampling (fixed n sample numbers)
+interface fsml_sample_n
+  !! Subroutine for subsampling a rank 1 array. It shuffles indeces
+  !! using the forward Fisher-Yates algorithm (as needed given n),
+  !! then generates an index mask from the first n indeces.
+  module procedure s_dat_sample_n
+end interface
+
+! Poisson sampling (fixed p probability of inclusion of element)
+interface fsml_sample_p
+  !! Subroutine for subsampling a rank 1 array using Poisson sampling
+  !! (subjecting individual elements independently to Bernoulli experiments),
+  !! then generates an index mask for subsampling
+  module procedure s_dat_sample_p
+end interface
+
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !

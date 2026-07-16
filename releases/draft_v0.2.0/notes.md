@@ -57,6 +57,6 @@ The following has changed since the last release (v0.1.0):
 - [ ] Blog post: This blog post is a brief development update, providing more context and background. [contributed by @sebastian-mutz]
 
 ## Application Spotlight
-- @Khadar146/Khadar Dahir Abdisalan used FSML's distribution functions to statistically model future droughts in Somaliland. <p align="left">  <img src="khadar.png" alt="Shifting SPEI index under sceneario SSP5-8.5." width="300"> </p>
+- @Khadar146/Khadar Dahir Abdisalan used FSML's distribution functions to statistically model future droughts in Somaliland. <p align="left">  <img src="img/khadar.png" alt="Shifting SPEI index under sceneario SSP5-8.5." width="300"> </p>
 
 

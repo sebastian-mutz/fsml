@@ -23,6 +23,7 @@ program main
   integer            :: i
   real(wp)           :: r
   real(wp)           :: x1(10,5), x2(10,5), pcc(5), x(10)
+  logical            :: mask(10)
 
 !   infile = "./example/research/data/Mutz_et_al_2021/DMC_Mutz2021_Antofagasta.csv"
 !
@@ -93,5 +94,15 @@ program main
 
   ! compute quantile
   print*, fsml_quantile(x, 0.90_wp)
+
+  ! sample fixed n=5
+  call fsml_sample_n(size(x), 5, mask)
+  print*, mask
+  print*, pack(x, mask)
+
+  ! poisson sample (p=0.2)
+  call fsml_sample_p(size(x), 0.2_wp, mask)
+  print*, mask
+  print*, pack(x, mask)
 
 end program main

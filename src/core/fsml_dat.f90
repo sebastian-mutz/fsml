@@ -16,6 +16,7 @@ module fsml_dat
 
   ! load modules
   use :: fsml_ini, only: wp, i4, ieee_quiet_nan, ieee_is_nan, ieee_value
+  use :: fsml_err, only: s_err_print, fsml_error
   use :: fsml_utl, only: f_utl_assign_nan
 
   ! basic options
@@ -24,7 +25,7 @@ module fsml_dat
 
   ! declare public procedures
   ! public array operations
-  public :: s_dat_rank, s_dat_sort
+  public :: s_dat_rank, s_dat_sort, s_dat_sample_n, s_dat_sample_p
 
 contains
 
@@ -171,6 +172,127 @@ pure subroutine s_dat_sort(a_in, n, mode, idx_in, a_out, idx_out)
   end select
 
 end subroutine s_dat_sort
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_dat_sample_n(m, n, mask)
+
+! ==== Description
+!! Subroutine for subsampling a rank 1 array. It shuffles indeces
+!! using the forward Fisher-Yates algorithm (as needed given n),
+!! then generates an index mask from the first n indeces.
+!! The mask can simply be applied using the pack intrinsic function:
+!! new_array = pack (old_array, mask)
+
+! ==== Declarations
+  integer(i4), intent(in)  :: m       !! size of population (array)
+  integer(i4), intent(in)  :: n       !! size of sample
+  logical    , intent(out) :: mask(m) !! mask for retained data
+  integer(i4)              :: idx(m)  !! indeces in array a
+  integer(i4)              :: i, j, k
+  real(wp)                 :: r
+
+! ==== Instructions
+
+! ---- handle input and initialise
+
+  ! check if size is valid
+  if (n .lt. 0 .or. n .gt. m) then
+     ! write error message and assign false if invalid
+     call s_err_print(fsml_error(4))
+     mask = .false.
+     return
+  endif
+
+  ! build indeces
+  do i = 1, m
+     idx(i) = i
+  enddo
+
+! ---- create subsample mask
+
+  ! partial Fisher-Yates shuffle
+  do i = 1, n
+     call random_number(r)
+     j = i + int(r * (m - i + 1))
+     k = idx(i)
+     idx(i) = idx(j)
+     idx(j) = k
+  enddo
+
+  ! create mask
+  mask = .false.
+  do i = 1, n
+     mask(idx(i)) = .true.
+  enddo
+
+end subroutine s_dat_sample_n
+
+
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_dat_sample_p(m, p, mask)
+
+! ==== Description
+!! Subroutine for subsampling a rank 1 array using Poisson sampling
+!! (subjecting individual elements independently to Bernoulli experiments),
+!! then generates an index mask for subsampling
+!! The mask can simply be applied using the pack intrinsic function:
+!! new_array = pack (old_array, mask)
+
+! ==== Declarations
+  integer(i4), intent(in)  :: m       !! size of population (array)
+  real(wp)   , intent(in)  :: p       !! inclusion probability
+  logical    , intent(out) :: mask(m) !! mask for retained data
+  integer(i4)              :: i
+  real(wp)                 :: r
+
+! ==== Instructions
+
+! ---- handle input and initialise
+
+  ! check if population size is valid
+  if (m .le. 0) then
+     ! write error message and assign false if invalid
+     call s_err_print(fsml_error(4))
+     mask = .false.
+     return
+  endif
+
+  ! check if value is valid
+  if (p .lt. 0.0_wp .or. p .gt. 1.0_wp) then
+     ! write error message and assign false if invalid
+     call s_err_print(fsml_error(4))
+     mask = .false.
+     return
+  endif
+
+! ---- create subsample mask
+
+  ! Poisson subsampling
+  do i = 1, m
+     call random_number(r)
+     mask(i) = (r .lt. p)
+  enddo
+
+end subroutine s_dat_sample_p
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
