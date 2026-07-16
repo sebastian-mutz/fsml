@@ -57,8 +57,9 @@ module fsml
   public :: fsml_manhattan, fsml_chebyshev, fsml_euclidean, fsml_mahalanobis
   ! public nonlinear procedures
   public :: fsml_hclust, fsml_kmeans, fsml_hkmeans
-  ! public utility procedures
-  public :: fsml_rank, fsml_sort, fsml_sample_n, fsml_sample_p
+  ! public data manipulation procedures
+  public :: fsml_rank, fsml_sort
+  public :: fsml_sample_n, fsml_sample_p, fsml_sample_k
   ! public data/io procedures
   public :: fsml_read_csv
   ! public derived types
@@ -1069,6 +1070,14 @@ interface fsml_sample_p
   !! (subjecting individual elements independently to Bernoulli experiments),
   !! then generates an index mask for sampling.
   module procedure s_dat_sample_p
+end interface
+
+! K-fold subsampling
+interface fsml_sample_k
+  !! Subroutine for creating k ~equal-sized subsamples of a rank-1 array.
+  !! The array indices are shuffled using the Fisher–Yates algorithm.
+  !! Then, k logical masks are constructed for the k subsamples.
+  module procedure s_dat_sample_k
 end interface
 
 

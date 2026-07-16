@@ -25,7 +25,8 @@ module fsml_dat
 
   ! declare public procedures
   ! public array operations
-  public :: s_dat_rank, s_dat_sort, s_dat_sample_n, s_dat_sample_p
+  public :: s_dat_rank, s_dat_sort
+  public :: s_dat_sample_n, s_dat_sample_p, s_dat_sample_k
 
 contains
 
@@ -179,7 +180,7 @@ end subroutine s_dat_sort
 subroutine s_dat_sample_n(m, n, mask)
 
 ! ==== Description
-!! Subroutine for subsampling a rank 1 array. It shuffles indeces
+!! Subroutine for sampling a rank 1 array. It shuffles indeces
 !! using the forward Fisher-Yates algorithm (as needed given n),
 !! then generates an index mask from it.
 !! The mask can simply be applied using the pack intrinsic function:
@@ -188,8 +189,8 @@ subroutine s_dat_sample_n(m, n, mask)
 ! ==== Declarations
   integer(i4), intent(in)  :: m       !! size of population (array)
   integer(i4), intent(in)  :: n       !! size of sample
-  logical    , intent(out) :: mask(m) !! mask for retained data
-  integer(i4)              :: idx(m)  !! indeces in array a
+  logical    , intent(out) :: mask(m) !! index mask for sampled data
+  integer(i4)              :: idx(m)  !! index mask for sampled data
   integer(i4)              :: i, j, k
   real(wp)                 :: r
 
@@ -235,7 +236,7 @@ end subroutine s_dat_sample_n
 subroutine s_dat_sample_p(m, p, mask)
 
 ! ==== Description
-!! Subroutine for subsampling a rank 1 array using Poisson sampling
+!! Subroutine for sampling a rank 1 array using Poisson sampling
 !! (subjecting individual elements independently to Bernoulli experiments),
 !! then generates an index mask for sampling.
 !! The mask can simply be applied using the pack intrinsic function:
@@ -244,7 +245,7 @@ subroutine s_dat_sample_p(m, p, mask)
 ! ==== Declarations
   integer(i4), intent(in)  :: m       !! size of population (array)
   real(wp)   , intent(in)  :: p       !! inclusion probability
-  logical    , intent(out) :: mask(m) !! mask for retained data
+  logical    , intent(out) :: mask(m) !! index mask for sampled data
   integer(i4)              :: i
   real(wp)                 :: r
 
@@ -277,6 +278,79 @@ subroutine s_dat_sample_p(m, p, mask)
   enddo
 
 end subroutine s_dat_sample_p
+
+
+! ==================================================================== !
+! -------------------------------------------------------------------- !
+subroutine s_dat_sample_k(m, k, mask)
+
+! ==== Description
+!! Subroutine for creating k ~equal-sized samples of a rank-1 array.
+!! The array indices are shuffled using the Fisher–Yates algorithm.
+!! Then, k logical masks are constructed. In each mask, the indices
+!! belonging to one of the k folds (not part of the sample) are set
+!! to .false. and the remaining indices are set to .true.,
+!! making the masks directly suitable for k-fold cross-validation.
+!!
+!! In cases where m cannot be divided into exactly equal sized k folds,
+!! the remainder is added to the last fold. Therefore, the last sample
+!! may be smaller than the others.
+!!
+!! The masks can be applied using the pack intrinsic function, e.g.
+!! new_array = pack(old_array, mask(:, i)) for the ith of the k samples.
+
+! ==== Declarations
+  integer(i4), intent(in)  :: m         !! size of population (array)
+  integer(i4), intent(in)  :: k         !! number of subsample sets
+  logical    , intent(out) :: mask(m,k) !! index mask for sampled data
+  integer(i4)              :: idx(m)    !! index mask for sampled data
+  integer(i4)              :: i, j, n
+  real(wp)                 :: r
+
+! ==== Instructions
+
+! ---- handle input and initialise
+
+  ! check if size is valid
+  if (k .le. 0 .or. k .gt. m) then
+     ! write error message and assign false if invalid
+     call s_err_print(fsml_error(4))
+     mask = .false.
+     return
+  endif
+
+  ! build indeces
+  do i = 1, m
+     idx(i) = i
+  enddo
+
+! ---- create subsample mask
+
+  ! full Fisher-Yates shuffle
+  do i = m, 2, -1
+     call random_number(r)
+     j = int(r * i) + 1
+     n = idx(i)
+     idx(i) = idx(j)
+     idx(j) = n
+  enddo
+
+  ! create masks
+  n = m/k
+  mask = .true.
+  do j = 1, k
+     if (j .eq. k) then
+        do i = 1 + (j-1)*n, m
+           mask(idx(i),j) = .false.
+        enddo
+     else
+        do i = 1 + (j-1)*n, j*n
+           mask(idx(i),j) = .false.
+        enddo
+     endif
+  enddo
+
+end subroutine s_dat_sample_k
 
 
 end module fsml_dat

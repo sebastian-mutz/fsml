@@ -122,4 +122,4 @@ The following procedures are currently covered and have a public interface. The 
 | ------------------------------------------------------------ |
 | [Fixed-N Sampling](./dat.html#fsml_sample_n)                 |
 | [Probabilistic (Poisson) Sampling](./dat.html#fsml_sample_p) |
-
+| [K-Fold Sampling](./dat.html#fsml_sample_k) |

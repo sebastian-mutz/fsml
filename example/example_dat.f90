@@ -16,16 +16,18 @@ program example_dat
 
   implicit none
 
-  real(wp) :: x(10)
-  logical  :: mask(10)
-
+  real(wp)               :: x(10)       ! array for subsampling
+  integer(i4), parameter :: k = 3       ! k fold parameter
+  logical                :: mask(10)    ! single subsample mask
+  logical                :: kmask(10,k) ! mask for k subsamples
+  integer(i4)            :: i
 
   print*
 
-  ! ---- Sampling
-
   ! generate array elements
   call random_number(x)
+
+  ! ---- Sampling (fixed-n)
 
   print*, "> fixed-n sampling"
 
@@ -36,6 +38,7 @@ program example_dat
   ! apply mask to array
   print*, pack(x, mask)
 
+  ! ---- Sampling (Poisson)
 
   print*, "> Poisson sampling"
 
@@ -46,5 +49,19 @@ program example_dat
   ! apply mask to array
   print*, pack(x, mask)
 
+  ! ---- Sampling (k-folds)
+
+  print*, "> k-fold sampling"
+
+  ! create k ~equal sized subsamples
+  call fsml_sample_k(size(x), k, kmask)
+  do i = 1, k
+     print*, kmask(:,i)
+  enddo
+
+  ! apply mask to array
+  do i = 1, k
+     print*, pack(x, kmask(:,i))
+  enddo
 
 end program example_dat
