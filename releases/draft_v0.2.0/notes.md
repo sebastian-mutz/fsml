@@ -28,8 +28,9 @@ The following has changed since the last release (v0.1.0):
 
 #### DAT module
 
-- [x] Added procedure for fixed-n sampling of a rank 1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
-- [x] Added procedure for probabilistic (Poisson) sampling of a rank 1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
+- [x] Added procedure for fixed-n sampling of a rank-1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
+- [x] Added procedure for probabilistic (Poisson) sampling of a rank-1 array ([9f5761a](https://github.com/sebastian-mutz/fsml/commit/9f5761ac30121d27f9029a1f53b7e0cf91781708), [bfb8410](https://github.com/sebastian-mutz/fsml/commit/bfb8410198aacbcafef8497569a3d0ecaca78b5d), [8ed1542](https://github.com/sebastian-mutz/fsml/commit/8ed154287753662a615d5e502aa5fcbc21586d04)) [contributed by @sebastian-mutz]
+- [x] Added procedure for k-fold sampling of a rank-1 array ([7284ed9](https://github.com/sebastian-mutz/fsml/commit/7284ed9648e8a9c34f241761821470caa98f352e)) [contributed by @sebastian-mutz]
 
 #### IOP module
 
