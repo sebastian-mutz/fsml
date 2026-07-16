@@ -21,7 +21,7 @@ The FSML procedures are categorised into several thematic modules:
 
 The following modules provide additional procedures that are useful in working with the five core modules above:
 
-- `DST`: Data manipulation and processing (e.g., sampling)
+- `DAT`: Data manipulation and processing (e.g., sampling)
 
 While the public interfaces do not include these as prefixes, the handbook makes use of these
 categories to give it more structure. If you are interested in exploring the code, you will

@@ -15,16 +15,19 @@ This is the API documentation for data manipulation and processing procedures.
 
 ### Description
 The subroutine samples a rank 1 array of size \( m \) (`m`) with prescribed 
-\( n \) (`n`), the number of elements in the sample. 
-It uses the forward Fisher-Yates algorithm to re-shuffle the array (incomplete reshuffle), then generates an index mask (`mask`) from it.
+\( n \) (`n`), the number of elements in the sample. It uses the forward 
+Fisher-Yates algorithm to re-shuffle the array (incomplete reshuffle), 
+then generates an index mask (`mask`) from it.
 
-The subroutine only generates the mask rather than a new array of sampled elements. 
-Outside the subroutine, the `pack` intrinsic function can simply be used to generate a new array of samples as follows:
+The subroutine only generates the mask rather than a new array of sampled
+elements. Outside the subroutine, the `pack` intrinsic function can simply 
+be used to generate a new array of samples as follows:
 
 `new_array = pack (old_array, mask)`
 
 @note
-The procesure has no pure equivalent, because it uses the intrinsic subroutine `random_number` to generate pseudorandom numbers.
+The procesure has no pure equivalent, because it uses the intrinsic
+subroutine `random_number` to generate pseudorandom numbers.
 @endnote
 
 
@@ -49,19 +52,25 @@ Invalid argument values will result in returning all `.false.` mask values.
 
 ### Description
 
-The subroutine samples a rank 1 array of size \( m \) (`m`). Each element in the array is independently subjected to Bernoulli experiments and included in the sample with specified probability \( m \) (`p`). An index mask (`mask`) for included elements is generated based on these probability experiments.
+The subroutine samples a rank 1 array of size \( m \) (`m`). Each element
+in the array is independently subjected to Bernoulli experiments to determine
+its inclusion or exclusion from the sample. The inclusion probability is specified
+through \( p \) (`p`). An index mask (`mask`) for included elements is generated
+based on these probability experiments.
 
-The subroutine only generates the mask rather than a new array of sampled elements. 
-Outside the subroutine, the `pack` intrinsic function can simply be used to generate a new array of samples as follows:
+The subroutine only generates the mask rather than a new array of sampled
+elements. Outside the subroutine, the `pack` intrinsic function can simply 
+be used to generate a new array of samples as follows:
 
 `new_array = pack (old_array, mask)`
 
 @note
-The procesure has no pure equivalent, because it uses the intrinsic subroutine `random_number` to generate pseudorandom numbers.
+The procesure has no pure equivalent, because it uses the intrinsic
+subroutine `random_number` to generate pseudorandom numbers.
 @endnote
 
 ### Syntax
-`call ` [[fsml(module):fsml_sample_n(interface)]]`(m, p, mask)`
+`call ` [[fsml(module):fsml_sample_p(interface)]]`(m, p, mask)`
 
 ### Parameters
 `m`: A scalar of type `integer`.
