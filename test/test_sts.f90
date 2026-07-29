@@ -36,7 +36,7 @@ program test_sts
   status = test_quantiles(tol)
   call handle_status(status)
 
-  print*, "> sts: testing basic statistical relationships (cov., trend, Pearson- and Spearman corr.)"
+  print*, "> sts: testing basic statistical relationships (cov., slope, Pearson- and Spearman corr.)"
   status = test_relationship(tol)
   call handle_status(status)
 
@@ -161,7 +161,7 @@ end function test_dispersion
 function test_relationship(tol) result(status)
 
 ! ==== Description
-!! Tests relationship metrics (covariance, ols linear trend,
+!! Tests relationship metrics (covariance, ols linear slope,
 !! Pearson correlation, Spearman correlation).
 
 ! ==== Declarations
@@ -203,7 +203,7 @@ function test_relationship(tol) result(status)
   enddo
   do i = 1, n
      j=j+1
-     res = fsml_trend( x(:,i), y(:,i) )
+     res = fsml_slope( x(:,i), y(:,i) )
      if (abs( res - ans(j) ) .gt. tol) status = .false.
   enddo
   do i = 1, n

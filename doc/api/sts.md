@@ -141,21 +141,21 @@ The result is a scalar and the same type as `x` and `y`.
 
 
 <br>
-# Linear Trend
+# Regression Slope (Linear, 2D)
 
-## `fsml_trend`
+## `fsml_slope`
 
 ### Description
-The procedure computes the regression coefficient/trend.
+The procedure computes the regression coefficient/slope.
 $$ m = \frac{\operatorname{cov}(x, y)}{\operatorname{var}(x)} $$
-where \( m \) is the slope of the regression line (linear trend),
+where \( m \) is the slope of the regression line (linear slope),
 \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
 \( \operatorname{var}(x) \) is the variance of `x`.
 
 Vectors `x` and `y` must be the same size.
 
 ### Syntax
-`result =` [[fsml(module):fsml_trend(interface)]]`(x, y)`
+`result =` [[fsml(module):fsml_slope(interface)]]`(x, y)`
 
 ### Parameters
 `x`: A rank-1 array of type `real`. It must be the same size as `y`.

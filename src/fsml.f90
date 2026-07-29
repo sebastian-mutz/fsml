@@ -35,7 +35,7 @@ module fsml
   ! public statistics procedures
   public :: fsml_mean, fsml_median
   public :: fsml_var, fsml_std
-  public :: fsml_cov, fsml_trend, fsml_pcc, fsml_scc
+  public :: fsml_cov, fsml_slope, fsml_pcc, fsml_scc
   public :: fsml_quantile
   ! public distribution procedures
   public :: fsml_norm_pdf, fsml_norm_cdf, fsml_norm_ppf
@@ -126,16 +126,16 @@ interface fsml_cov
   module procedure f_sts_cov
 end interface
 
-! linear trend (regression coefficient)
-interface fsml_trend
-  !! Computes regression coefficient/trend.
+! slope (regression coefficient)
+interface fsml_slope
+  !! Computes regression coefficient/slope.
   !! $$ m = \frac{\operatorname{cov}(x, y)}{\operatorname{var}(x)} $$
-  !! where \( m \) is the slope of the regression line (linear trend),
+  !! where \( m \) is the slope of the regression line (slope),
   !! \( \operatorname{cov}(x, y) \) is the covariance of `x` and `y`, and
   !! \( \operatorname{var}(x) \) is the variance of `x`.
   !!
   !! Vectors `x` and `y` must be the same size.
-  module procedure f_sts_trend
+  module procedure f_sts_slope
 end interface
 
 ! Pearson correlation coefficient

@@ -80,7 +80,7 @@ program example_sts
   ! 3.8753333333333341E-002
 
   ! linear regression slope for x1 and x2
-  print*, "trend (x1, x2): ", fsml_trend(x1, x2)
+  print*, "slope (x1, x2): ", fsml_slope(x1, x2)
   ! 5.2076614348168869E-002
 
   ! Pearson correlation coefficient for x1 and x2

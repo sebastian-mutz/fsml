@@ -30,7 +30,7 @@ module fsml_sts
   public :: f_sts_var, f_sts_var_core
   public :: f_sts_std, f_sts_std_core
   public :: f_sts_cov, f_sts_cov_core
-  public :: f_sts_trend, f_sts_trend_core
+  public :: f_sts_slope, f_sts_slope_core
   public :: f_sts_pcc, f_sts_pcc_core
   public :: f_sts_scc, f_sts_scc_core
   public :: f_sts_quantile, f_sts_quantile_core
@@ -368,15 +368,15 @@ end function f_sts_cov_core
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-impure function f_sts_trend(x, y) result(trend)
+impure function f_sts_slope(x, y) result(slope)
 
 ! ==== Description
-!! Impure wrapper function for `f_sts_trend_core`.
+!! Impure wrapper function for `f_sts_slope_core`.
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:)  !! x vector (assumed size array)
   real(wp), intent(in) :: y(:)  !! y vector (assumed size array)
-  real(wp)             :: trend !! trend/regression slope
+  real(wp)             :: slope !! slope/regression slope
 
 ! ==== Instructions
 
@@ -386,7 +386,7 @@ impure function f_sts_trend(x, y) result(trend)
   if (size(x) .le. 1) then
      ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     trend = f_utl_assign_nan()
+     slope = f_utl_assign_nan()
      return
   endif
 
@@ -394,34 +394,34 @@ impure function f_sts_trend(x, y) result(trend)
   if (size(x) .ne. size(y)) then
      ! write error message and assign NaN value if invalid
      call s_err_print(fsml_error(4))
-     trend = f_utl_assign_nan()
+     slope = f_utl_assign_nan()
      return
   endif
 
-! ---- compute trend
+! ---- compute slope
 
   ! call pure function
-  trend = f_sts_trend_core(x, y)
+  slope = f_sts_slope_core(x, y)
 
-end function f_sts_trend
+end function f_sts_slope
 
 
 ! ==================================================================== !
 ! -------------------------------------------------------------------- !
-pure function f_sts_trend_core(x, y) result(trend)
+pure function f_sts_slope_core(x, y) result(slope)
 
 ! ==== Description
-!! Computes regression coefficient/trend.
+!! Computes regression coefficient/slope.
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:)   !! x vector (assumed size array)
   real(wp), intent(in) :: y(:)   !! y vector (assumed size array)
-  real(wp)             :: trend  !! trend/regression slope
+  real(wp)             :: slope  !! slope/regression slope
 
 ! ==== Instructions
-  trend = f_sts_cov_core(x, y, 0.0_wp) / f_sts_var_core(x, 0.0_wp)
+  slope = f_sts_cov_core(x, y, 0.0_wp) / f_sts_var_core(x, 0.0_wp)
 
-end function f_sts_trend_core
+end function f_sts_slope_core
 
 
 ! ==================================================================== !
@@ -429,7 +429,7 @@ end function f_sts_trend_core
 impure function f_sts_pcc(x, y) result(corr)
 
 ! ==== Description
-!! Impure wrapper function for `f_sts_trend_core`.
+!! Impure wrapper function for `f_sts_slope_core`.
 
 ! ==== Declarations
   real(wp), intent(in) :: x(:) !! x vector (assumed size array)
