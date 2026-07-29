@@ -44,7 +44,7 @@ The following has changed since the last release (v0.1.0):
 
 ## Other Changes
 - [x] Function name changes for 2D regression slope to avoid ambiguity and remain consistent with API changes: `f_sts_trend` => `f_sts_slope_core` => `f_sts_slope_core`. ([2659da3](https://github.com/sebastian-mutz/fsml/commit/2659da31312f99ccc1ff927c041bd0f1b51826d5)) [contributed by @sebastian-mutz]
-- [x] `fsml_slope` documentation: Added a note on how to compute the corresponding y-intercept.
+- [x] `fsml_slope` documentation: Added a note on how to compute the corresponding y-intercept. ([395471b](https://github.com/sebastian-mutz/fsml/commit/395471b8faa6cb4210b030a117a16aff4375954c))
 - [x] **Refactoring** ([468eb08](https://github.com/sebastian-mutz/fsml/commit/468eb08b22d8bc58083964f1490efd71da8bfce9), [3fb7008](https://github.com/sebastian-mutz/fsml/commit/3fb7008eefc0b7122e59cbb59a0b5f0bb7d4c23b), and [9dd4d1b](https://github.com/sebastian-mutz/fsml/commit/9dd4d1b627517e25be937b18848d93c846e9432d)) [contributed by @sebastian-mutz]
     - Renamed `s_utl_sort` => `s_dat_sort` and `s_utl_rank` => `s_dat_rank` and moved to `DAT` module. References and `use` statements are updated throughout the library. 
     - `DAT` module now reserved for data manipulation and processing (e.g., subsampling, filtering, sorting). `s_dat_sort` and `s_dat_rank` moved to this module.
