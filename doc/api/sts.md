@@ -154,9 +154,9 @@ where \( m \) is the slope of the regression line (linear slope),
 \( \operatorname{var}(x) \) is the variance of `x`.
 
 The y-intercept (\( c \)) can be calculated as 
-$$ c = y - m \cdot x $$ 
+$$ c = \bar{y} - m \cdot \bar{x} $$ 
 
-Therefore, it can be computed as `c = y - fsml_slope(x,y) * x`, where `c` is a scalar of type `real`.
+where \( \bar{y} \) and \( \bar{x} \) are the mean of \( y \) and \( x \), respectively. Therefore, it can be computed as `c = fsml_mean(y) - fsml_slope(x,y) * fsml_mean(x)`, where `c` is a scalar of type `real`.
 
 Vectors `x` and `y` must be the same size.
 
