@@ -3,12 +3,7 @@
 ## Changelog
 The following has changed since the last release (v0.1.0):
 
-### API Changes
-
-:warning: text
-
-> [!warning] 
-> Minor API changes (see STS module updates)
+:warning: *Warning*: Minor API changes (see STS module updates).
 
 ### Bug Fixes
 - Fixed gamma distribution loc bug and removed redundant arg checks in pure procedure ([f578d27](https://github.com/sebastian-mutz/fsml/commit/f578d27fba2518bb9b0f66056f2a59fb233fbf25)) [contributed by @sebastian-mutz]
@@ -23,7 +18,7 @@ The following has changed since the last release (v0.1.0):
 - [x] Added Euclidean Distance ([0a17c15](https://github.com/sebastian-mutz/fsml/commit/0a17c15dcc14e72d5844de3c2cd264852b0d2757)) [contributed by @sebastian-mutz].
 
 #### STS module
-- [x] API and function name changes for 2D regression slope to avoid ambiguity: `fsml_trend` => `fsml_slope`, `f_sts_trend` => `f_sts_slope_core` => `f_sts_slope_core`.
+- [x] API and function name changes for 2D regression slope to avoid ambiguity: `fsml_trend` => `fsml_slope`, `f_sts_trend` => `f_sts_slope_core` => `f_sts_slope_core`. ([2659da3](https://github.com/sebastian-mutz/fsml/commit/2659da31312f99ccc1ff927c041bd0f1b51826d5)) [contributed by @sebastian-mutz]
 - [x] Added function to compute quantile/percentile value (based on Hyndman & Fan (1996) type 7 index). ([562d9af](https://github.com/sebastian-mutz/fsml/commit/562d9af29dccff7c25de1766039ecd304ffc33c4), [a0c67ef](https://github.com/sebastian-mutz/fsml/commit/a0c67ef4b85275220860381db073199b33797884), [262f21b](https://github.com/sebastian-mutz/fsml/commit/262f21b31b47b06267d06a2e43899eed0cc4858b)) [contributed by @sebastian-mutz]
 
 #### DST module
