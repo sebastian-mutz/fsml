@@ -43,7 +43,7 @@ The following procedures are currently covered and have a public interface. The 
 | [Variance](./sts.html#fsml_var)                    |
 | [Standard deviation](./sts.html#fsml_std)          |
 | [Covariance](./sts.html#fsml_cov)                  |
-| [Regression slope](./sts.html#fsml_slope)          |
+| [Slope (Regression)](./sts.html#fsml_slope)        |
 | [Correlation (Pearson)](./sts.html#fsml_pcc)       |
 | [Correlation (Spearman rank)](./sts.html#fsml_scc) |
 | [Quantile](./sts.html#fsml_quantile)               |
